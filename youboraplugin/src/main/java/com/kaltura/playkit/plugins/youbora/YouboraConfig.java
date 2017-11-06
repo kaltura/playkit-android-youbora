@@ -10,7 +10,7 @@
  * ============================================================================
  */
 
-package com.kaltura.playkit.plugin.youbora;
+package com.kaltura.playkit.plugins.youbora;
 
 
 import com.google.gson.JsonObject;
