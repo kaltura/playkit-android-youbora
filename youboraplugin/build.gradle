@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply from: 'version.gradle'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionName libVersion
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,13 +27,12 @@ android {
 dependencies {
 
     //TODO change to latest playkit version after tagging.
-    compile ('com.kaltura:playkit-android:develop-SNAPSHOT')
-    //compile project(":playkit");
+    implementation ('com.kaltura:playkit-android:develop-SNAPSHOT')
+    //implementation project(":playkit");
+    implementation files('libs/YouboraLib-5.3.10.jar')
 
-    compile files('libs/YouboraLib-5.3.10.jar')
-
-    testCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:0.5'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 
 }
 
