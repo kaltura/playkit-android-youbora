@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.PlayerEvent.Type.STATE_CHANGED;
 
 /**
@@ -46,6 +47,7 @@ class YouboraLibraryManager extends PluginGeneric {
     private static final PKLog log = PKLog.get("YouboraLibraryManager");
     private static final String KALTURA_ANDROID = "Kaltura-Android";
     private static final String PLAYER_ERROR_STR = "Player error occurred";
+
 
     private Player player;
     private MessageBus messageBus;
@@ -123,6 +125,9 @@ class YouboraLibraryManager extends PluginGeneric {
 
             if (event instanceof PlayerEvent && viewManager != null) {
                 log.d("PlayerEvent: " + ((PlayerEvent) event).type.toString());
+                if (((PlayerEvent) event).type != PLAYHEAD_UPDATED) {
+                    log.d("PlayerEvent: " + ((PlayerEvent) event).type.toString());
+                }
                 switch (((PlayerEvent) event).type) {
                     case DURATION_CHANGE:
                         log.d("new duration = " + ((PlayerEvent.DurationChanged) event).duration);
@@ -184,17 +189,19 @@ class YouboraLibraryManager extends PluginGeneric {
     private void sendErrorHandler(PKEvent event) {
 
         PlayerEvent.Error errorEvent = (PlayerEvent.Error) event;
-        String errorMetadata = (errorEvent != null &&  errorEvent.error != null) ? errorEvent.error.message : PLAYER_ERROR_STR;
+        String errorMetadata = (errorEvent != null && errorEvent.error != null) ? errorEvent.error.message : PLAYER_ERROR_STR;
+
+
         PKError error = errorEvent.error;
         if (error.exception == null) {
             errorHandler(errorMetadata, event.eventType().name());
             return;
         }
 
+
         Exception playerErrorException = (Exception) error.exception;
         String exceptionClass = "";
         String exceptionCause = "";
-
         if (playerErrorException.getCause() != null && playerErrorException.getCause().getClass() != null) {
             exceptionClass = playerErrorException.getCause().getClass().getName();
             errorMetadata = (playerErrorException.getCause().toString() != null) ? playerErrorException.getCause().toString() : errorMetadata;
@@ -206,9 +213,9 @@ class YouboraLibraryManager extends PluginGeneric {
             } else {
                 exceptionCause = causesList.get(0);
             }
-        }
 
-        errorHandler(exceptionCause, exceptionClass, errorMetadata);
+            errorHandler(exceptionCause, exceptionClass, errorMetadata);
+        }
     }
 
     public static List<String> getExceptionMessageChain(Throwable throwable) {
@@ -223,21 +230,21 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     private void onAdEvent(AdEvent event) {
-        if (event.type != AdEvent.Type.PLAY_HEAD_CHANGED) {
+        if (event.type != AdEvent.Type.AD_POSITION_UPDATED) {
             log.d("Ad Event: " + event.type.name());
         }
 
         switch (event.type) {
-            case STARTED:
+            case AD_STARTED:
                 ignoringAdHandler();
                 allowSendingYouboraBufferEvents = false;
                 break;
-            case CONTENT_RESUME_REQUESTED:
+            case ADS_PLAYBACK_ENDED:
                 ignoredAdHandler();
                 break;
-            case CUEPOINTS_CHANGED:
-                AdEvent.AdCuePointsUpdateEvent cuePointsList = (AdEvent.AdCuePointsUpdateEvent) event;
-                adCuePoints = cuePointsList.cuePoints;
+            case AD_CUEPOINTS_UPDATED:
+                AdEvent.AdCuePointsChangedEvent cuePointsList = (AdEvent.AdCuePointsChangedEvent) event;
+                adCuePoints = cuePointsList.adCuePoints;
                 break;
             case ALL_ADS_COMPLETED:
                 if (adCuePoints != null && adCuePoints.hasPostRoll()) {
@@ -289,7 +296,7 @@ class YouboraLibraryManager extends PluginGeneric {
 
     public Double getPlayhead() {
         double currPos = Long.valueOf(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-        log.d("getPlayhead currPos = " + currPos);
+        //log.d("getPlayhead currPos = " + currPos);
         return (currPos >= 0) ? currPos : 0;
     }
 
@@ -320,7 +327,7 @@ class YouboraLibraryManager extends PluginGeneric {
         messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
     }
 
-    private String generateRendition(double bitrate, int width, int height) {
+    public String generateRendition(double bitrate, int width, int height) {
 
         if ((width <= 0 || height <= 0) && bitrate <= 0) {
             return super.getRendition();
