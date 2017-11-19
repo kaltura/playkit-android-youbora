@@ -198,7 +198,9 @@ class YouboraLibraryManager extends PluginGeneric {
             exceptionClass = playerErrorException.getCause().getClass().getName();
             errorMetadata = (playerErrorException.getCause().toString() != null) ? playerErrorException.getCause().toString() : errorMetadata;
         } else {
-            exceptionClass = error.exception.getClass().getName();
+            if (error.exception.getClass() != null) {
+                exceptionClass = error.exception.getClass().getName();
+            }
         }
 
         LinkedHashSet<String> causeMessages = getExceptionMessageChain(playerErrorException);
@@ -206,11 +208,11 @@ class YouboraLibraryManager extends PluginGeneric {
             exceptionCause = playerErrorException.toString();
         } else {
             for (String cause : causeMessages)
-                exceptionCause = causeMessages + "\n";
+                exceptionCause += cause + "\n";
         }
 
         String errorCode = (errorEvent != null && errorEvent.error != null && errorEvent.error.errorType != null) ?  errorEvent.error.errorType + " - " : "";
-                errorHandler(exceptionCause, errorCode + exceptionClass, errorMetadata);
+        errorHandler(exceptionCause, errorCode + exceptionClass, errorMetadata);
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
