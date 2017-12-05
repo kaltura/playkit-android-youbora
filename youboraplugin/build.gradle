@@ -27,8 +27,8 @@ android {
 dependencies {
 
     //TODO change to latest playkit version after tagging.
-    compile 'com.kaltura:playkit-android:develop-SNAPSHOT'
-    //implementation project(":playkit");
+    //compile 'com.kaltura:playkit-android:develop-SNAPSHOT'
+    implementation project(":playkit");
 
     compile files('libs/YouboraLib-5.3.10.jar')
 
