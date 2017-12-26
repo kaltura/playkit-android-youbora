@@ -158,7 +158,8 @@ public class YouboraPlugin extends PKPlugin {
                 case DURATION_CHANGE:
 
                     key = "duration";
-                    value = Long.valueOf(player.getDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+                    PlayerEvent.DurationChanged durationChanged = (PlayerEvent.DurationChanged) playerEvent;
+                    value = (double) Math.round(durationChanged.duration / Consts.MILLISECONDS_MULTIPLIER);
                     break;
 
                 case SOURCE_SELECTED:

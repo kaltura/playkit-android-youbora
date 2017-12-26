@@ -109,7 +109,7 @@ class YouboraAdManager extends AdnalyzerGeneric {
                         adPositionType = adLoadedEvent.adInfo.getAdPositionType();
                         lastReportedAdDuration = Long.valueOf(adLoadedEvent.adInfo.getAdDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
                         lastReportedAdTitle = adLoadedEvent.adInfo.getAdTitle();
-
+                        lastReportedAdDuration = (double) Math.round(adLoadedEvent.adInfo.getAdDuration() / Consts.MILLISECONDS_MULTIPLIER);
                         currentReportedAdDuration = lastReportedAdDuration;
                         currentReportedAdTitle = lastReportedAdTitle;
                         log.d("lastReportedAdDuration: " + lastReportedAdDuration);
@@ -118,6 +118,7 @@ class YouboraAdManager extends AdnalyzerGeneric {
                         break;
                     case AD_STARTED:
                         log.d("Youbora AD_STARTED");
+
                         joinAdHandler();
                         break;
                     case AD_PAUSED:
@@ -160,17 +161,19 @@ class YouboraAdManager extends AdnalyzerGeneric {
                         if (event instanceof AdEvent.AdProgressUpdateEvent) {
                             if (((AdEvent.AdProgressUpdateEvent) event).currentPosition < Consts.MILLISECONDS_MULTIPLIER) {
                                 lastReportedAdPlayhead = ((AdEvent.AdProgressUpdateEvent) event).currentPosition * 1.0;
+                                currentReportedAdDuration = (double) Math.round(((AdEvent.AdProgressUpdateEvent) event).duration * 1.0);
                             } else {
-                                lastReportedAdPlayhead = Long.valueOf(((AdEvent.AdProgressUpdateEvent) event).currentPosition / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+                                lastReportedAdPlayhead =    (double) Math.round(((AdEvent.AdProgressUpdateEvent) event).currentPosition / Consts.MILLISECONDS_MULTIPLIER);
+                                currentReportedAdDuration = (double) Math.round(((AdEvent.AdProgressUpdateEvent) event).duration / Consts.MILLISECONDS_MULTIPLIER);
                             }
                             currentReportedAdPlayhead = lastReportedAdPlayhead;
+                            lastReportedAdDuration = currentReportedAdDuration;
                         }
 
                         return;
                     default:
                         break;
                 }
-
                 messageBus.post(new YouboraEvent.YouboraReport(event.eventType().name()));
             }
         }

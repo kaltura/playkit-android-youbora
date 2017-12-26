@@ -116,21 +116,17 @@ class YouboraLibraryManager extends PluginGeneric {
 
             if (event.eventType() == PlayerEvent.Type.PLAYBACK_INFO_UPDATED) {
                 PlaybackInfo currentPlaybackInfo = ((PlayerEvent.PlaybackInfoUpdated) event).playbackInfo;
-                lastReportedBitrate = Long.valueOf(currentPlaybackInfo.getVideoBitrate()).doubleValue();
-                lastReportedThroughput = Long.valueOf(currentPlaybackInfo.getVideoThroughput()).doubleValue();
+                lastReportedBitrate = (double) currentPlaybackInfo.getVideoBitrate();
+                lastReportedThroughput = (double) currentPlaybackInfo.getVideoThroughput();
                 lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
                 return;
             }
 
             if (event instanceof PlayerEvent && viewManager != null) {
-                log.d("PlayerEvent: " + ((PlayerEvent) event).type.toString());
                 if (((PlayerEvent) event).type != PLAYHEAD_UPDATED) {
                     log.d("PlayerEvent: " + ((PlayerEvent) event).type.toString());
                 }
                 switch (((PlayerEvent) event).type) {
-                    case DURATION_CHANGE:
-                        log.d("new duration = " + ((PlayerEvent.DurationChanged) event).duration);
-                        break;
                     case STATE_CHANGED:
                         YouboraLibraryManager.this.onEvent((PlayerEvent.StateChanged) event);
                         break;
@@ -297,7 +293,7 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     public Double getPlayhead() {
-        double currPos = Long.valueOf(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+        double currPos = (double) Math.round(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER);
         //log.d("getPlayhead currPos = " + currPos);
         return (currPos >= 0) ? currPos : 0;
     }
@@ -307,7 +303,7 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     public Double getMediaDuration() {
-        double lastReportedMediaDuration = (mediaConfig == null) ? 0 : Long.valueOf(mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+        double lastReportedMediaDuration = (mediaConfig == null) ? 0 : (double) Math.round(mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER);
         log.d("lastReportedMediaDuration = " + lastReportedMediaDuration);
         return lastReportedMediaDuration;
     }
