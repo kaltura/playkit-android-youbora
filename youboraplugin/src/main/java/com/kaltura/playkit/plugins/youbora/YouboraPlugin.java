@@ -49,7 +49,7 @@ public class YouboraPlugin extends PKPlugin {
     public static final Factory factory = new Factory() {
         @Override
         public String getName() {
-            return "Youbora";
+            return "youbora";
         }
 
         @Override
@@ -74,7 +74,9 @@ public class YouboraPlugin extends PKPlugin {
         stopMonitoring();
         log.d("youbora - onUpdateMedia");
         this.mediaConfig = mediaConfig;
-        Map<String, Object> opt  = YouboraConfig.getConfig(pluginConfig, this.mediaConfig, player);
+        pluginConfig = PKPlugin.replaceKeysInPluginConfig(mediaConfig.getMediaEntry(), pluginConfig);
+
+        Map<String, Object> opt  = YouboraLibraryConfig.getConfig(pluginConfig, this.mediaConfig, player);
         // Refresh options with updated media
         pluginManager.setOptions(opt);
         if (!isMonitoring) {
@@ -97,7 +99,7 @@ public class YouboraPlugin extends PKPlugin {
             adsManager.onUpdateConfig();
         }
         this.pluginConfig = (JsonObject) config;
-        Map<String, Object> opt  = YouboraConfig.getConfig(pluginConfig, mediaConfig, player);
+        Map<String, Object> opt  = YouboraLibraryConfig.getConfig(pluginConfig, mediaConfig, player);
         // Refresh options with updated media
         pluginManager.setOptions(opt);
     }
@@ -149,7 +151,6 @@ public class YouboraPlugin extends PKPlugin {
             }
             messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED);
         }
-
     }
 
     PKEvent.Listener eventListener = new PKEvent.Listener() {
@@ -178,7 +179,7 @@ public class YouboraPlugin extends PKPlugin {
                 return ;
             }
 
-            Map<String, Object> opt  = YouboraConfig.updateMediaConfig(pluginConfig, key, value);
+            Map<String, Object> opt  = YouboraLibraryConfig.updateMediaConfig(pluginConfig, key, value);
             pluginManager.setOptions(opt);
         }
     };

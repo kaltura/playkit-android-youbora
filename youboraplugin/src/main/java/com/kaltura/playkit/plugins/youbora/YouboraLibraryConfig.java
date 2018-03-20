@@ -29,8 +29,8 @@ import java.util.Map;
  * Created by zivilan on 17/11/2016.
  */
 
-public class YouboraConfig {
-    private static final PKLog log = PKLog.get("YouboraConfig");
+public class YouboraLibraryConfig {
+    private static final PKLog log = PKLog.get("YouboraLibraryConfig");
 
     private static Map<String, Object> youboraConfig = null;
     private static final Map<String, Object> defaultYouboraConfig;
@@ -92,7 +92,7 @@ public class YouboraConfig {
         defaultYouboraConfig = Collections.unmodifiableMap(youboraLocalConfig);
     }
 
-    private YouboraConfig() {
+    private YouboraLibraryConfig() {
     }
 
     public static Map<String, Object> getConfig(JsonObject pluginConfig, PKMediaConfig mediaConfig, Player player) {
@@ -112,7 +112,7 @@ public class YouboraConfig {
     }
 
     private static void setConfig(JsonObject pluginConfig, PKMediaConfig mediaConfig, Player player) {
-        log.d("setConfig");
+        log.d("Start setConfig");
 
         youboraConfig = defaultYouboraConfig;
         if (mediaConfig != null) {
@@ -146,15 +146,17 @@ public class YouboraConfig {
     private static void setYouboraConfigObject(Map<String, Object> defaultJsonObject, JsonObject jsonObject, String[] fieldNames, String[] booleanFieldNames) {
         for (String fieldName : fieldNames) {
             if (Utils.isJsonObjectValueValid(jsonObject, fieldName)) {
-                log.d("setYouboraConfigObject: " + fieldName);
-                defaultJsonObject.put(fieldName, jsonObject.getAsJsonPrimitive(fieldName).getAsString());
+                String fieldValue = jsonObject.getAsJsonPrimitive(fieldName).getAsString();
+                log.d("setYouboraConfigObject: " + fieldName + "=" + fieldValue);
+                defaultJsonObject.put(fieldName, fieldValue);
             }
         }
         if (booleanFieldNames != null) {
             for (String fieldName : booleanFieldNames) {
                 if (Utils.isJsonObjectValueValid(jsonObject, fieldName)) {
-                    log.d("setYouboraConfigObject: " + fieldName);
-                    defaultJsonObject.put(fieldName, jsonObject.getAsJsonPrimitive(fieldName).getAsBoolean());
+                    Boolean fieldValue = jsonObject.getAsJsonPrimitive(fieldName).getAsBoolean();
+                    log.d("setYouboraConfigObject: " + fieldName  + "=" + fieldValue);
+                    defaultJsonObject.put(fieldName, fieldValue);
                 }
             }
         }
