@@ -16,6 +16,7 @@ package com.kaltura.playkit.plugins.youbora;
 import com.google.gson.JsonObject;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
+import com.kaltura.playkit.PKMediaEntry;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.Utils;
 import com.kaltura.playkit.utils.Consts;
@@ -43,8 +44,8 @@ public class YouboraLibraryConfig {
     private static String[] youboraConfigFieldNames = new String[]{"accountCode", "username", "transactionCode"};
     private static String[] youboraBooleanConfigFieldNames = new String[]{"haltOnError", "enableAnalytics", "httpSecure", "parseCDNNodeHost"};
 
-    private static String[] mediaConfigFieldNames = new String[]{"title", "cdn"};
-    private static String[] mediaBooleanConfigFieldNames = new String[]{"isLive"};
+    private static String[] mediaConfigFieldNames = new String[]{"cdn"};
+    private static String[] mediaBooleanConfigFieldNames = new String[]{};
 
     private static String[] adsConfigFieldNames = new String[]{"title", "campaign"};
     private static String[] adsBooleanConfigFieldNames = new String[]{};
@@ -115,14 +116,16 @@ public class YouboraLibraryConfig {
         log.d("Start setConfig");
 
         youboraConfig = defaultYouboraConfig;
-        if (mediaConfig != null) {
-
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
             Long duration = mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER;
             log.d("Youbora update duration = " + duration.doubleValue());
 
             mediaObject.put("duration", duration.intValue()); //Duration should be sent in secs
+            mediaObject.put("title", mediaConfig.getMediaEntry().getName());
+            mediaObject.put("isLive", (mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live) ? true : false);
             propertiesObject.put("sessionId", player.getSessionId());
         }
+
         if (pluginConfig != null) {
 
             //set these values on the root object
