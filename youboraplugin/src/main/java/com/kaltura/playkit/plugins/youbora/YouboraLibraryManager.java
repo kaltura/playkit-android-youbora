@@ -107,7 +107,6 @@ class YouboraLibraryManager extends PluginGeneric {
         sendReportEvent(event);
     }
 
-
     private PKEvent.Listener mEventListener = new PKEvent.Listener() {
         @Override
         public void onEvent(PKEvent event) {
@@ -322,8 +321,10 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     private void sendReportEvent(PKEvent event) {
-        String reportedEventName = event.eventType().name();
-        messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+        if (event.eventType() != PLAYHEAD_UPDATED) {
+            String reportedEventName = event.eventType().name(); 
+            messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+        }
     }
 
     private String generateRendition(double bitrate, int width, int height) {
