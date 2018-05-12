@@ -1,10 +1,12 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.npaw.youbora.lib6.plugin.Options;
 
 public class YouboraConfig {
 
@@ -12,11 +14,13 @@ public class YouboraConfig {
 
     private String username;
 
-    private Boolean haltOnError;
+    private String userType;        // any string - free / paid etc.
 
-    private Boolean enableAnalytics;
+    private String houseHoldId;    // which device is used to play
 
-    private Boolean enableSmartAds;
+    private boolean obfuscateIP;   // ip in dahsbord will be encrytpted
+
+    private boolean httpSecure; // youbora events will be sent via https
 
     private Media media;
 
@@ -42,28 +46,36 @@ public class YouboraConfig {
         this.username = username;
     }
 
-    public Boolean getHaltOnError() {
-        return haltOnError;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setHaltOnError(Boolean haltOnError) {
-        this.haltOnError = haltOnError;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public Boolean getEnableAnalytics() {
-        return enableAnalytics;
+    public boolean isObfuscateIP() {
+        return obfuscateIP;
     }
 
-    public void setEnableAnalytics(Boolean enableAnalytics) {
-        this.enableAnalytics = enableAnalytics;
+    public boolean getHttpSecure() {
+        return httpSecure;
     }
 
-    public Boolean getEnableSmartAds() {
-        return enableSmartAds;
+    public void setHttpSecure(boolean httpSecure) {
+        this.httpSecure = httpSecure;
     }
 
-    public void setEnableSmartAds(Boolean enableSmartAds) {
-        this.enableSmartAds = enableSmartAds;
+    public String getHouseHoldId() {
+        return houseHoldId;
+    }
+
+    public void setHouseHoldId(String houseHoldId) {
+        this.houseHoldId = houseHoldId;
+    }
+
+    public void setObfuscateIP(boolean obfuscateIP) {
+        this.obfuscateIP = obfuscateIP;
     }
 
     public Media getMedia() {
@@ -98,19 +110,109 @@ public class YouboraConfig {
         this.extraParams = extraParams;
     }
 
+
+    public Options getYouboraOptions() {
+        Options youboraLocalConfig =  new Options();
+
+        youboraLocalConfig.setAccountCode(accountCode);
+        youboraLocalConfig.setUsername(username);
+        youboraLocalConfig.setUserType(userType);
+        youboraLocalConfig.setNetworkObfuscateIp(obfuscateIP);
+        youboraLocalConfig.setHttpSecure(httpSecure);
+
+        youboraLocalConfig.setParseHls(false);
+        youboraLocalConfig.setParseCdnNode(false);
+
+
+        youboraLocalConfig.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
+        youboraLocalConfig.setContentCdn(null);
+
+
+
+        youboraLocalConfig.setContentIsLive(media.getIsLive());
+        youboraLocalConfig.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
+        youboraLocalConfig.setContentDuration(media.getDuration());
+        youboraLocalConfig.setContentTitle(media.getTitle());
+        youboraLocalConfig.setContentTitle2(media.getTitle2());
+        youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
+
+
+        youboraLocalConfig.setAdResource(null);
+        youboraLocalConfig.setAdCampaign(ads.getCampaign());
+        youboraLocalConfig.setAdTitle("");
+
+
+
+        youboraLocalConfig.setContentMetadata(getPropertiesBundle());
+
+
+        if (ads.getExtraParams() != null) {
+            youboraLocalConfig.setAdExtraparam1(ads.getExtraParams().getParam1());
+            youboraLocalConfig.setAdExtraparam2(ads.getExtraParams().getParam2());
+            youboraLocalConfig.setAdExtraparam3(ads.getExtraParams().getParam3());
+            youboraLocalConfig.setAdExtraparam4(ads.getExtraParams().getParam4());
+            youboraLocalConfig.setAdExtraparam5(ads.getExtraParams().getParam5());
+            youboraLocalConfig.setAdExtraparam6(ads.getExtraParams().getParam6());
+            youboraLocalConfig.setAdExtraparam7(ads.getExtraParams().getParam7());
+            youboraLocalConfig.setAdExtraparam8(ads.getExtraParams().getParam8());
+            youboraLocalConfig.setAdExtraparam9(ads.getExtraParams().getParam9());
+            youboraLocalConfig.setAdExtraparam10(ads.getExtraParams().getParam10());
+        }
+
+        if (extraParams != null) {
+            youboraLocalConfig.setExtraparam1(extraParams.getParam1());
+            youboraLocalConfig.setExtraparam2(extraParams.getParam2());
+            youboraLocalConfig.setExtraparam3(extraParams.getParam3());
+            youboraLocalConfig.setExtraparam4(extraParams.getParam4());
+            youboraLocalConfig.setExtraparam5(extraParams.getParam5());
+            youboraLocalConfig.setExtraparam6(extraParams.getParam6());
+            youboraLocalConfig.setExtraparam7(extraParams.getParam7());
+            youboraLocalConfig.setExtraparam8(extraParams.getParam8());
+            youboraLocalConfig.setExtraparam9(extraParams.getParam9());
+            youboraLocalConfig.setExtraparam10(extraParams.getParam10());
+        }
+        return youboraLocalConfig;
+    }
+
+
+    private Bundle getPropertiesBundle() {
+        if (getProperties() == null) {
+            return new Bundle();
+        }
+
+        Properties prop = getProperties();
+        Bundle propertiesBunble = new Bundle();
+        propertiesBunble.putString("genre", (prop.getGenre() != null) ? prop.getGenre() : "");
+        propertiesBunble.putString("type", (prop.getType() != null) ? prop.getType() : "");
+        propertiesBunble.putString("transaction_type", (prop.getTransactionType() != null) ? prop.getTransactionType() : "");
+        propertiesBunble.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
+        propertiesBunble.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
+        propertiesBunble.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
+        propertiesBunble.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
+        propertiesBunble.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
+        propertiesBunble.putString("price", (prop.getPrice() != null) ? prop.getPrice() : "");
+        propertiesBunble.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
+        propertiesBunble.putString("audioType", (prop.getAudioType() != null) ? prop.getAudioType() : "");
+        propertiesBunble.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
+        propertiesBunble.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
+        propertiesBunble.putString("quality", (prop.getQuality() != null) ? prop.getQuality() : "");
+        return propertiesBunble;
+    }
+
     public JsonObject toJson() {
         JsonPrimitive accountCode = new JsonPrimitive(getAccountCode() != null ? getAccountCode() : "");
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
-        JsonPrimitive haltOnError = new JsonPrimitive(getHaltOnError() != null ? getHaltOnError() : Boolean.TRUE);
-        JsonPrimitive enableAnalytics = new JsonPrimitive(getEnableAnalytics() != null ? getEnableAnalytics() : Boolean.TRUE);
-        JsonPrimitive enableSmartAds = new JsonPrimitive(getEnableSmartAds() != null ? getEnableSmartAds() : Boolean.FALSE);
+        JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
+        JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
+        JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP() ? true : false);
+        JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure() ? true : false);
 
         JsonObject mediaEntry = getMediaJsonObject();
         JsonObject adsEntry = new JsonObject();
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, haltOnError, enableAnalytics, enableSmartAds, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
+        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isObfuscateIP, httpSecure, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
         return youboraConfig;
     }
 
@@ -131,13 +233,16 @@ public class YouboraConfig {
     }
 
     @NonNull
-    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive haltOnError, JsonPrimitive enableAnalytics, JsonPrimitive enableSmartAds, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
+    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive obfuscateIP, JsonPrimitive httpSecure,
+                                                  JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
-        youboraConfig.add("haltOnError", haltOnError);
-        youboraConfig.add("enableAnalytics", enableAnalytics);
-        youboraConfig.add("enableSmartAds", enableSmartAds);
+        youboraConfig.add("userType", userType);
+        youboraConfig.add("houseHoldId", houseHoldId);
+        youboraConfig.add("obfuscateIP", obfuscateIP);
+        youboraConfig.add("httpSecure", httpSecure);
+
         youboraConfig.add("media", mediaEntry);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
@@ -222,17 +327,6 @@ public class YouboraConfig {
             username =  youboraConfigUiConf.getUsername();
         }
 
-        if (haltOnError == null) {
-            haltOnError = youboraConfigUiConf.getHaltOnError();
-        }
-
-        if (enableAnalytics == null) {
-            enableAnalytics = youboraConfigUiConf.getEnableAnalytics();
-        }
-
-        if (enableSmartAds == null) {
-            enableSmartAds = youboraConfigUiConf.getEnableSmartAds();
-        }
         if (media != null) {
             if (youboraConfigUiConf.getMedia() != null) {
                 if (media.getIsLive() == null) {
@@ -344,11 +438,9 @@ public class YouboraConfig {
                     extraParams.setParam10(extraParamsUiConf.getParam10());
                 }
             }
-
         } else {
             extraParams = youboraConfigUiConf.getExtraParams();
         }
 
     }
-
 }

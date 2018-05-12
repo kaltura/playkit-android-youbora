@@ -28,7 +28,7 @@ dependencies {
     implementation 'com.kaltura:playkit-android:develop-SNAPSHOT'
     //implementation project(":playkit");
 
-    implementation files('libs/YouboraLib-5.3.10.jar')
+    api 'com.npaw.youbora:youboralib:6.1.7'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
