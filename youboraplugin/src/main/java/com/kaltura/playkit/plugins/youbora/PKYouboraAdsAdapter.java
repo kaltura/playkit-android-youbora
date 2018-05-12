@@ -152,9 +152,8 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         break;
                     case CLICKED:
                         log.d("learn more clicked");
-                        //We are not sending this event to youbora,
-                        //so prevent it from dispatching through YouboraEvent.YouboraReport.
-                        return;
+                        fireClick();
+                        break;
                     case PLAY_HEAD_CHANGED:
                         lastReportedAdPlayhead = Long.valueOf(((AdEvent.AdPlayHeadEvent) event).adPlayHead).doubleValue();
                         //We are not sending this event to youbora,
