@@ -36,7 +36,7 @@ public class YouboraPlugin extends PKPlugin {
     public static final Factory factory = new Factory() {
         @Override
         public String getName() {
-            return "Youbora";
+            return "youbora";
         }
 
         @Override
