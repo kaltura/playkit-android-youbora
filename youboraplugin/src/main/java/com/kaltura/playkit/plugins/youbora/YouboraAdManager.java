@@ -12,21 +12,23 @@
 
 package com.kaltura.playkit.plugins.youbora;
 
+
 import com.kaltura.playkit.MessageBus;
-import com.kaltura.playkit.PKError;
 import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlayerEvent;
-import com.kaltura.playkit.ads.AdEvent;
-import com.kaltura.playkit.ads.AdInfo;
-import com.kaltura.playkit.ads.PKAdErrorType;
+import com.kaltura.playkit.plugins.ads.AdEvent;
+import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
+import com.kaltura.playkit.ads.PKAdErrorType;
+import com.kaltura.playkit.PKError;
 import com.npaw.youbora.adnalyzers.AdnalyzerGeneric;
 import com.npaw.youbora.plugins.PluginGeneric;
 import com.npaw.youbora.youboralib.BuildConfig;
 import com.npaw.youbora.youboralib.utils.YBLog;
 
+import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.PlayerEvent.Type.STATE_CHANGED;
 
 /**
@@ -80,10 +82,11 @@ class YouboraAdManager extends AdnalyzerGeneric {
         @Override
         public void onEvent(PKEvent event) {
 
-            log.d("on event " + event.eventType());
+            if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED) {
+                log.d("YouboraAdManager on event " + event.eventType());
+            }
 
             if (event instanceof AdEvent) {
-                log.d("AdManager: " + ((AdEvent) event).type.toString());
                 switch (((AdEvent) event).type) {
                     case AD_REQUESTED:
                         lastReportedAdResource = ((AdEvent.AdRequestedEvent) event).adTagUrl;
@@ -165,7 +168,6 @@ class YouboraAdManager extends AdnalyzerGeneric {
                     default:
                         break;
                 }
-
                 messageBus.post(new YouboraEvent.YouboraReport(event.eventType().name()));
             }
         }
