@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
@@ -39,10 +38,10 @@ public class YouboraPlugin extends PKPlugin {
             return "Youbora";
         }
 
-        @Override
-        public String getVersion() {
-            return com.kaltura.playkit.plugin.youbora.BuildConfig.VERSION_NAME;
-        }
+//        @Override
+//        public String getVersion() {
+//            return com.kaltura.playkit.plugin.youbora.BuildConfig.VERSION_NAME;
+//        }
 
         @Override
         public PKPlugin newInstance() {

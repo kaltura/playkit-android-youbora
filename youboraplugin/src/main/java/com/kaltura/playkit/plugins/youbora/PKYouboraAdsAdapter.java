@@ -20,9 +20,9 @@ import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
-import com.kaltura.playkit.ads.AdEvent;
-import com.kaltura.playkit.ads.AdInfo;
 import com.kaltura.playkit.ads.PKAdErrorType;
+import com.kaltura.playkit.plugins.ads.AdEvent;
+import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
@@ -124,6 +124,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                             fireJoin();
                             populateAdValues();
                         }
+
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
                         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
                         fireResume();
@@ -161,7 +162,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         return;
                     case AD_PROGRESS:
                         //We are not sending this event to youbora,
-                        //so prevent it from dispatching through YouboraEvent.YouboraReport by return.
+                        //so prevent it from dispatching through YouboraEvent.YouboraReport.
                         return;
                     case AD_BUFFER_START:
                         log.d("AD_BUFFER_START lastReportedAdPlayhead = " + lastReportedAdPlayhead);
@@ -171,6 +172,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         log.d("AD_BUFFER_END lastReportedAdPlayhead = " + lastReportedAdPlayhead);
                         fireBufferEnd();
                         break;
+
                     default:
                         break;
                 }
@@ -227,7 +229,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
 
     @Override
     public Double getPlayhead() {
-        //log.d("getAdPlayhead = " + lastReportedAdPlayhead);
+        log.d("getAdPlayhead = " + lastReportedAdPlayhead);
         return lastReportedAdPlayhead;
     }
 

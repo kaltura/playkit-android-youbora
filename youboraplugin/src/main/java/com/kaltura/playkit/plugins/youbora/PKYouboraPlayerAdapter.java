@@ -25,8 +25,8 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
-import com.kaltura.playkit.ads.AdCuePoints;
-import com.kaltura.playkit.ads.AdEvent;
+import com.kaltura.playkit.plugins.ads.AdCuePoints;
+import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.YouboraUtil;
@@ -349,7 +349,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if (mediaConfig != null && (player == null || (player!= null && player.getDuration() <= 0))) {
             isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live;
         } else if (player != null) {
-            isLive = player.isLive();
+            isLive = player.isLiveStream();
         }
         return isLive;
     }
