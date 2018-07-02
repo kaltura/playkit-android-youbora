@@ -22,8 +22,8 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
-import com.kaltura.playkit.ads.AdCuePoints;
-import com.kaltura.playkit.ads.AdEvent;
+import com.kaltura.playkit.plugins.ads.AdCuePoints;
+import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.plugins.PluginGeneric;
 import com.npaw.youbora.youboralib.BuildConfig;
@@ -34,6 +34,7 @@ import org.json.JSONException;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.PlayerEvent.Type.STATE_CHANGED;
 
 /**
@@ -45,6 +46,7 @@ class YouboraLibraryManager extends PluginGeneric {
     private static final PKLog log = PKLog.get("YouboraLibraryManager");
     private static final String KALTURA_ANDROID = "Kaltura-Android";
     private static final String PLAYER_ERROR_STR = "Player error occurred";
+
 
     private Player player;
     private MessageBus messageBus;
@@ -121,7 +123,9 @@ class YouboraLibraryManager extends PluginGeneric {
             }
 
             if (event instanceof PlayerEvent && viewManager != null) {
-                log.d("PlayerEvent: " + ((PlayerEvent) event).type.toString());
+                if (event.eventType() != PLAYHEAD_UPDATED) {
+                    log.d("New PKEvent = " + event.eventType().name());
+                }
                 switch (((PlayerEvent) event).type) {
                     case DURATION_CHANGE:
                         log.d("new duration = " + ((PlayerEvent.DurationChanged) event).duration);
@@ -278,12 +282,10 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     public Double getThroughput() {
-        log.d("getThroughput = " + lastReportedThroughput);
         return this.lastReportedThroughput;
     }
 
     public String getRendition() {
-        log.d("getRendition = " + lastReportedRendition);
         return lastReportedRendition;
     }
 
@@ -293,7 +295,6 @@ class YouboraLibraryManager extends PluginGeneric {
 
     public Double getPlayhead() {
         double currPos = Long.valueOf(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-        log.d("getPlayhead currPos = " + currPos);
         return (currPos >= 0) ? currPos : 0;
     }
 
@@ -320,11 +321,13 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     private void sendReportEvent(PKEvent event) {
-        String reportedEventName = event.eventType().name();
-        messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+        if (event.eventType() != PLAYHEAD_UPDATED) {
+            String reportedEventName = event.eventType().name();
+            messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+        }
     }
 
-    private String generateRendition(double bitrate, int width, int height) {
+    public String generateRendition(double bitrate, int width, int height) {
 
         if ((width <= 0 || height <= 0) && bitrate <= 0) {
             return super.getRendition();
