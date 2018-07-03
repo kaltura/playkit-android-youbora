@@ -22,6 +22,7 @@ import com.kaltura.playkit.PKMediaConfig;
 import com.kaltura.playkit.PKPlugin;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
+import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.youboralib.data.Options;
 
@@ -51,10 +52,10 @@ public class YouboraPlugin extends PKPlugin {
             return "Youbora";
         }
 
-//        @Override
-//        public String getVersion() {
-//            return BuildConfig.VERSION_NAME;
-//        }
+        @Override
+        public String getVersion() {
+            return BuildConfig.VERSION_NAME;
+        }
 
         @Override
         public PKPlugin newInstance() {
