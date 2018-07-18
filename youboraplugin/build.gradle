@@ -22,11 +22,15 @@ android {
 
 }
 
+tasks.withType(Javadoc) {
+    options.addBooleanOption('Xdoclint:none', true)
+}
+
 dependencies {
 
     //TODO change to latest playkit version after tagging.
     implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
-//    implementation project(":playkit");
+    //implementation project(":playkit");
 
     implementation files('libs/YouboraLib-5.3.10.jar')
 
