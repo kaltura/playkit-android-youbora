@@ -32,7 +32,7 @@ dependencies {
     implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
     //implementation project(":playkit");
 
-    implementation files('libs/YouboraLib-5.3.10.jar')
+    api files('libs/YouboraLib-5.3.10.jar')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
