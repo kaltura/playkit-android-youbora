@@ -220,7 +220,7 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
-        LinkedHashSet<String> result = new LinkedHashSet();
+        LinkedHashSet<String> result = new LinkedHashSet<>();
         while (throwable != null) {
             if (throwable.getMessage() != null){
                 result.add(throwable.getMessage());
