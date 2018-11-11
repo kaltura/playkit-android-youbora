@@ -20,7 +20,7 @@ public class YouboraConfig {
 
     private boolean obfuscateIP;   // ip in dahsbord will be encrytpted
 
-    private boolean httpSecure; // youbora events will be sent via https
+    private boolean httpSecure = true; // youbora events will be sent via https
 
     private Media media;
 
