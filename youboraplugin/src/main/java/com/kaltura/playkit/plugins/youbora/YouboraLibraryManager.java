@@ -231,7 +231,7 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     private void onAdEvent(AdEvent event) {
-        if (event.type != AdEvent.Type.PLAY_HEAD_CHANGED) {
+        if (event.type != AdEvent.Type.PLAY_HEAD_CHANGED && event.type != AdEvent.Type.AD_PROGRESS) {
             log.d("Ad Event: " + event.type.name());
         }
 
