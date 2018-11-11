@@ -58,7 +58,7 @@ public class YouboraConfig {
         youboraLocalConfig.put("enableAnalytics", true);
         youboraLocalConfig.put("parseHLS", false);
         youboraLocalConfig.put("parseCDNNodeHost", false);
-        youboraLocalConfig.put("httpSecure", false);
+        youboraLocalConfig.put("httpSecure", true);
         youboraLocalConfig.put("accountCode", "kalturatest");
         youboraLocalConfig.put("transactionCode", "");
         youboraLocalConfig.put("haltOnError", true);
