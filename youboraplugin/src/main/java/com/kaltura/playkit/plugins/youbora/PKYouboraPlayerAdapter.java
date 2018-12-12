@@ -175,7 +175,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         PlayerEvent.Error errorEvent = (PlayerEvent.Error) event;
         String errorMetadata = (errorEvent != null && errorEvent.error != null) ? errorEvent.error.message : PLAYER_ERROR_STR;
         PKError error = errorEvent.error;
-        if (error.exception == null) {
+        if (error == null || error.exception == null) {
             fireFatalError(errorMetadata, event.eventType().name(), null);
             return;
         }
