@@ -29,6 +29,7 @@ import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import java.util.HashMap;
 
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
+import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
 /**
  * @hide
@@ -77,7 +78,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         @Override
         public void onEvent(PKEvent event) {
 
-            if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED) {
+            if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != AD_PROGRESS && event.eventType() != PLAYHEAD_UPDATED) {
                 log.d("PKYouboraAdsAdapter on event " + event.eventType());
             }
 

@@ -182,7 +182,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         Exception playerErrorException = (Exception) error.exception;
         String exceptionClass = "";
-        String exceptionCause = "";
 
         if (playerErrorException.getCause() != null && playerErrorException.getCause().getClass() != null) {
             exceptionClass = playerErrorException.getCause().getClass().getName();
@@ -194,19 +193,21 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
 
         LinkedHashSet<String> causeMessages = getExceptionMessageChain(playerErrorException);
+        StringBuilder exceptionCauseBuilder = new StringBuilder();
         if (causeMessages.isEmpty()) {
-            exceptionCause = playerErrorException.toString();
+            exceptionCauseBuilder.append(playerErrorException.toString());
         } else {
-            for (String cause : causeMessages)
-                exceptionCause += cause + "\n";
+            for (String cause : causeMessages) {
+                exceptionCauseBuilder.append(cause).append("\n");
+            }
         }
 
         String errorCode = (errorEvent != null && errorEvent.error != null && errorEvent.error.errorType != null) ?  errorEvent.error.errorType + " - " : "";
-        fireFatalError(exceptionCause, errorCode + exceptionClass, errorMetadata);
+        fireFatalError(exceptionCauseBuilder.toString(), errorCode + exceptionClass, errorMetadata);
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
-        LinkedHashSet<String> result = new LinkedHashSet();
+        LinkedHashSet<String> result = new LinkedHashSet<>();
         while (throwable != null) {
             if (throwable.getMessage() != null){
                 result.add(throwable.getMessage());
@@ -217,7 +218,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     private void onAdEvent(AdEvent event) {
-        if (event.type != AdEvent.Type.PLAY_HEAD_CHANGED) {
+        if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED) {
             log.d("Ad Event: " + event.type.name());
         }
 
@@ -349,7 +350,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if (mediaConfig != null && (player == null || (player!= null && player.getDuration() <= 0))) {
             isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live;
         } else if (player != null) {
-            isLive = player.isLiveStream();
+            isLive = player.isLive();
         }
         return isLive;
     }
