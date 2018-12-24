@@ -41,13 +41,13 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private boolean isFirstPlay = true;
     private boolean isBuffering = false;
     private MessageBus messageBus;
-    private Long adBitrate = -1L;
 
     private AdInfo currentAdInfo;
     private String lastReportedAdResource;
     private String lastReportedAdTitle;
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
+    private long lastReportedAdBitrate;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -105,12 +105,14 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                     case STARTED:
                         currentAdInfo = ((AdEvent.AdStartedEvent) event).adInfo;
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
                         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
                         fireJoin();
                         break;
                     case PAUSED:
                         currentAdInfo = ((AdEvent.AdPausedEvent) event).adInfo;
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
                         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
                         firePause();
                         break;
@@ -127,6 +129,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         }
 
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
                         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
                         fireResume();
                         break;
@@ -145,7 +148,8 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         currentAdInfo = ((AdEvent.AdSkippedEvent) event).adInfo;
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
                         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        fireStop(new HashMap<String, String>(){{put("skipped","true");}});
+                        //fireStop(new HashMap<String, String>(){{put("skipped","true");}});
+                        fireSkip();
                         break;
                     case ERROR:
                         AdEvent.Error errorEvent = (AdEvent.Error) event;
@@ -154,7 +158,12 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         break;
                     case CLICKED:
                         log.d("learn more clicked");
-                        fireClick();
+                        AdEvent.AdClickedEvent adClickedEvent = (AdEvent.AdClickedEvent) event;
+                        String clickThruUrl = "";
+                        if (adClickedEvent != null) {
+                           clickThruUrl = adClickedEvent.clickThruUrl;
+                        }
+                        fireClick(clickThruUrl);
                         break;
                     case PLAY_HEAD_CHANGED:
                         lastReportedAdPlayhead = Long.valueOf(((AdEvent.AdPlayHeadEvent) event).adPlayHead).doubleValue();
@@ -173,7 +182,9 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         log.d("AD_BUFFER_END lastReportedAdPlayhead = " + lastReportedAdPlayhead);
                         fireBufferEnd();
                         break;
-
+                    case ALL_ADS_COMPLETED:
+                        fireAllAdsCompleted();
+                        break;
                     default:
                         break;
                 }
@@ -196,13 +207,9 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         super.unregisterListeners();
     }
 
-    public void setAdBitrate(Long bitrate) {
-        this.adBitrate = bitrate;
-    }
-
     @Override
     public Long getBitrate() {
-        return this.adBitrate;
+        return Long.valueOf(lastReportedAdBitrate);
     }
 
     @Override
@@ -269,9 +276,12 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         lastReportedAdDuration = Long.valueOf(currentAdInfo.getAdDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
         lastReportedAdTitle = currentAdInfo.getAdTitle();
         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
+        log.d("lastReportedAdResource: " + lastReportedAdResource);
         log.d("lastReportedAdDuration: " + lastReportedAdDuration);
         log.d("lastReportedAdTitle: " + lastReportedAdTitle);
         log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+        log.d("lastReportedAdBitrate: " + lastReportedAdBitrate);
     }
 
     void resetAdValues() {
@@ -284,7 +294,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
 
     public void onUpdateConfig() {
         resetAdValues();
-        adBitrate = -1L;
+        lastReportedAdBitrate = -1L;
         lastReportedAdResource = super.getResource();
     }
 

@@ -57,8 +57,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private Long lastReportedBitrate = -1L;
     private Long lastReportedThroughput;
     private String lastReportedRendition;
-    Double lastReportedMediaPosition;
-    Double lastReportedMediaDuration;
+    private Double lastReportedMediaPosition;
+    private Double lastReportedMediaDuration;
     private String houseHoldId;
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
