@@ -160,7 +160,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         log.d("learn more clicked");
                         AdEvent.AdClickedEvent adClickedEvent = (AdEvent.AdClickedEvent) event;
                         String clickThruUrl = "";
-                        if (adClickedEvent != null) {
+                        if (adClickedEvent != null && adClickedEvent.clickThruUrl != null) {
                            clickThruUrl = adClickedEvent.clickThruUrl;
                         }
                         fireClick(clickThruUrl);
