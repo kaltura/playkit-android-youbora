@@ -141,6 +141,11 @@ class YouboraLibraryManager extends PluginGeneric {
                         }
                         break;
                     case ERROR:
+                        PKError error = ((PlayerEvent.Error) event).error;
+                        if (error != null && !error.isFatal()) {
+                            log.v("Error eventType = " + error.errorType + " severity = " + error.severity + " errorMessage = " + error.message);
+                            return;
+                        }
                         sendErrorHandler(event);
                         adCuePoints = null;
                         break;
