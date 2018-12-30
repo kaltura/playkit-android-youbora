@@ -36,6 +36,7 @@ import java.util.LinkedHashSet;
 
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.PlayerEvent.Type.STATE_CHANGED;
+import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
 /**
  * @hide
@@ -223,7 +224,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     private void onAdEvent(AdEvent event) {
-        if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED) {
+        if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED && event.eventType() != AD_PROGRESS) {
             log.d("Ad Event: " + event.type.name());
         }
 
