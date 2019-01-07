@@ -13,7 +13,7 @@
 package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
+import android.util.Pair;
 
 import com.google.gson.JsonObject;
 import com.kaltura.playkit.MessageBus;
@@ -94,9 +94,9 @@ public class YouboraPlugin extends PKPlugin {
     protected void onUpdateConfig(Object config) {
         log.d("youbora - onUpdateConfig");
         if (config instanceof Pair) {
-            Pair<String, Integer> experimantalPair = (Pair<String, Integer>) config;
-            if (experimantalPair != null && "experimentId".equals(experimantalPair.first) && experimantalPair.second != null) {
-                pluginConfig.getAsJsonObject("extraParams").addProperty("param10", experimantalPair.second);
+            Pair pair = (Pair) config;
+            if ("configurationId".equals(pair.first) && pair.second instanceof String) {
+                pluginConfig.getAsJsonObject("extraParams").addProperty("param10", ((String) pair.second));
                 Map<String, Object> opt = YouboraConfig.getConfig(pluginConfig, mediaConfig, player);
                 pluginManager.setOptions(opt);
             }
