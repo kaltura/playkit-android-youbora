@@ -97,6 +97,8 @@ public class YouboraPlugin extends PKPlugin {
             Pair<String, Integer> experimantalPair = (Pair<String, Integer>) config;
             if (experimantalPair != null && "experimentId".equals(experimantalPair.first) && experimantalPair.second != null) {
                 pluginConfig.getAsJsonObject("extraParams").addProperty("param10", experimantalPair.second);
+                Map<String, Object> opt = YouboraConfig.getConfig(pluginConfig, mediaConfig, player);
+                pluginManager.setOptions(opt);
             }
             return;
         }
@@ -106,7 +108,7 @@ public class YouboraPlugin extends PKPlugin {
             adsManager.onUpdateConfig();
         }
         this.pluginConfig = (JsonObject) config;
-        Map<String, Object> opt  = YouboraConfig.getConfig(pluginConfig, mediaConfig, player);
+        Map<String, Object> opt = YouboraConfig.getConfig(pluginConfig, mediaConfig, player);
         // Refresh options with updated media
         pluginManager.setOptions(opt);
     }
