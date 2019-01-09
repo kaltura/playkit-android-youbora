@@ -26,8 +26,6 @@ import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
-import java.util.HashMap;
-
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
@@ -94,8 +92,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         log.d("lastReportedAdResource: " + lastReportedAdResource);
                         break;
                     case LOADED:
-                        log.d("XXX AD LOADED: isFirstPlay = " + isFirstPlay);
-
+                        log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
                         if (isFirstPlay) {
                             isFirstPlay = false;
                             getPlugin().getAdapter().fireStart();
@@ -160,12 +157,12 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         break;
                     case CLICKED:
                         log.d("learn more clicked");
-//                        AdEvent.AdClickedEvent adClickedEvent = (AdEvent.AdClickedEvent) event;
-//                        String clickThruUrl = "";
-//                        if (adClickedEvent != null && adClickedEvent.clickThruUrl != null) {
-//                           clickThruUrl = adClickedEvent.clickThruUrl;
-//                        }
-//                        fireClick(clickThruUrl);
+                        AdEvent.AdClickedEvent adClickedEvent = (AdEvent.AdClickedEvent) event;
+                        String clickThruUrl = "";
+                        if (adClickedEvent != null && adClickedEvent.clickThruUrl != null) {
+                           clickThruUrl = adClickedEvent.clickThruUrl;
+                        }
+                        fireClick(clickThruUrl);
                         break;
                     case PLAY_HEAD_CHANGED:
                         lastReportedAdPlayhead = Long.valueOf(((AdEvent.AdPlayHeadEvent) event).adPlayHead).doubleValue();

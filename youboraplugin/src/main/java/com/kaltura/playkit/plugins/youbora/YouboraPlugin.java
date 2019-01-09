@@ -62,11 +62,8 @@ public class YouboraPlugin extends PKPlugin {
 
         if (this.mediaConfig == null) {
             isMonitoring = true;
-        } else {
-         //   if (pluginManager != null) {
-          //      pluginManager.resetPlaybackValues();
-          //  }
         }
+
         this.mediaConfig = mediaConfig;
         // Refresh options with updated media
         npawPlugin.setOptions(pluginConfig.getYouboraOptions());
@@ -80,7 +77,6 @@ public class YouboraPlugin extends PKPlugin {
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
-
             npawPlugin.setAdapter(pluginManager);
         }
         if (!isAdsMonitoring) {
@@ -154,7 +150,7 @@ public class YouboraPlugin extends PKPlugin {
 
     private void loadPlugin() {
 
-        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED, PlayerEvent.Type.STOPPED);
+        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED);
     }
 
     PKEvent.Listener eventListener = new PKEvent.Listener() {
@@ -164,17 +160,17 @@ public class YouboraPlugin extends PKPlugin {
             PlayerEvent playerEvent = (PlayerEvent) event;
             switch (playerEvent.type) {
                 case SOURCE_SELECTED:
-                    log.d("XXX YouboraPlugin SOURCE_SELECTED");
+                    log.d("YouboraPlugin SOURCE_SELECTED");
                     PlayerEvent.SourceSelected sourceSelected = (PlayerEvent.SourceSelected) playerEvent;
                     pluginConfig.getMedia().setResource(sourceSelected.source.getUrl());
                     pluginConfig.getMedia().setDuration(null); // we can start getting real duration from player using adapter getDuration
                     npawPlugin.setOptions(pluginConfig.getYouboraOptions());
                     break;
                 case DURATION_CHANGE:
-                    log.d("XXX YouboraPlugin DURATION_CHANGE");
+                    log.d("YouboraPlugin DURATION_CHANGE");
                     break;
                 case STOPPED:
-                    log.d("XXX YouboraPlugin STOPPED");
+                    log.d("YouboraPlugin STOPPED");
 
                     break;
                 default:
