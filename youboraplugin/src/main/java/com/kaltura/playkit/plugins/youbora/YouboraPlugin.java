@@ -60,19 +60,36 @@ public class YouboraPlugin extends PKPlugin {
         stopMonitoring();
         log.d("youbora - onUpdateMedia");
 
-        if (pluginManager != null) {
-            pluginManager.resetPlaybackValues();
+        if (this.mediaConfig == null) {
+            isMonitoring = true;
+        } else {
+         //   if (pluginManager != null) {
+          //      pluginManager.resetPlaybackValues();
+          //  }
         }
         this.mediaConfig = mediaConfig;
         // Refresh options with updated media
         npawPlugin.setOptions(pluginConfig.getYouboraOptions());
         if (!isMonitoring) {
             isMonitoring = true;
-            pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
+            if (pluginManager == null) {
+                pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
+            } else {
+                pluginManager.setMediaConfig(mediaConfig);
+                pluginManager.setPluginConfig(pluginConfig);
+                pluginManager.resetPlaybackValues();
+                pluginManager.registerListeners();
+            }
+
             npawPlugin.setAdapter(pluginManager);
         }
-        if (!isAdsMonitoring){
-            adsManager = new PKYouboraAdsAdapter(player, messageBus);
+        if (!isAdsMonitoring) {
+            if (adsManager == null) {
+                adsManager = new PKYouboraAdsAdapter(player, messageBus);
+            } else {
+                adsManager.resetAdValues();
+                adsManager.registerListeners();
+            }
             npawPlugin.setAdsAdapter(adsManager);
             isAdsMonitoring = true;
         }
@@ -136,8 +153,8 @@ public class YouboraPlugin extends PKPlugin {
     }
 
     private void loadPlugin() {
-        log.d("loadPlugin");
-        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED);
+
+        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED, PlayerEvent.Type.STOPPED);
     }
 
     PKEvent.Listener eventListener = new PKEvent.Listener() {
@@ -147,10 +164,18 @@ public class YouboraPlugin extends PKPlugin {
             PlayerEvent playerEvent = (PlayerEvent) event;
             switch (playerEvent.type) {
                 case SOURCE_SELECTED:
+                    log.d("XXX YouboraPlugin SOURCE_SELECTED");
                     PlayerEvent.SourceSelected sourceSelected = (PlayerEvent.SourceSelected) playerEvent;
                     pluginConfig.getMedia().setResource(sourceSelected.source.getUrl());
                     pluginConfig.getMedia().setDuration(null); // we can start getting real duration from player using adapter getDuration
                     npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+                    break;
+                case DURATION_CHANGE:
+                    log.d("XXX YouboraPlugin DURATION_CHANGE");
+                    break;
+                case STOPPED:
+                    log.d("XXX YouboraPlugin STOPPED");
+
                     break;
                 default:
                     return;
@@ -160,13 +185,19 @@ public class YouboraPlugin extends PKPlugin {
 
     private void stopMonitoring() {
         log.d("stop monitoring");
-        if (adsManager != null && isAdsMonitoring) {
-            npawPlugin.removeAdsAdapter();
-            isAdsMonitoring = false;
-        }
-        if (isMonitoring) {
-            npawPlugin.removeAdapter();
-            isMonitoring = false;
+        if (npawPlugin != null) {
+            if (isAdsMonitoring) {
+                if (npawPlugin.getAdsAdapter() != null) {
+                    npawPlugin.removeAdsAdapter();
+                }
+                isAdsMonitoring = false;
+            }
+            if (isMonitoring) {
+                if (npawPlugin.getAdapter() != null) {
+                    npawPlugin.removeAdapter();
+                }
+                isMonitoring = false;
+            }
         }
     }
 

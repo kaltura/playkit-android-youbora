@@ -28,8 +28,8 @@ android {
 dependencies {
 
     //TODO change to latest playkit version after tagging.
-    implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
-    //implementation project(":playkit");
+    //implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
+    implementation project(":playkit");
 
     api 'com.npaw.youbora:youboralib:6.3.2'
 
