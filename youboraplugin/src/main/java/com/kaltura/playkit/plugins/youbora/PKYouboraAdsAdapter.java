@@ -117,15 +117,15 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         break;
                     case RESUMED:
                         currentAdInfo = ((AdEvent.AdResumedEvent) event).adInfo;
-                        if (isFirstPlay) {
-                            isFirstPlay = false;
-                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
-                                getPlugin().getAdapter().fireStart();
-                            }
-                            fireStart();
-                            fireJoin();
-                            populateAdValues();
-                        }
+//                        if (isFirstPlay) {
+//                            isFirstPlay = false;
+//                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
+//                                getPlugin().getAdapter().fireStart();
+//                            }
+//                            fireStart();
+//                            fireJoin();
+//                            populateAdValues();
+//                        }
 
                         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
                         lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
