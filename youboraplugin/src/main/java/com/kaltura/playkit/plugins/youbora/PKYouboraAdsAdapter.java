@@ -26,8 +26,6 @@ import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
-import java.util.HashMap;
-
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
@@ -94,6 +92,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                         log.d("lastReportedAdResource: " + lastReportedAdResource);
                         break;
                     case LOADED:
+                        log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
                         if (isFirstPlay) {
                             isFirstPlay = false;
                             getPlugin().getAdapter().fireStart();

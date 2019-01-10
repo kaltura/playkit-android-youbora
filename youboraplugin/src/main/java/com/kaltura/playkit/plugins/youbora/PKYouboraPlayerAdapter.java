@@ -1,10 +1,10 @@
 /*
  * ============================================================================
  * Copyright (C) 2017 Kaltura Inc.
- * 
+ *
  * Licensed under the AGPLv3 license, unless a different license for a
  * particular library is specified in the applicable library path.
- * 
+ *
  * You may obtain a copy of the License at
  * https://www.gnu.org/licenses/agpl-3.0.html
  * ============================================================================
@@ -66,11 +66,19 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, YouboraConfig pluginConfig) {
         super(player);
+        log.d("Start PKYouboraPlayerAdapter");
         this.messageBus = messageBus;
         this.mediaConfig = mediaConfig;
+        updateDurationFromMediaConfig(mediaConfig);
         this.houseHoldId = pluginConfig.getHouseHoldId();
         registerListeners();
 
+    }
+
+    private void updateDurationFromMediaConfig(PKMediaConfig mediaConfig) {
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
+            lastReportedMediaDuration = Math.floor((double) mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER);
+        }
     }
 
     private void onEvent(PlayerEvent.StateChanged event) {
@@ -82,11 +90,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         switch (event.newState) {
             case READY:
                 if (isBuffering) {
+                    //log.d("fireBufferEnd");
                     isBuffering = false;
                     fireBufferEnd();
                 }
                 break;
             case BUFFERING:
+                //log.d("fireBufferBegin");
                 isBuffering = true;
                 fireBufferBegin();
                 break;
@@ -115,7 +125,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 }
                 switch (((PlayerEvent) event).type) {
                     case DURATION_CHANGE:
-                        log.d("new duration = " + ((PlayerEvent.DurationChanged) event).duration);
+                        lastReportedMediaDuration = Math.floor((double) ((PlayerEvent.DurationChanged) event).duration / Consts.MILLISECONDS_MULTIPLIER);
+                        log.d("DURATION_CHANGE duration = " + lastReportedMediaDuration);
+                        break;
+                    case PLAYHEAD_UPDATED:
+                        PlayerEvent.PlayheadUpdated playheadUpdated = (PlayerEvent.PlayheadUpdated) event;
+                        lastReportedMediaPosition  = Math.floor((double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER);
+                        //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
                         break;
                     case STATE_CHANGED:
                         PKYouboraPlayerAdapter.this.onEvent((PlayerEvent.StateChanged) event);
@@ -163,6 +179,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                     case SOURCE_SELECTED:
                         PlayerEvent.SourceSelected sourceSelected = ((PlayerEvent.SourceSelected) event);
                         lastReportedResource = sourceSelected.source.getUrl();
+                        //log.d("SOURCE_SELECTED lastReportedResource = " + lastReportedResource);
                         break;
                     default:
                         break;
@@ -311,31 +328,17 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     public Double getPlayhead() {
-
-        if (isAdPlaying) {
-            return lastReportedMediaPosition;
-        }
-        double currPos = Long.valueOf(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-        lastReportedMediaPosition = currPos;
-        return (currPos >= 0) ? currPos : 0;
+        return (lastReportedMediaPosition != null && lastReportedMediaPosition >= 0) ? lastReportedMediaPosition : 0;
     }
 
     public String getResource() {
+        //log.d("getResource = " + lastReportedResource);
         return lastReportedResource;
     }
 
     @Override
     public Double getDuration() {
-        if (isAdPlaying) {
-            //log.d("lastReportedMediaDuration = " + lastReportedMediaDuration);
-            return lastReportedMediaDuration;
-        }
-        if (mediaConfig != null && (player == null || (player!= null && player.getDuration() <= 0))) {
-            lastReportedMediaDuration =  Double.valueOf(mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER);
-        } else if (player != null) {
-            lastReportedMediaDuration =  Double.valueOf(player.getDuration() / Consts.MILLISECONDS_MULTIPLIER);
-        }
-        //log.d("lastReportedMediaDuration = " + lastReportedMediaDuration);
+        //log.d("getDuration lastReportedMediaDuration = " + lastReportedMediaDuration);
         return lastReportedMediaDuration;
     }
 
@@ -386,13 +389,30 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
+        mediaConfig = null;
+        houseHoldId = null;
         isFirstPlay = true;
     }
 
     public void resetPlaybackValues() {
         lastReportedMediaDuration = super.getDuration();
         lastReportedMediaPosition =  super.getPlayhead();
+        lastReportedResource = null;
         adCuePoints = null;
         resetValues();
+    }
+
+    public void setMediaConfig(PKMediaConfig mediaConfig) {
+        this.mediaConfig = mediaConfig;
+        updateDurationFromMediaConfig(mediaConfig);
+
+    }
+
+    public void setPluginConfig(YouboraConfig pluginConfig) {
+        this.houseHoldId = pluginConfig.getHouseHoldId();
+    }
+
+    public void setLastReportedResource(String lastReportedResource) {
+        this.lastReportedResource = lastReportedResource;
     }
 }
