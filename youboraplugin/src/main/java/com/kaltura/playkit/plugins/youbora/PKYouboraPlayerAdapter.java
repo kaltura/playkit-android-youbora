@@ -130,7 +130,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                         break;
                     case PLAYHEAD_UPDATED:
                         PlayerEvent.PlayheadUpdated playheadUpdated = (PlayerEvent.PlayheadUpdated) event;
-                        //lastReportedMediaDuration =  (double) playheadUpdated.duration / Consts.MILLISECONDS_MULTIPLIER;
                         lastReportedMediaPosition  = (double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER;
                         //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
                         break;
@@ -398,6 +397,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     public void resetPlaybackValues() {
         lastReportedMediaDuration = super.getDuration();
         lastReportedMediaPosition =  super.getPlayhead();
+        lastReportedResource = null;
         adCuePoints = null;
         resetValues();
     }
