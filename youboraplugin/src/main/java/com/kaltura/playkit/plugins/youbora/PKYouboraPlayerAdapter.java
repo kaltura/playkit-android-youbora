@@ -77,7 +77,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     private void updateDurationFromMediaConfig(PKMediaConfig mediaConfig) {
         if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
-            lastReportedMediaDuration = (double) mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER;
+            lastReportedMediaDuration = Math.floor((double) mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER);
         }
     }
 
@@ -125,12 +125,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 }
                 switch (((PlayerEvent) event).type) {
                     case DURATION_CHANGE:
-                        log.d("DURATION_CHANGE duration = " + ((PlayerEvent.DurationChanged) event).duration / Consts.MILLISECONDS_MULTIPLIER);
-                        lastReportedMediaDuration = (double) ((PlayerEvent.DurationChanged) event).duration / Consts.MILLISECONDS_MULTIPLIER;
+                        lastReportedMediaDuration = Math.floor((double) ((PlayerEvent.DurationChanged) event).duration / Consts.MILLISECONDS_MULTIPLIER);
+                        log.d("DURATION_CHANGE duration = " + lastReportedMediaDuration);
                         break;
                     case PLAYHEAD_UPDATED:
                         PlayerEvent.PlayheadUpdated playheadUpdated = (PlayerEvent.PlayheadUpdated) event;
-                        lastReportedMediaPosition  = (double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER;
+                        lastReportedMediaPosition  = Math.floor((double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER);
                         //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
                         break;
                     case STATE_CHANGED:
