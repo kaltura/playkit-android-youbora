@@ -56,29 +56,43 @@ public class YouboraPlugin extends PKPlugin {
     };
 
     @Override
+    protected void onLoad(final Player player, Object config, final MessageBus messageBus, Context context) {
+        log.d("onLoad");
+        this.player = player;
+        this.messageBus = messageBus;
+
+        this.pluginConfig = parseConfig(config);
+        //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
+        npawPlugin = new NPAWPlugin(pluginConfig.getYouboraOptions());
+        loadPlugin();
+    }
+
+    private void loadPlugin() {
+        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED);
+    }
+
+    @Override
     protected void onUpdateMedia(PKMediaConfig mediaConfig) {
         stopMonitoring();
         log.d("youbora - onUpdateMedia");
 
-        if (this.mediaConfig == null) {
-            isMonitoring = true;
-        }
-
         this.mediaConfig = mediaConfig;
         // Refresh options with updated media
-        npawPlugin.setOptions(pluginConfig.getYouboraOptions());
         if (!isMonitoring) {
             isMonitoring = true;
             if (pluginManager == null) {
                 pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
             } else {
-                pluginManager.setMediaConfig(mediaConfig);
-                pluginManager.setPluginConfig(pluginConfig);
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
-            npawPlugin.setAdapter(pluginManager);
+            pluginManager.setMediaConfig(mediaConfig);
+            pluginManager.setPluginConfig(pluginConfig);
         }
+
+        npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+        npawPlugin.setAdapter(pluginManager);
+
         if (!isAdsMonitoring) {
             if (adsManager == null) {
                 adsManager = new PKYouboraAdsAdapter(player, messageBus);
@@ -132,25 +146,14 @@ public class YouboraPlugin extends PKPlugin {
         if (isMonitoring) {
             stopMonitoring();
         }
-    }
-
-    @Override
-    protected void onLoad(final Player player, Object config, final MessageBus messageBus, Context context) {
-        log.d("onLoad");
-        this.player = player;
-        this.messageBus = messageBus;
-
-        this.pluginConfig = parseConfig(config);
-        //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
-        npawPlugin = new NPAWPlugin(pluginConfig.getYouboraOptions());
-        npawPlugin.setAdapter(pluginManager);
-        loadPlugin();
-    }
-
-    private void loadPlugin() {
-
-        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED);
+        if (pluginManager != null) {
+            pluginManager.unregisterListeners();
+            pluginManager = null;
+        }
+        if (adsManager != null) {
+            adsManager.unregisterListeners();
+            adsManager = null;
+        }
     }
 
     PKEvent.Listener eventListener = new PKEvent.Listener() {
@@ -160,18 +163,19 @@ public class YouboraPlugin extends PKPlugin {
             PlayerEvent playerEvent = (PlayerEvent) event;
             switch (playerEvent.type) {
                 case SOURCE_SELECTED:
-                    log.d("YouboraPlugin SOURCE_SELECTED");
                     PlayerEvent.SourceSelected sourceSelected = (PlayerEvent.SourceSelected) playerEvent;
-                    pluginConfig.getMedia().setResource(sourceSelected.source.getUrl());
-                    pluginConfig.getMedia().setDuration(null); // we can start getting real duration from player using adapter getDuration
-                    npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+                    if (sourceSelected != null && sourceSelected.source != null) {
+                        log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
+                        if (pluginManager != null) {
+                            pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
+                        }
+                    }
                     break;
                 case DURATION_CHANGE:
                     log.d("YouboraPlugin DURATION_CHANGE");
                     break;
                 case STOPPED:
                     log.d("YouboraPlugin STOPPED");
-
                     break;
                 default:
                     return;

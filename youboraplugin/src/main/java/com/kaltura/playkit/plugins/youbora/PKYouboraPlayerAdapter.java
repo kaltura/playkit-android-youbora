@@ -69,9 +69,16 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         log.d("Start PKYouboraPlayerAdapter");
         this.messageBus = messageBus;
         this.mediaConfig = mediaConfig;
+        updateDurationFromMediaConfig(mediaConfig);
         this.houseHoldId = pluginConfig.getHouseHoldId();
         registerListeners();
 
+    }
+
+    private void updateDurationFromMediaConfig(PKMediaConfig mediaConfig) {
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
+            lastReportedMediaDuration = (double) mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER;
+        }
     }
 
     private void onEvent(PlayerEvent.StateChanged event) {
@@ -83,11 +90,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         switch (event.newState) {
             case READY:
                 if (isBuffering) {
+                    //log.d("fireBufferEnd");
                     isBuffering = false;
                     fireBufferEnd();
                 }
                 break;
             case BUFFERING:
+                //log.d("fireBufferBegin");
                 isBuffering = true;
                 fireBufferBegin();
                 break;
@@ -171,11 +180,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                     case SOURCE_SELECTED:
                         PlayerEvent.SourceSelected sourceSelected = ((PlayerEvent.SourceSelected) event);
                         lastReportedResource = sourceSelected.source.getUrl();
-                        if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
-                            lastReportedMediaDuration =  (double) mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER;
-                        }
-                        log.d("SOURCE_SELECTED lastReportedResource =  " + lastReportedResource);
-                        log.d("SOURCE_SELECTED lastReportedMediaDuration = " + lastReportedMediaDuration);
+                        //log.d("SOURCE_SELECTED lastReportedResource = " + lastReportedResource);
                         break;
                     default:
                         break;
@@ -324,32 +329,17 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     public Double getPlayhead() {
-//
-//        if (isAdPlaying || player == null) {
-//            return lastReportedMediaPosition;
-//        }
-//        double currPos = Long.valueOf(player.getCurrentPosition() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-//        lastReportedMediaPosition = currPos;
-        return (lastReportedMediaPosition >= 0) ? lastReportedMediaPosition : 0;
+        return (lastReportedMediaPosition != null && lastReportedMediaPosition >= 0) ? lastReportedMediaPosition : 0;
     }
 
     public String getResource() {
-        log.d("getResource = " + lastReportedResource);
+        log.d("XXX getResource = " + lastReportedResource);
         return lastReportedResource;
     }
 
     @Override
     public Double getDuration() {
-//        if (isAdPlaying) {
-//            log.d("XXX getDuration isAdPlaying -> lastReportedMediaDuration = " + lastReportedMediaDuration);
-//            return lastReportedMediaDuration;
-//        }
-//        if (mediaConfig != null && (player == null || (player!= null && player.getDuration() <= 0))) {
-//            lastReportedMediaDuration =  Double.valueOf(mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER);
-//        } else if (player != null) {
-//            lastReportedMediaDuration =  Double.valueOf(player.getDuration() / Consts.MILLISECONDS_MULTIPLIER);
-//        }
-        log.d("getDuration lastReportedMediaDuration = " + lastReportedMediaDuration);
+        //log.d("getDuration lastReportedMediaDuration = " + lastReportedMediaDuration);
         return lastReportedMediaDuration;
     }
 
@@ -400,6 +390,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
+        mediaConfig = null;
+        houseHoldId = null;
         isFirstPlay = true;
     }
 
@@ -412,13 +404,15 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     public void setMediaConfig(PKMediaConfig mediaConfig) {
         this.mediaConfig = mediaConfig;
-        if (mediaConfig != null && mediaConfig.getMediaEntry() != null) {
-            lastReportedMediaDuration = (1.0 * (Math.round(mediaConfig.getMediaEntry().getDuration() / Consts.MILLISECONDS_MULTIPLIER)));
-        }
+        updateDurationFromMediaConfig(mediaConfig);
 
     }
 
     public void setPluginConfig(YouboraConfig pluginConfig) {
         this.houseHoldId = pluginConfig.getHouseHoldId();
+    }
+
+    public void setLastReportedResource(String lastReportedResource) {
+        this.lastReportedResource = lastReportedResource;
     }
 }
