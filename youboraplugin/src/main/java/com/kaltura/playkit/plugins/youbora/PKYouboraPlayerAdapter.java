@@ -333,7 +333,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     public String getResource() {
-        log.d("XXX getResource = " + lastReportedResource);
+        //log.d("getResource = " + lastReportedResource);
         return lastReportedResource;
     }
 
