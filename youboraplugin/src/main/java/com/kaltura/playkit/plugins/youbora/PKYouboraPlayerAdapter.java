@@ -339,7 +339,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     @Override
     public Double getDuration() {
         //log.d("getDuration lastReportedMediaDuration = " + lastReportedMediaDuration);
-        return lastReportedMediaDuration;
+        return (lastReportedMediaDuration != null && lastReportedMediaDuration >= 0) ? lastReportedMediaDuration : 0;
     }
 
 //    public Double getPlayrate() {
