@@ -130,8 +130,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                         break;
                     case PLAYHEAD_UPDATED:
                         PlayerEvent.PlayheadUpdated playheadUpdated = (PlayerEvent.PlayheadUpdated) event;
-                        lastReportedMediaPosition  = Math.floor((double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER);
-                        lastReportedMediaDuration  = Math.floor((double) playheadUpdated.duration / Consts.MILLISECONDS_MULTIPLIER);
+                        lastReportedMediaPosition = Math.floor((double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER);
+                        lastReportedMediaDuration = Math.floor((double) playheadUpdated.duration / Consts.MILLISECONDS_MULTIPLIER);
                         //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
                         break;
                     case STATE_CHANGED:
