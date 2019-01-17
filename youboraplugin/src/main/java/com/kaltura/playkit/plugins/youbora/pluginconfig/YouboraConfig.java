@@ -128,17 +128,20 @@ public class YouboraConfig {
         youboraLocalConfig.setContentCdn(null);
 
 
-
-        youboraLocalConfig.setContentIsLive(media.getIsLive());
-        youboraLocalConfig.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
-        youboraLocalConfig.setContentDuration(media.getDuration());
-        youboraLocalConfig.setContentTitle(media.getTitle());
-        youboraLocalConfig.setContentTitle2(media.getTitle2());
-        youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
+        if (media != null) {
+            youboraLocalConfig.setContentIsLive(media.getIsLive());
+            youboraLocalConfig.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
+            youboraLocalConfig.setContentDuration(media.getDuration());
+            youboraLocalConfig.setContentTitle(media.getTitle());
+            youboraLocalConfig.setContentTitle2(media.getTitle2());
+            youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
+        }
 
 
         youboraLocalConfig.setAdResource(null);
-        youboraLocalConfig.setAdCampaign(ads.getCampaign());
+        if (ads != null) {
+            youboraLocalConfig.setAdCampaign(ads.getCampaign());
+        }
         youboraLocalConfig.setAdTitle("");
 
 
@@ -146,7 +149,7 @@ public class YouboraConfig {
         youboraLocalConfig.setContentMetadata(getPropertiesBundle());
 
 
-        if (ads.getExtraParams() != null) {
+        if (ads != null && ads.getExtraParams() != null) {
             youboraLocalConfig.setAdExtraparam1(ads.getExtraParams().getParam1());
             youboraLocalConfig.setAdExtraparam2(ads.getExtraParams().getParam2());
             youboraLocalConfig.setAdExtraparam3(ads.getExtraParams().getParam3());
