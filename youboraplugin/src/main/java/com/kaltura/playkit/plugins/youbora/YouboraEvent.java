@@ -20,7 +20,7 @@ import com.kaltura.playkit.PKEvent;
 
 public class YouboraEvent implements PKEvent {
 
-    public static final Class<YouboraReport> youboraReport = YouboraReport.class;
+    public static final Class<YouboraReport> reportSent = YouboraReport.class;
 
     public enum Type {
         REPORT_SENT
