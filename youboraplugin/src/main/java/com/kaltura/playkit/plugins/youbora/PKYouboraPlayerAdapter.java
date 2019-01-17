@@ -35,8 +35,6 @@ import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import java.util.LinkedHashSet;
 
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
-import static com.kaltura.playkit.PlayerEvent.Type.STATE_CHANGED;
-import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
 /**
  * @hide
@@ -81,7 +79,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
     }
 
-    private void onEvent(PlayerEvent.StateChanged event) {
+    private void onStateChangedEvent(PlayerEvent.StateChanged event) {
         //If it is first play, do not continue with the flow.
         if (isFirstPlay) {
             return;
@@ -106,104 +104,17 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         sendReportEvent(event);
     }
 
-
-    private PKEvent.Listener mEventListener = new PKEvent.Listener() {
-        @Override
-        public void onEvent(PKEvent event) {
-
-            if (event.eventType() == PlayerEvent.Type.PLAYBACK_INFO_UPDATED) {
-                PlaybackInfo currentPlaybackInfo = ((PlayerEvent.PlaybackInfoUpdated) event).playbackInfo;
-                lastReportedBitrate = Long.valueOf(currentPlaybackInfo.getVideoBitrate());
-                lastReportedThroughput = Long.valueOf(currentPlaybackInfo.getVideoThroughput());
-                lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
-                return;
-            }
-
-            if (event instanceof PlayerEvent) {
-                if (event.eventType() != PLAYHEAD_UPDATED) {
-                    log.d("New PKEvent = " + event.eventType().name());
-                }
-                switch (((PlayerEvent) event).type) {
-                    case DURATION_CHANGE:
-                        lastReportedMediaDuration = Math.floor((double) ((PlayerEvent.DurationChanged) event).duration / Consts.MILLISECONDS_MULTIPLIER);
-                        log.d("DURATION_CHANGE duration = " + lastReportedMediaDuration);
-                        break;
-                    case PLAYHEAD_UPDATED:
-                        PlayerEvent.PlayheadUpdated playheadUpdated = (PlayerEvent.PlayheadUpdated) event;
-                        lastReportedMediaPosition = Math.floor((double) playheadUpdated.position / Consts.MILLISECONDS_MULTIPLIER);
-                        lastReportedMediaDuration = Math.floor((double) playheadUpdated.duration / Consts.MILLISECONDS_MULTIPLIER);
-                        //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
-                        break;
-                    case STATE_CHANGED:
-                        PKYouboraPlayerAdapter.this.onEvent((PlayerEvent.StateChanged) event);
-                        break;
-                    case ENDED:
-                        if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
-                            fireStop();
-                            isFirstPlay = true;
-                            adCuePoints = null;
-                        }
-                        break;
-                    case ERROR:
-                        PKError error = ((PlayerEvent.Error) event).error;
-                        if (error != null && !error.isFatal()) {
-                            log.v("Error eventType = " + error.errorType + " severity = " + error.severity + " errorMessage = " + error.message);
-                            return;
-                        }
-                        sendErrorHandler(event);
-                        adCuePoints = null;
-                        break;
-                    case PAUSE:
-                        firePause();
-                        break;
-                    case PLAY:
-                        if (!isFirstPlay) {
-                            fireResume();
-                        } else {
-                            isFirstPlay = false;
-                            fireStart();
-                        }
-                        break;
-                    case PLAYING:
-                        if (isFirstPlay) {
-                            isFirstPlay = false;
-                            fireStart();
-                        }
-                        fireJoin();
-                        break;
-                    case SEEKED:
-                        fireSeekEnd();
-                        break;
-                    case SEEKING:
-                        fireSeekBegin();
-                        break;
-                    case SOURCE_SELECTED:
-                        PlayerEvent.SourceSelected sourceSelected = ((PlayerEvent.SourceSelected) event);
-                        lastReportedResource = sourceSelected.source.getUrl();
-                        //log.d("SOURCE_SELECTED lastReportedResource = " + lastReportedResource);
-                        break;
-                    default:
-                        break;
-                }
-                if (((PlayerEvent) event).type != STATE_CHANGED) {
-                    sendReportEvent(event);
-                }
-            } else if (event instanceof AdEvent) {
-                onAdEvent((AdEvent) event);
-            }
-        }
-    };
-
     private void sendErrorHandler(PKEvent event) {
 
         PlayerEvent.Error errorEvent = (PlayerEvent.Error) event;
         String errorMetadata = (errorEvent != null && errorEvent.error != null) ? errorEvent.error.message : PLAYER_ERROR_STR;
-        PKError error = errorEvent.error;
-        if (error == null || error.exception == null) {
+
+        if (errorEvent == null || errorEvent.error == null || errorEvent.error.exception == null) {
             fireFatalError(errorMetadata, event.eventType().name(), null);
             return;
         }
 
+        PKError error = errorEvent.error;
         Exception playerErrorException = (Exception) error.exception;
         String exceptionClass = "";
 
@@ -226,7 +137,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             }
         }
 
-        String errorCode = (errorEvent != null && errorEvent.error != null && errorEvent.error.errorType != null) ?  errorEvent.error.errorType + " - " : "";
+        String errorCode = (errorEvent.error.errorType != null) ? errorEvent.error.errorType + " - " : "";
         fireFatalError(exceptionCauseBuilder.toString(), errorCode + exceptionClass, errorMetadata);
     }
 
@@ -241,52 +152,149 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         return result;
     }
 
-    private void onAdEvent(AdEvent event) {
-        if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != PLAYHEAD_UPDATED && event.eventType() != AD_PROGRESS) {
-            log.d("Ad Event: " + event.type.name());
-        }
-
-        switch (event.type) {
-            case CONTENT_PAUSE_REQUESTED:
-                isAdPlaying = true;
-                break;
-            case STARTED:
-                isAdPlaying = true;
-                break;
-            case ERROR:
-                isAdPlaying = false;
-                break;
-            case CONTENT_RESUME_REQUESTED:
-                isAdPlaying = false;
-                break;
-            case CUEPOINTS_CHANGED:
-                AdEvent.AdCuePointsUpdateEvent cuePointsList = (AdEvent.AdCuePointsUpdateEvent) event;
-                adCuePoints = cuePointsList.cuePoints;
-                break;
-            case ALL_ADS_COMPLETED:
-                if (adCuePoints != null && adCuePoints.hasPostRoll()) {
-                    getPlugin().getAdapter().fireStop();
-                    isFirstPlay = true;
-                    adCuePoints = null;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     public void registerListeners() {
         super.registerListeners();
+        addListeners();
         isFirstPlay = true;
-        messageBus.listen(mEventListener, (Enum[]) PlayerEvent.Type.values());
-        messageBus.listen(mEventListener, (Enum[]) AdEvent.Type.values());
+    }
+
+    private void addListeners() {
+        messageBus.addListener(this, PlayerEvent.playbackInfoUpdated, event -> {
+            printReceivedPlayerEvent(event);
+            PlaybackInfo currentPlaybackInfo = ((PlayerEvent.PlaybackInfoUpdated) event).playbackInfo;
+            lastReportedBitrate = currentPlaybackInfo.getVideoBitrate();
+            lastReportedThroughput = currentPlaybackInfo.getVideoThroughput();
+            lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
+            printReceivedPlayerEvent(event);
+            lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
+            log.d("DURATION_CHANGE lastReportedMediaDuration = " + lastReportedMediaDuration);
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.playheadUpdated, event -> {
+            lastReportedMediaPosition = Math.floor((double) event.position / Consts.MILLISECONDS_MULTIPLIER);
+            lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
+            //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
+        });
+
+        messageBus.addListener(this, PlayerEvent.stateChanged, event -> {
+            printReceivedPlayerEvent(event);
+            onStateChangedEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.ended, event -> {
+            printReceivedPlayerEvent(event);
+            if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+                fireStop();
+                isFirstPlay = true;
+                adCuePoints = null;
+            }
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.error, event -> {
+            printReceivedPlayerEvent(event);
+            PKError error = event.error;
+            if (error != null && !error.isFatal()) {
+                log.v("Error eventType = " + error.errorType + " severity = " + error.severity + " errorMessage = " + error.message);
+                return;
+            }
+            sendErrorHandler(event);
+            adCuePoints = null;
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.play, event -> {
+            printReceivedPlayerEvent(event);
+            if (!isFirstPlay) {
+                fireResume();
+            } else {
+                isFirstPlay = false;
+                fireStart();
+            }
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.playing, event -> {
+            printReceivedPlayerEvent(event);
+            if (isFirstPlay) {
+                isFirstPlay = false;
+                fireStart();
+            }
+            fireJoin();
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.seeked, event -> {
+            printReceivedPlayerEvent(event);
+            fireSeekEnd();
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.seeking, event -> {
+            printReceivedPlayerEvent(event);
+            fireSeekBegin();
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, PlayerEvent.sourceSelected, event -> {
+            printReceivedPlayerEvent(event);
+            lastReportedResource = event.source.getUrl();
+            //log.d("SOURCE_SELECTED lastReportedResource = " + lastReportedResource);
+            sendReportEvent(event);
+        });
+
+        messageBus.addListener(this, AdEvent.contentPauseRequested, event -> {
+            printReceivedAdEvent(event);
+            isAdPlaying = true;
+        });
+
+        messageBus.addListener(this, AdEvent.started, event -> {
+            printReceivedAdEvent(event);
+            isAdPlaying = true;
+        });
+
+        messageBus.addListener(this, AdEvent.error, event -> {
+            printReceivedAdEvent(event);
+            isAdPlaying = false;
+        });
+
+        messageBus.addListener(this, AdEvent.contentResumeRequested, event -> {
+            printReceivedAdEvent(event);
+            isAdPlaying = false;
+        });
+
+        messageBus.addListener(this, AdEvent.cuepointsChanged, event -> {
+            printReceivedAdEvent(event);
+            adCuePoints = event.cuePoints;
+        });
+
+        messageBus.addListener(this, AdEvent.allAdsCompleted, event -> {
+            printReceivedAdEvent(event);
+            if (adCuePoints != null && adCuePoints.hasPostRoll()) {
+                getPlugin().getAdapter().fireStop();
+                isFirstPlay = true;
+                adCuePoints = null;
+            }
+        });
+    }
+
+    private void printReceivedPlayerEvent(PKEvent event) {
+        log.d("Player Event = " + event.eventType().name());
+    }
+
+    private void printReceivedAdEvent(PKEvent event) {
+        log.d("Ad Event: " + event.eventType().name());
     }
 
     @Override
     public void unregisterListeners() {
-        messageBus.remove(mEventListener, (Enum[]) PlayerEvent.Type.values());
-        messageBus.remove(mEventListener, (Enum[]) AdEvent.Type.values());
+        messageBus.removeListeners(this);
         super.unregisterListeners();
     }
 

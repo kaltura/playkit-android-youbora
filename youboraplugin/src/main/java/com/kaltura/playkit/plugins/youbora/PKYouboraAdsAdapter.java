@@ -53,156 +53,35 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         registerListeners();
     }
 
-    private void onEvent(PlayerEvent.StateChanged event) {
-        log.d(event.newState.toString());
-        switch (event.newState) {
-            case READY:
-                if (isBuffering) {
-                    isBuffering = false;
-                    fireBufferEnd();
-                }
-                break;
-            case BUFFERING:
-                isBuffering = true;
-                fireBufferBegin();
-                break;
-            default:
-                break;
-        }
-        messageBus.post(new YouboraEvent.YouboraReport(event.eventType().name()));
-    }
-
-    private PKEvent.Listener mEventListener = new PKEvent.Listener() {
-        @Override
-        public void onEvent(PKEvent event) {
-
-            if (event.eventType() != AdEvent.Type.PLAY_HEAD_CHANGED && event.eventType() != AD_PROGRESS && event.eventType() != PLAYHEAD_UPDATED) {
-                log.d("PKYouboraAdsAdapter on event " + event.eventType());
-            }
-
-            if (event instanceof AdEvent) {
-                if (getPlugin() == null || getPlugin().getAdapter() == null) {
-                    log.e("Player Adapter is null return");
-                    return;
-                }
-
-                switch (((AdEvent) event).type) {
-                    case AD_REQUESTED:
-                        lastReportedAdResource = ((AdEvent.AdRequestedEvent) event).adTagUrl;
-                        log.d("lastReportedAdResource: " + lastReportedAdResource);
-                        break;
-                    case LOADED:
-                        log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
-                        if (isFirstPlay) {
-                            isFirstPlay = false;
-                            getPlugin().getAdapter().fireStart();
-                        }
-                        currentAdInfo = ((AdEvent.AdLoadedEvent) event).adInfo;
-                        populateAdValues();
-                        fireStart();
-                        break;
-                    case STARTED:
-                        currentAdInfo = ((AdEvent.AdStartedEvent) event).adInfo;
-                        lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-                        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        fireJoin();
-                        break;
-                    case PAUSED:
-                        currentAdInfo = ((AdEvent.AdPausedEvent) event).adInfo;
-                        lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-                        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        firePause();
-                        break;
-                    case RESUMED:
-                        currentAdInfo = ((AdEvent.AdResumedEvent) event).adInfo;
-//                        if (isFirstPlay) {
-//                            isFirstPlay = false;
-//                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
-//                                getPlugin().getAdapter().fireStart();
-//                            }
-//                            fireStart();
-//                            fireJoin();
-//                            populateAdValues();
-//                        }
-
-                        lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-                        lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-                        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        fireResume();
-                        break;
-                    case COMPLETED:
-                        lastReportedAdPlayhead = lastReportedAdDuration;
-                        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        fireStop();
-                        break;
-                    case AD_BREAK_IGNORED:
-                        fireStop();
-                        break;
-                    case CONTENT_RESUME_REQUESTED:
-                        fireStop();
-                        break;
-                    case SKIPPED:
-                        currentAdInfo = ((AdEvent.AdSkippedEvent) event).adInfo;
-                        lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
-                        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
-                        //fireStop(new HashMap<String, String>(){{put("skipped","true");}});
-                        fireSkip();
-                        break;
-                    case ERROR:
-                        AdEvent.Error errorEvent = (AdEvent.Error) event;
-                        log.e("ERROR " + errorEvent.error.errorType);
-                        handleAdError(errorEvent.error);
-                        break;
-                    case CLICKED:
-                        log.d("learn more clicked");
-                        AdEvent.AdClickedEvent adClickedEvent = (AdEvent.AdClickedEvent) event;
-                        String clickThruUrl = "";
-                        if (adClickedEvent != null && adClickedEvent.clickThruUrl != null) {
-                           clickThruUrl = adClickedEvent.clickThruUrl;
-                        }
-                        fireClick(clickThruUrl);
-                        break;
-                    case PLAY_HEAD_CHANGED:
-                        lastReportedAdPlayhead = Long.valueOf(((AdEvent.AdPlayHeadEvent) event).adPlayHead).doubleValue();
-                        //We are not sending this event to youbora,
-                        //so prevent it from dispatching through YouboraEvent.YouboraReport.
-                        return;
-                    case AD_PROGRESS:
-                        //We are not sending this event to youbora,
-                        //so prevent it from dispatching through YouboraEvent.YouboraReport.
-                        return;
-                    case AD_BUFFER_START:
-                        log.d("AD_BUFFER_START lastReportedAdPlayhead = " + lastReportedAdPlayhead);
-                        fireBufferBegin();
-                        break;
-                    case AD_BUFFER_END:
-                        log.d("AD_BUFFER_END lastReportedAdPlayhead = " + lastReportedAdPlayhead);
-                        fireBufferEnd();
-                        break;
-                    case ALL_ADS_COMPLETED:
-                        fireAllAdsCompleted();
-                        break;
-                    default:
-                        break;
-                }
-                messageBus.post(new YouboraEvent.YouboraReport(event.eventType().name()));
-            }
-        }
-    };
-
     @Override
     public void registerListeners() {
         super.registerListeners();
-        messageBus.listen(mEventListener, (PlayerEvent.Type.ERROR));
-        messageBus.listen(mEventListener, (Enum[]) AdEvent.Type.values());
+        addListeners();
+    }
+
+    private void printLastReportedAdPlayhead() {
+        log.d("lastReportedAdPlayhead = " + lastReportedAdPlayhead);
+    }
+
+    private void printEventName(PKEvent event) {
+        log.d("PKYouboraAdsAdapter on event " + event.eventType());
+    }
+
+    private boolean isNullAdapter() {
+        if (getPlugin() == null || getPlugin().getAdapter() == null) {
+            log.e("Player Adapter is null");
+            return true;
+        }
+        return false;
+    }
+
+    private void sendReportEvent(Enum anEnum) {
+        messageBus.post(new YouboraEvent.YouboraReport(anEnum.name()));
     }
 
     @Override
     public void unregisterListeners() {
-        messageBus.remove(mEventListener, (Enum[]) AdEvent.Type.values());
-        messageBus.remove(mEventListener, (PlayerEvent.Type.ERROR));
+        messageBus.removeListeners(this);
         super.unregisterListeners();
     }
 
@@ -297,6 +176,196 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         lastReportedAdResource = super.getResource();
     }
 
+    public void setLastAdResource(String lastReportedAdResource) {
+        this.lastReportedAdResource = lastReportedAdResource;
+    }
+
+    private void addListeners() {
+        messageBus.addListener(this, AdEvent.adRequested, event -> {
+            printEventName(event);
+            lastReportedAdResource = event.adTagUrl;
+            log.d("lastReportedAdResource: " + lastReportedAdResource);
+            if (isNullAdapter()) {
+                return;
+            }
+            getPlugin().getAdapter().fireStart();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.loaded, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
+            if (isFirstPlay) {
+                isFirstPlay = false;
+                getPlugin().getAdapter().fireStart();
+            }
+            currentAdInfo = event.adInfo;
+            populateAdValues();
+            if (isNullAdapter()) {
+               return;
+            }
+            getPlugin().getAdapter().fireStart();
+            fireStart();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.started, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            currentAdInfo = event.adInfo;
+            lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+            lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
+            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            fireJoin();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.paused, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            currentAdInfo = event.adInfo;
+            lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+            lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
+            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            firePause();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.resumed, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            currentAdInfo = event.adInfo;
+//                        if (isFirstPlay) {
+//                            isFirstPlay = false;
+//                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
+//                                getPlugin().getAdapter().fireStart();
+//                            }
+//                            fireStart();
+//                            fireJoin();
+//                            populateAdValues();
+//                        }
+
+            lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+            lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
+            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            fireResume();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.completed, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            lastReportedAdPlayhead = lastReportedAdDuration;
+            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            fireStop();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.adBreakIgnored, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            fireStop();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.contentResumeRequested, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            fireStop();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.skipped, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            currentAdInfo = event.adInfo;
+            lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+            printLastReportedAdPlayhead();
+            //fireStop(new HashMap<String, String>(){{put("skipped","true");}});
+            fireSkip();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.error, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            log.e("ERROR " + event.error.errorType);
+            handleAdError(event.error);
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.adClickedEvent, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            if (event.clickThruUrl != null) {
+                fireClick(event.clickThruUrl);
+            }
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.playHeadChanged, event -> {
+            lastReportedAdPlayhead = Long.valueOf(event.adPlayHead).doubleValue();
+            //We are not sending this event to youbora,
+            //so prevent it from dispatching through YouboraEvent.YouboraReport.
+        });
+
+        messageBus.addListener(this, AdEvent.adProgress, event -> {
+            //We are not sending this event to youbora,
+            //so prevent it from dispatching through YouboraEvent.YouboraReport.
+        });
+
+        messageBus.addListener(this, AdEvent.adBufferStart, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            printLastReportedAdPlayhead();
+            fireBufferBegin();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.adBufferEnd, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            printLastReportedAdPlayhead();
+            fireBufferEnd();
+            sendReportEvent(event.eventType());
+        });
+
+        messageBus.addListener(this, AdEvent.allAdsCompleted, event -> {
+            printEventName(event);
+            if (isNullAdapter()) {
+                return;
+            }
+            printLastReportedAdPlayhead();
+            fireAllAdsCompleted();
+            sendReportEvent(event.eventType());
+        });
+    }
+
     private void handleAdError(PKError error) {
 
         PKAdErrorType adErrorType = (PKAdErrorType) error.errorType;
@@ -314,7 +383,6 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                 }
                 fireFatalError(error.message, adErrorType.name(), null, adException);
         }
-
-        messageBus.post(new YouboraEvent.YouboraReport(adErrorType.name()));
+        sendReportEvent(adErrorType);
     }
 }

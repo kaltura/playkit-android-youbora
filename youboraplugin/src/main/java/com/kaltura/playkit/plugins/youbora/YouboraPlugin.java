@@ -12,6 +12,7 @@ import com.kaltura.playkit.PKPlugin;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
+import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 
 /**
@@ -68,7 +69,24 @@ public class YouboraPlugin extends PKPlugin {
     }
 
     private void loadPlugin() {
-        messageBus.listen(eventListener, PlayerEvent.Type.DURATION_CHANGE, PlayerEvent.Type.SOURCE_SELECTED, PlayerEvent.Type.STOPPED);
+
+        messageBus.addListener(this, PlayerEvent.sourceSelected, event -> {
+            PlayerEvent.SourceSelected sourceSelected = event;
+            if (sourceSelected != null && sourceSelected.source != null) {
+                log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
+                if (pluginManager != null) {
+                    pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
+                }
+            }
+        });
+
+        messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
+                log.d("YouboraPlugin DURATION_CHANGE");
+        });
+
+        messageBus.addListener(this, PlayerEvent.stopped, event -> {
+            log.d("YouboraPlugin STOPPED");
+        });
     }
 
     @Override
@@ -155,33 +173,6 @@ public class YouboraPlugin extends PKPlugin {
             adsManager = null;
         }
     }
-
-    PKEvent.Listener eventListener = new PKEvent.Listener() {
-        @Override
-        public void onEvent(PKEvent event) {
-
-            PlayerEvent playerEvent = (PlayerEvent) event;
-            switch (playerEvent.type) {
-                case SOURCE_SELECTED:
-                    PlayerEvent.SourceSelected sourceSelected = (PlayerEvent.SourceSelected) playerEvent;
-                    if (sourceSelected != null && sourceSelected.source != null) {
-                        log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
-                        if (pluginManager != null) {
-                            pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
-                        }
-                    }
-                    break;
-                case DURATION_CHANGE:
-                    log.d("YouboraPlugin DURATION_CHANGE");
-                    break;
-                case STOPPED:
-                    log.d("YouboraPlugin STOPPED");
-                    break;
-                default:
-                    return;
-            }
-        }
-    };
 
     private void stopMonitoring() {
         log.d("stop monitoring");
