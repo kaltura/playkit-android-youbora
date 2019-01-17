@@ -19,15 +19,11 @@ import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
-import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.ads.PKAdErrorType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
-
-import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
-import static com.kaltura.playkit.plugins.ads.AdEvent.Type.AD_PROGRESS;
 
 /**
  * @hide
