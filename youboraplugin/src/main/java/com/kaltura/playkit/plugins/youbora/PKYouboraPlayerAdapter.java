@@ -209,6 +209,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             sendReportEvent(event);
         });
 
+        messageBus.addListener(this, PlayerEvent.pause, event -> {
+            firePause();
+            sendReportEvent(event);
+        });
+
         messageBus.addListener(this, PlayerEvent.play, event -> {
             printReceivedPlayerEvent(event);
             if (!isFirstPlay) {
