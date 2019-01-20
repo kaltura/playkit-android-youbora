@@ -106,7 +106,7 @@ public class YouboraLibraryConfig {
     public static Map<String, Object> updateMediaConfig(JsonObject pluginConfig, String key, Object value) {
 
         mediaObject.put(key, value);
-        if (pluginConfig.has("media")) {
+        if (Utils.isJsonObjectValueValid(pluginConfig, "media")) {
             setYouboraConfigObject(mediaObject, pluginConfig.getAsJsonObject("media"), mediaConfigFieldNames, mediaBooleanConfigFieldNames);
         }
         return youboraConfig;
@@ -131,16 +131,16 @@ public class YouboraLibraryConfig {
             //set these values on the root object
             setYouboraConfigObject(youboraConfigObject, pluginConfig, youboraConfigFieldNames, youboraBooleanConfigFieldNames);
 
-            if (pluginConfig.has("media")) {
+            if (Utils.isJsonObjectValueValid(pluginConfig, "media")) {
                 setYouboraConfigObject(mediaObject, pluginConfig.getAsJsonObject("media"), mediaConfigFieldNames, mediaBooleanConfigFieldNames);
             }
-            if (pluginConfig.has("ads")) {
+            if (Utils.isJsonObjectValueValid(pluginConfig, "ads")) {
                 setYouboraConfigObject(adsObject, pluginConfig.getAsJsonObject("ads"), adsConfigFieldNames, adsBooleanConfigFieldNames);
             }
-            if (pluginConfig.has("properties")) {
+            if (Utils.isJsonObjectValueValid(pluginConfig, "properties")) {
                 setYouboraConfigObject(propertiesObject, pluginConfig.getAsJsonObject("properties"), propertiesConfigFieldNames, null);
             }
-            if (pluginConfig.has("extraParams")) {
+            if (Utils.isJsonObjectValueValid(pluginConfig, "extraParams")) {
                 setYouboraConfigObject(extraParamsObject, pluginConfig.getAsJsonObject("extraParams"), extraConfigFieldNames, null);
             }
         }
