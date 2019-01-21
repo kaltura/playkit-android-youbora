@@ -25,24 +25,22 @@ android {
 
 }
 
-tasks.withType(Javadoc) {
-    options.addBooleanOption('Xdoclint:none', true)
-}
-
 dependencies {
 
     //TODO change to latest playkit version after tagging.
     implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
     //implementation project(":playkit");
 
-    api files('libs/YouboraLib-5.3.10.jar')
+    api 'com.npaw.youbora:youboralib:6.3.5'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+
 }
 
 repositories {
     google()
     jcenter()
     maven { url "https://jitpack.io" }
+
 }
