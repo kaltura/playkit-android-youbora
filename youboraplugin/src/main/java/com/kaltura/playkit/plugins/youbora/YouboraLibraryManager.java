@@ -323,9 +323,15 @@ class YouboraLibraryManager extends PluginGeneric {
     }
 
     public Boolean getIsLive() {
-        return mediaConfig != null && (mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live);
+        Boolean isLive = Boolean.FALSE;
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null && (player == null || player.getDuration() <= 0)) {
+            isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live || mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.DvrLive;
+        } else if (player != null) {
+            isLive = player.isLive();
+        }
+        return isLive;
     }
-
+    
     private void sendReportEvent(PKEvent event) {
         if (event.eventType() != PLAYHEAD_UPDATED) {
             String reportedEventName = event.eventType().name();
