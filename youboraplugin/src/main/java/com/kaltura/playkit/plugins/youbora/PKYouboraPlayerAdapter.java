@@ -370,8 +370,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     public Boolean getIsLive() {
         Boolean isLive = Boolean.FALSE;
-        if (mediaConfig != null && (player == null || (player!= null && player.getDuration() <= 0))) {
-            isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live;
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null && (player == null || player.getDuration() <= 0)) {
+            isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live || mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.DvrLive;
         } else if (player != null) {
             isLive = player.isLive();
         }
