@@ -58,6 +58,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String lastReportedRendition;
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
+    private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
@@ -180,6 +181,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             lastReportedMediaPosition = Math.floor((double) event.position / Consts.MILLISECONDS_MULTIPLIER);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
             //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
+        });
+
+        messageBus.addListener(this, PlayerEvent.videoFramesDropped, event -> {
+            droppedFrames = event.droppedVideoFrames;
         });
 
         messageBus.addListener(this, PlayerEvent.stateChanged, event -> {
@@ -356,7 +361,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         return (lastReportedMediaDuration != null && lastReportedMediaDuration >= 0) ? lastReportedMediaDuration : 0;
     }
 
-//    public Double getPlayrate() {
+    @Override
+    public Integer getDroppedFrames() {
+        return droppedFrames.intValue();
+    }
+
+    //    public Double getPlayrate() {
 //        return lastPlayrate
 //    }
 
@@ -411,6 +421,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     public void resetPlaybackValues() {
         lastReportedMediaDuration = super.getDuration();
         lastReportedMediaPosition =  super.getPlayhead();
+        droppedFrames = 0L;
         lastReportedResource = null;
         adCuePoints = null;
         resetValues();
