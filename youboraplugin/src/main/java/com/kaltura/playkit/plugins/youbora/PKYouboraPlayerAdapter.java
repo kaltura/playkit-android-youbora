@@ -184,7 +184,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
 
         messageBus.addListener(this, PlayerEvent.videoFramesDropped, event -> {
-            droppedFrames = event.droppedVideoFrames;
+            droppedFrames = event.totalDroppedVideoFrames;
         });
 
         messageBus.addListener(this, PlayerEvent.stateChanged, event -> {
@@ -363,6 +363,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public Integer getDroppedFrames() {
+        //log.d("getDroppedFrames " + droppedFrames.intValue());
         return droppedFrames.intValue();
     }
 
