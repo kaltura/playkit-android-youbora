@@ -25,6 +25,7 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
+import com.kaltura.playkit.ads.PKAdPlugin;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
@@ -58,6 +59,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String lastReportedRendition;
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
+    private PKAdPlugin lastReportedAdPlugin = PKAdPlugin.ima;
     private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
@@ -180,7 +182,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         messageBus.addListener(this, PlayerEvent.playheadUpdated, event -> {
             lastReportedMediaPosition = Math.floor((double) event.position / Consts.MILLISECONDS_MULTIPLIER);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
-            //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
+            log.d("PLAYHEAD_UPDATED new position/duration = " + lastReportedMediaPosition + "/" + lastReportedMediaDuration);
         });
 
         messageBus.addListener(this, PlayerEvent.videoFramesDropped, event -> {
@@ -194,11 +196,19 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, PlayerEvent.ended, event -> {
             printReceivedPlayerEvent(event);
-            if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+            if (PKAdPlugin.ima_dai.equals(lastReportedAdPlugin)) {
+                getPlugin().getAdapter().fireStop();
                 fireStop();
                 isFirstPlay = true;
                 adCuePoints = null;
+            } else {
+                if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+                    fireStop();
+                    isFirstPlay = true;
+                    adCuePoints = null;
+                }
             }
+
             sendReportEvent(event);
         });
 
@@ -292,6 +302,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 adCuePoints = null;
             }
         });
+
+        messageBus.addListener(this, AdEvent.adRequested, event -> {
+            lastReportedAdPlugin = event.adPlugin;
+        });
+
     }
 
     private void printReceivedPlayerEvent(PKEvent event) {

@@ -20,6 +20,8 @@ import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.ads.PKAdErrorType;
+
+import com.kaltura.playkit.ads.PKAdPlugin;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
@@ -42,6 +44,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
     private long lastReportedAdBitrate;
+    private PKAdPlugin lastReportedAdPlugin = PKAdPlugin.ima;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -147,6 +150,10 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     }
 
     private void populateAdValues() {
+        if (currentAdInfo == null) {
+            return;
+        }
+
         lastReportedAdDuration = Long.valueOf(currentAdInfo.getAdDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
         lastReportedAdTitle = currentAdInfo.getAdTitle();
         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
@@ -179,6 +186,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private void addListeners() {
         messageBus.addListener(this, AdEvent.adRequested, event -> {
             printEventName(event);
+            lastReportedAdPlugin = event.adPlugin;
             lastReportedAdResource = event.adTagUrl;
             log.d("lastReportedAdResource: " + lastReportedAdResource);
             if (isNullAdapter()) {
@@ -197,6 +205,9 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
+                if (PKAdPlugin.ima_dai.equals(lastReportedAdPlugin)) {
+                    getPlugin().getAdapter().fireJoin();
+                }
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
@@ -240,16 +251,6 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                 return;
             }
             currentAdInfo = event.adInfo;
-//                        if (isFirstPlay) {
-//                            isFirstPlay = false;
-//                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
-//                                getPlugin().getAdapter().fireStart();
-//                            }
-//                            fireStart();
-//                            fireJoin();
-//                            populateAdValues();
-//                        }
-
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
             log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
