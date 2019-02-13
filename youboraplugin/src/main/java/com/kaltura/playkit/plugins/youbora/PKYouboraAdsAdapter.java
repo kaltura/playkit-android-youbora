@@ -139,7 +139,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             default:
                 break;
         }
-        log.d("adPosition = " + adPosition);
+        //log.d("adPosition = " + adPosition);
         return adPosition;
     }
 
@@ -174,6 +174,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     }
 
     public void onUpdateConfig() {
+        unregisterListeners();
         resetAdValues();
         lastReportedAdBitrate = -1L;
         lastReportedAdResource = super.getResource();

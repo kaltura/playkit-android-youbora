@@ -175,14 +175,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
             printReceivedPlayerEvent(event);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
-            log.d("DURATION_CHANGE lastReportedMediaDuration = " + lastReportedMediaDuration);
+            //log.d("DURATION_CHANGE lastReportedMediaDuration = " + lastReportedMediaDuration);
             sendReportEvent(event);
         });
 
         messageBus.addListener(this, PlayerEvent.playheadUpdated, event -> {
             lastReportedMediaPosition = Math.floor((double) event.position / Consts.MILLISECONDS_MULTIPLIER);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
-            log.d("PLAYHEAD_UPDATED new position/duration = " + lastReportedMediaPosition + "/" + lastReportedMediaDuration);
+            //log.d("PLAYHEAD_UPDATED new position/duration = " + lastReportedMediaPosition + "/" + lastReportedMediaDuration);
         });
 
         messageBus.addListener(this, PlayerEvent.videoFramesDropped, event -> {
@@ -422,6 +422,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     public void onUpdateConfig() {
         log.d("onUpdateConfig");
+        unregisterListeners();
         resetValues();
     }
 
