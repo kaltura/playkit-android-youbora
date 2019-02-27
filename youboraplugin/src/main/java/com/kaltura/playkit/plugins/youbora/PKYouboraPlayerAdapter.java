@@ -25,7 +25,7 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
-import com.kaltura.playkit.ads.PKAdPlugin;
+import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
@@ -59,7 +59,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String lastReportedRendition;
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
-    private PKAdPlugin lastReportedAdPlugin = PKAdPlugin.ima;
+    private PKAdPluginType lastReportedAdPluginType = PKAdPluginType.client;
     private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
@@ -73,7 +73,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         updateDurationFromMediaConfig(mediaConfig);
         this.houseHoldId = pluginConfig.getHouseHoldId();
         registerListeners();
-
     }
 
     private void updateDurationFromMediaConfig(PKMediaConfig mediaConfig) {
@@ -196,7 +195,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, PlayerEvent.ended, event -> {
             printReceivedPlayerEvent(event);
-            if (PKAdPlugin.ima_dai.equals(lastReportedAdPlugin)) {
+            if (PKAdPluginType.server.equals(lastReportedAdPluginType)) {
                 getPlugin().getAdapter().fireStop();
                 fireStop();
                 isFirstPlay = true;
@@ -304,7 +303,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.adRequested, event -> {
-            lastReportedAdPlugin = event.adPlugin;
+            lastReportedAdPluginType = event.adPluginType;
         });
 
     }

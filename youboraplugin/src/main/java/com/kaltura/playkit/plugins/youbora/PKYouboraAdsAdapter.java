@@ -21,7 +21,7 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.ads.PKAdErrorType;
 
-import com.kaltura.playkit.ads.PKAdPlugin;
+import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
@@ -44,7 +44,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
     private long lastReportedAdBitrate;
-    private PKAdPlugin lastReportedAdPlugin = PKAdPlugin.ima;
+    private PKAdPluginType lastReportedAdPlugin = PKAdPluginType.client;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -187,7 +187,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private void addListeners() {
         messageBus.addListener(this, AdEvent.adRequested, event -> {
             printEventName(event);
-            lastReportedAdPlugin = event.adPlugin;
+            lastReportedAdPlugin = event.adPluginType;
             lastReportedAdResource = event.adTagUrl;
             log.d("lastReportedAdResource: " + lastReportedAdResource);
             if (isNullAdapter()) {
@@ -206,7 +206,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
-                if (PKAdPlugin.ima_dai.equals(lastReportedAdPlugin)) {
+                if (PKAdPluginType.server.equals(lastReportedAdPlugin)) {
                     getPlugin().getAdapter().fireJoin();
                 }
             }
