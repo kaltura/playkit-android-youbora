@@ -19,7 +19,10 @@ import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
+import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdErrorType;
+
+import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
@@ -42,6 +45,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
     private long lastReportedAdBitrate;
+    private PKAdPluginType lastReportedAdPluginType;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -136,7 +140,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             default:
                 break;
         }
-        log.d("adPosition = " + adPosition);
+        //log.d("adPosition = " + adPosition);
         return adPosition;
     }
 
@@ -147,6 +151,10 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     }
 
     private void populateAdValues() {
+        if (currentAdInfo == null) {
+            return;
+        }
+
         lastReportedAdDuration = Long.valueOf(currentAdInfo.getAdDuration() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
         lastReportedAdTitle = currentAdInfo.getAdTitle();
         lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
@@ -164,9 +172,11 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         lastReportedAdDuration = super.getDuration();
         lastReportedAdTitle = super.getTitle();
         lastReportedAdPlayhead = super.getPlayhead();
+        lastReportedAdPluginType = null;
     }
 
     public void onUpdateConfig() {
+        unregisterListeners();
         resetAdValues();
         lastReportedAdBitrate = -1L;
         lastReportedAdResource = super.getResource();
@@ -197,6 +207,9 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
+                if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                    getPlugin().getAdapter().fireJoin();
+                }
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
@@ -240,16 +253,6 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                 return;
             }
             currentAdInfo = event.adInfo;
-//                        if (isFirstPlay) {
-//                            isFirstPlay = false;
-//                            if (getPlugin().getAdapter() != null && !getPlugin().getAdapter().getFlags().isStarted()) {
-//                                getPlugin().getAdapter().fireStart();
-//                            }
-//                            fireStart();
-//                            fireJoin();
-//                            populateAdValues();
-//                        }
-
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
             log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
@@ -360,6 +363,22 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             fireAllAdsCompleted();
             sendReportEvent(event.eventType());
         });
+    }
+
+    private PKAdPluginType getLastReportedAdPluginType() {
+        if (lastReportedAdPluginType != null) {
+            return  lastReportedAdPluginType;
+        }
+
+        if (player != null) {
+            AdController adController = player.getController(AdController.class);
+            if (adController != null && !adController.isAdError()) {
+                lastReportedAdPluginType = adController.getAdPluginType();
+            } else {
+                lastReportedAdPluginType = PKAdPluginType.client;
+            }
+        }
+        return lastReportedAdPluginType;
     }
 
     private void handleAdError(PKError error) {
