@@ -19,6 +19,7 @@ import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
+import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdErrorType;
 
 import com.kaltura.playkit.ads.PKAdPluginType;
@@ -44,7 +45,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
     private long lastReportedAdBitrate;
-    private PKAdPluginType lastReportedAdPluginType = PKAdPluginType.client;
+    private PKAdPluginType lastReportedAdPluginType;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -171,7 +172,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         lastReportedAdDuration = super.getDuration();
         lastReportedAdTitle = super.getTitle();
         lastReportedAdPlayhead = super.getPlayhead();
-        lastReportedAdPluginType = PKAdPluginType.client;
+        lastReportedAdPluginType = null;
     }
 
     public void onUpdateConfig() {
@@ -188,7 +189,6 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private void addListeners() {
         messageBus.addListener(this, AdEvent.adRequested, event -> {
             printEventName(event);
-            lastReportedAdPluginType = event.adPluginType;
             lastReportedAdResource = event.adTagUrl;
             log.d("lastReportedAdResource: " + lastReportedAdResource);
             if (isNullAdapter()) {
@@ -207,7 +207,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
-                if (PKAdPluginType.server.equals(lastReportedAdPluginType)) {
+                if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
                     getPlugin().getAdapter().fireJoin();
                 }
             }
@@ -363,6 +363,22 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             fireAllAdsCompleted();
             sendReportEvent(event.eventType());
         });
+    }
+
+    private PKAdPluginType getLastReportedAdPluginType() {
+        if (lastReportedAdPluginType != null) {
+            return  lastReportedAdPluginType;
+        }
+
+        if (player != null) {
+            AdController adController = player.getController(AdController.class);
+            if (adController != null) {
+                lastReportedAdPluginType = adController.getAdPluginType();
+            } else {
+                lastReportedAdPluginType = PKAdPluginType.client;
+            }
+        }
+        return lastReportedAdPluginType;
     }
 
     private void handleAdError(PKError error) {

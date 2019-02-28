@@ -25,6 +25,7 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
+import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
@@ -59,7 +60,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String lastReportedRendition;
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
-    private PKAdPluginType lastReportedAdPluginType = PKAdPluginType.client;
+    private PKAdPluginType lastReportedAdPluginType;
     private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
@@ -195,7 +196,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, PlayerEvent.ended, event -> {
             printReceivedPlayerEvent(event);
-            if (PKAdPluginType.server.equals(lastReportedAdPluginType)) {
+            if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
                 getPlugin().getAdapter().fireStop();
                 fireStop();
                 isFirstPlay = true;
@@ -301,11 +302,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 adCuePoints = null;
             }
         });
-
-        messageBus.addListener(this, AdEvent.adRequested, event -> {
-            lastReportedAdPluginType = event.adPluginType;
-        });
-
     }
 
     private void printReceivedPlayerEvent(PKEvent event) {
@@ -410,6 +406,22 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
     }
 
+    private PKAdPluginType getLastReportedAdPluginType() {
+        if (lastReportedAdPluginType != null) {
+            return  lastReportedAdPluginType;
+        }
+
+        if (player != null) {
+            AdController adController = player.getController(AdController.class);
+            if (adController != null) {
+                lastReportedAdPluginType = adController.getAdPluginType();
+            } else {
+                lastReportedAdPluginType = PKAdPluginType.client;
+            }
+        }
+        return lastReportedAdPluginType;
+    }
+
     public String generateRendition(double bitrate, int width, int height) {
 
         if ((width <= 0 || height <= 0) && bitrate <= 0) {
@@ -429,7 +441,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
-        lastReportedAdPluginType = PKAdPluginType.client;
+        lastReportedAdPluginType = null;
         mediaConfig = null;
         houseHoldId = null;
         isFirstPlay = true;
