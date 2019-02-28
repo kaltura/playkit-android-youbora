@@ -44,7 +44,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private Double lastReportedAdPlayhead;
     private Double lastReportedAdDuration;
     private long lastReportedAdBitrate;
-    private PKAdPluginType lastReportedAdPlugin = PKAdPluginType.client;
+    private PKAdPluginType lastReportedAdPluginType = PKAdPluginType.client;
 
     PKYouboraAdsAdapter(Player player, MessageBus messageBus) {
         super(player);
@@ -171,6 +171,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
         lastReportedAdDuration = super.getDuration();
         lastReportedAdTitle = super.getTitle();
         lastReportedAdPlayhead = super.getPlayhead();
+        lastReportedAdPluginType = PKAdPluginType.client;
     }
 
     public void onUpdateConfig() {
@@ -187,7 +188,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
     private void addListeners() {
         messageBus.addListener(this, AdEvent.adRequested, event -> {
             printEventName(event);
-            lastReportedAdPlugin = event.adPluginType;
+            lastReportedAdPluginType = event.adPluginType;
             lastReportedAdResource = event.adTagUrl;
             log.d("lastReportedAdResource: " + lastReportedAdResource);
             if (isNullAdapter()) {
@@ -206,7 +207,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
-                if (PKAdPluginType.server.equals(lastReportedAdPlugin)) {
+                if (PKAdPluginType.server.equals(lastReportedAdPluginType)) {
                     getPlugin().getAdapter().fireJoin();
                 }
             }

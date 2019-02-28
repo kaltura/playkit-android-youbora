@@ -429,6 +429,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
+        lastReportedAdPluginType = PKAdPluginType.client;
         mediaConfig = null;
         houseHoldId = null;
         isFirstPlay = true;
