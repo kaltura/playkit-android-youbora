@@ -25,6 +25,8 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
+import com.kaltura.playkit.ads.AdController;
+import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
@@ -58,6 +60,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String lastReportedRendition;
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
+    private PKAdPluginType lastReportedAdPluginType;
     private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
@@ -71,7 +74,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         updateDurationFromMediaConfig(mediaConfig);
         this.houseHoldId = pluginConfig.getHouseHoldId();
         registerListeners();
-
     }
 
     private void updateDurationFromMediaConfig(PKMediaConfig mediaConfig) {
@@ -173,14 +175,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
             printReceivedPlayerEvent(event);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
-            log.d("DURATION_CHANGE lastReportedMediaDuration = " + lastReportedMediaDuration);
+            //log.d("DURATION_CHANGE lastReportedMediaDuration = " + lastReportedMediaDuration);
             sendReportEvent(event);
         });
 
         messageBus.addListener(this, PlayerEvent.playheadUpdated, event -> {
             lastReportedMediaPosition = Math.floor((double) event.position / Consts.MILLISECONDS_MULTIPLIER);
             lastReportedMediaDuration = Math.floor((double) event.duration / Consts.MILLISECONDS_MULTIPLIER);
-            //log.d("PLAYHEAD_UPDATED new duration = " + lastReportedMediaPosition);
+            //log.d("PLAYHEAD_UPDATED new position/duration = " + lastReportedMediaPosition + "/" + lastReportedMediaDuration);
         });
 
         messageBus.addListener(this, PlayerEvent.videoFramesDropped, event -> {
@@ -194,11 +196,19 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, PlayerEvent.ended, event -> {
             printReceivedPlayerEvent(event);
-            if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+            if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                getPlugin().getAdapter().fireStop();
                 fireStop();
                 isFirstPlay = true;
                 adCuePoints = null;
+            } else {
+                if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+                    fireStop();
+                    isFirstPlay = true;
+                    adCuePoints = null;
+                }
             }
+
             sendReportEvent(event);
         });
 
@@ -396,6 +406,22 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
     }
 
+    private PKAdPluginType getLastReportedAdPluginType() {
+        if (lastReportedAdPluginType != null) {
+            return  lastReportedAdPluginType;
+        }
+
+        if (player != null) {
+            AdController adController = player.getController(AdController.class);
+            if (adController != null && !adController.isAdError()) {
+                lastReportedAdPluginType = adController.getAdPluginType();
+            } else {
+                lastReportedAdPluginType = PKAdPluginType.client;
+            }
+        }
+        return lastReportedAdPluginType;
+    }
+
     public String generateRendition(double bitrate, int width, int height) {
 
         if ((width <= 0 || height <= 0) && bitrate <= 0) {
@@ -407,6 +433,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     public void onUpdateConfig() {
         log.d("onUpdateConfig");
+        unregisterListeners();
         resetValues();
     }
 
@@ -414,6 +441,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
+        lastReportedAdPluginType = null;
         mediaConfig = null;
         houseHoldId = null;
         isFirstPlay = true;
