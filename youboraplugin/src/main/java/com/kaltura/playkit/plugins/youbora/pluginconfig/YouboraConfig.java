@@ -22,6 +22,8 @@ public class YouboraConfig {
 
     private boolean httpSecure = true; // youbora events will be sent via https
 
+    private Device device;
+
     private Media media;
 
     private Ads ads;
@@ -74,8 +76,17 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
+
     public void setObfuscateIP(boolean obfuscateIP) {
         this.obfuscateIP = obfuscateIP;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 
     public Media getMedia() {
@@ -123,10 +134,33 @@ public class YouboraConfig {
         youboraLocalConfig.setParseHls(false);
         youboraLocalConfig.setParseCdnNode(false);
 
-
         youboraLocalConfig.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
         youboraLocalConfig.setContentCdn(null);
 
+        if (device != null) {
+            //Generic Data by code see in Device class what Codes are available
+            youboraLocalConfig.setDeviceCode(device.getDeviceCode());
+            // Specific Data
+            if (device.getModel() != null) {
+                youboraLocalConfig.setDeviceModel(device.getModel());
+            }
+
+            if (device.getBrand() != null) {
+                youboraLocalConfig.setDeviceBrand(device.getBrand());
+            }
+
+            if (device.getType() != null) {
+                youboraLocalConfig.setDeviceType(device.getType());
+            }
+
+            if (device.getOsName() != null) {
+                youboraLocalConfig.setDeviceOsName(device.getOsName());
+            }
+
+            if (device.getOsVersion() != null) {
+                youboraLocalConfig.setDeviceOsVersion(device.getOsVersion());
+            }
+        }
 
         if (media != null) {
             youboraLocalConfig.setContentIsLive(media.getIsLive());
@@ -209,24 +243,57 @@ public class YouboraConfig {
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
         JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP() ? true : false);
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure() ? true : false);
-
+        JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
         JsonObject adsEntry = new JsonObject();
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isObfuscateIP, httpSecure, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
+        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isObfuscateIP, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
         return youboraConfig;
+    }
+
+    private JsonObject getDeviceJsonObject() {
+        JsonObject deviceJsonObject = new JsonObject();
+        Device device = getDevice();
+        if (device == null) {
+            return deviceJsonObject;
+        }
+
+        if (device.getDeviceCode() != null) {
+            deviceJsonObject.addProperty("deviceCode", device.getDeviceCode());
+        }
+
+        if (device.getModel() != null) {
+            deviceJsonObject.addProperty("model", device.getModel());
+        }
+
+        if (device.getBrand() != null) {
+            deviceJsonObject.addProperty("brand", device.getBrand());
+        }
+
+        if (device.getType() != null) {
+            deviceJsonObject.addProperty("deviceCode", device.getType());
+        }
+
+        if (device.getOsName() != null) {
+            deviceJsonObject.addProperty("osName", device.getOsName());
+        }
+
+        if (device.getOsVersion() != null) {
+            deviceJsonObject.addProperty("osName", device.getOsVersion());
+        }
+        return deviceJsonObject;
     }
 
     @NonNull
     private JsonObject getMediaJsonObject() {
         JsonObject mediaEntry = new JsonObject();
-        if (getMedia() == null) {
+        Media media = getMedia();
+        if (media == null) {
             return mediaEntry;
         }
 
-        Media media = getMedia();
         mediaEntry.addProperty("isLive", media.getIsLive() != null ? media.getIsLive() : Boolean.FALSE);
         mediaEntry.addProperty("title",  media.getTitle() != null ? media.getTitle() : "");
         if (media.getDuration() != null) {
@@ -237,7 +304,7 @@ public class YouboraConfig {
 
     @NonNull
     private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive obfuscateIP, JsonPrimitive httpSecure,
-                                                  JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
+                                                  JsonObject device, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
@@ -246,6 +313,7 @@ public class YouboraConfig {
         youboraConfig.add("obfuscateIP", obfuscateIP);
         youboraConfig.add("httpSecure", httpSecure);
 
+        youboraConfig.add("device", device);
         youboraConfig.add("media", mediaEntry);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
