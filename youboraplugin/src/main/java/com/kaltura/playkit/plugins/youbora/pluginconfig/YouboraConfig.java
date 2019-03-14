@@ -138,8 +138,10 @@ public class YouboraConfig {
         youboraLocalConfig.setContentCdn(null);
 
         if (device != null) {
-            //Generic Data by code see in Device class what Codes are available
-            youboraLocalConfig.setDeviceCode(device.getDeviceCode());
+            if (device.getDeviceCode() != null) {
+                //Generic Data by code see in Device class what Codes are available
+                youboraLocalConfig.setDeviceCode(device.getDeviceCode());
+            }
             // Specific Data
             if (device.getModel() != null) {
                 youboraLocalConfig.setDeviceModel(device.getModel());
