@@ -121,7 +121,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         Exception playerErrorException = (Exception) error.exception;
         String exceptionClass = "";
 
-        if (playerErrorException.getCause() != null && playerErrorException.getCause().getClass() != null) {
+        if (playerErrorException != null && playerErrorException.getCause() != null && playerErrorException.getCause().getClass() != null) {
             exceptionClass = playerErrorException.getCause().getClass().getName();
             errorMetadata = (playerErrorException.getCause().toString() != null) ? playerErrorException.getCause().toString() : errorMetadata;
         } else {
@@ -132,7 +132,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         LinkedHashSet<String> causeMessages = getExceptionMessageChain(playerErrorException);
         StringBuilder exceptionCauseBuilder = new StringBuilder();
-        if (causeMessages.isEmpty()) {
+        if (playerErrorException != null && causeMessages.isEmpty()) {
             exceptionCauseBuilder.append(playerErrorException.toString());
         } else {
             for (String cause : causeMessages) {
