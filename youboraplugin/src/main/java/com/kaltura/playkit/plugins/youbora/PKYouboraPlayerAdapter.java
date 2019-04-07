@@ -196,6 +196,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, PlayerEvent.ended, event -> {
             printReceivedPlayerEvent(event);
+            if (isNullAdapter()) {
+                return;
+            }
+
             if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
                 getPlugin().getAdapter().fireStop();
                 fireStop();
@@ -296,6 +300,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
         messageBus.addListener(this, AdEvent.allAdsCompleted, event -> {
             printReceivedAdEvent(event);
+            if (isNullAdapter()) {
+                return;
+            }
+
             if (adCuePoints != null && adCuePoints.hasPostRoll()) {
                 getPlugin().getAdapter().fireStop();
                 isFirstPlay = true;
@@ -420,6 +428,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             }
         }
         return lastReportedAdPluginType;
+    }
+
+    private boolean isNullAdapter() {
+        if (getPlugin() == null || getPlugin().getAdapter() == null) {
+            log.e("Player Adapter is null");
+            return true;
+        }
+        return false;
     }
 
     public String generateRendition(double bitrate, int width, int height) {
