@@ -126,6 +126,9 @@ public class YouboraPlugin extends PKPlugin {
     @Override
     protected void onUpdateConfig(Object config) {
         log.d("youbora - onUpdateConfig");
+        if (pluginManager == null) {
+            return;
+        }
         pluginManager.onUpdateConfig();
         if (adsManager != null) {
             adsManager.onUpdateConfig();
