@@ -35,7 +35,7 @@ public class YouboraPlugin extends PKPlugin {
     public static final Factory factory = new Factory() {
         @Override
         public String getName() {
-            return "Youbora";
+            return "youbora";
         }
 
         @Override
@@ -124,6 +124,15 @@ public class YouboraPlugin extends PKPlugin {
     @Override
     protected void onUpdateConfig(Object config) {
         log.d("youbora - onUpdateConfig");
+        if (config == null) {
+            return;
+        }
+        this.pluginConfig = parseConfig(config);
+        // Refresh options with updated media
+        if (npawPlugin != null && pluginConfig != null) {
+            npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+        }
+
         if (pluginManager == null) {
             return;
         }
@@ -131,9 +140,7 @@ public class YouboraPlugin extends PKPlugin {
         if (adsManager != null) {
             adsManager.onUpdateConfig();
         }
-        this.pluginConfig = parseConfig(config);
-        // Refresh options with updated media
-        npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+
     }
 
     @Override
