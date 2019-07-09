@@ -14,8 +14,6 @@ script:
   - ./gradlew youboraplugin:build
 after_failure:
   - cat youboraplugin/build/outputs/lint-results-debug.xml
-after_success:
-  - ./travis-push-to-bintray.sh
 notifications:
   email:
     recipients:
