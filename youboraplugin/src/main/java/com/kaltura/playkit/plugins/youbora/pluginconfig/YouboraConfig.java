@@ -243,8 +243,8 @@ public class YouboraConfig {
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP() ? true : false);
-        JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure() ? true : false);
+        JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP());
+        JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
         JsonObject adsEntry = new JsonObject();
