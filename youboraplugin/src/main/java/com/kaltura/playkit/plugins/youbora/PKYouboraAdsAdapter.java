@@ -87,7 +87,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
 
     @Override
     public Long getBitrate() {
-        return Long.valueOf(lastReportedAdBitrate);
+        return lastReportedAdBitrate;
     }
 
     @Override
