@@ -1,8 +1,9 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
