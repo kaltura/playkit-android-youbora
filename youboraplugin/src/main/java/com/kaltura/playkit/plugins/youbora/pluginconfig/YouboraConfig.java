@@ -10,6 +10,29 @@ import com.npaw.youbora.lib6.plugin.Options;
 
 public class YouboraConfig {
 
+    // Kaltura Youbora Keys for Bundle
+
+    public static final String KEY_HALT_ON_ERROR = "haltOnError";
+
+    public static final String KEY_SMART_ADS = "enableSmartAds";
+
+    public static final String KEY_ADS_EXPECTED = "adsExpected";
+
+    public static final String KEY_CONTENT_YEAR = "content.year";
+
+    public static final String KEY_CONTENT_CAST = "content.cast";
+
+    public static final String KEY_CONTENT_DIRECTOR = "content.director";
+
+    public static final String KEY_CONTENT_OWNER = "content.owner";
+
+    public static final String KEY_CONTENT_PARENTAL = "content.parental";
+
+    public static final String KEY_CONTENT_RATING = "content.rating";
+
+    public static final String KEY_CONTENT_QUALITY = "content.quality";
+
+
     private String accountCode;
 
     private String username;
@@ -169,7 +192,7 @@ public class YouboraConfig {
             youboraLocalConfig.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
             youboraLocalConfig.setContentDuration(media.getDuration());
             youboraLocalConfig.setContentTitle(media.getTitle());
-            youboraLocalConfig.setContentTitle2(media.getTitle2());
+            youboraLocalConfig.setProgram(media.getTitle2());
             youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
         }
 
@@ -180,35 +203,32 @@ public class YouboraConfig {
         }
         youboraLocalConfig.setAdTitle("");
 
-
-
         youboraLocalConfig.setContentMetadata(getPropertiesBundle());
 
-
         if (ads != null && ads.getExtraParams() != null) {
-            youboraLocalConfig.setAdExtraparam1(ads.getExtraParams().getParam1());
-            youboraLocalConfig.setAdExtraparam2(ads.getExtraParams().getParam2());
-            youboraLocalConfig.setAdExtraparam3(ads.getExtraParams().getParam3());
-            youboraLocalConfig.setAdExtraparam4(ads.getExtraParams().getParam4());
-            youboraLocalConfig.setAdExtraparam5(ads.getExtraParams().getParam5());
-            youboraLocalConfig.setAdExtraparam6(ads.getExtraParams().getParam6());
-            youboraLocalConfig.setAdExtraparam7(ads.getExtraParams().getParam7());
-            youboraLocalConfig.setAdExtraparam8(ads.getExtraParams().getParam8());
-            youboraLocalConfig.setAdExtraparam9(ads.getExtraParams().getParam9());
-            youboraLocalConfig.setAdExtraparam10(ads.getExtraParams().getParam10());
+            youboraLocalConfig.setAdCustomDimension1(ads.getExtraParams().getParam1());
+            youboraLocalConfig.setAdCustomDimension2(ads.getExtraParams().getParam2());
+            youboraLocalConfig.setAdCustomDimension3(ads.getExtraParams().getParam3());
+            youboraLocalConfig.setAdCustomDimension4(ads.getExtraParams().getParam4());
+            youboraLocalConfig.setAdCustomDimension5(ads.getExtraParams().getParam5());
+            youboraLocalConfig.setAdCustomDimension6(ads.getExtraParams().getParam6());
+            youboraLocalConfig.setAdCustomDimension7(ads.getExtraParams().getParam7());
+            youboraLocalConfig.setAdCustomDimension8(ads.getExtraParams().getParam8());
+            youboraLocalConfig.setAdCustomDimension9(ads.getExtraParams().getParam9());
+            youboraLocalConfig.setAdCustomDimension10(ads.getExtraParams().getParam10());
         }
 
         if (extraParams != null) {
-            youboraLocalConfig.setExtraparam1(extraParams.getParam1());
-            youboraLocalConfig.setExtraparam2(extraParams.getParam2());
-            youboraLocalConfig.setExtraparam3(extraParams.getParam3());
-            youboraLocalConfig.setExtraparam4(extraParams.getParam4());
-            youboraLocalConfig.setExtraparam5(extraParams.getParam5());
-            youboraLocalConfig.setExtraparam6(extraParams.getParam6());
-            youboraLocalConfig.setExtraparam7(extraParams.getParam7());
-            youboraLocalConfig.setExtraparam8(extraParams.getParam8());
-            youboraLocalConfig.setExtraparam9(extraParams.getParam9());
-            youboraLocalConfig.setExtraparam10(extraParams.getParam10());
+            youboraLocalConfig.setContentCustomDimension1(extraParams.getParam1());
+            youboraLocalConfig.setContentCustomDimension2(extraParams.getParam2());
+            youboraLocalConfig.setContentCustomDimension3(extraParams.getParam3());
+            youboraLocalConfig.setContentCustomDimension4(extraParams.getParam4());
+            youboraLocalConfig.setContentCustomDimension5(extraParams.getParam5());
+            youboraLocalConfig.setContentCustomDimension6(extraParams.getParam6());
+            youboraLocalConfig.setContentCustomDimension7(extraParams.getParam7());
+            youboraLocalConfig.setContentCustomDimension8(extraParams.getParam8());
+            youboraLocalConfig.setContentCustomDimension9(extraParams.getParam9());
+            youboraLocalConfig.setContentCustomDimension10(extraParams.getParam10());
         }
         return youboraLocalConfig;
     }

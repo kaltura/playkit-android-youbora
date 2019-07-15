@@ -12,6 +12,7 @@
 
 package com.kaltura.playkit.plugins.youbora;
 
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.kaltura.playkit.BuildConfig;
@@ -33,6 +34,7 @@ import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
+import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.LinkedHashSet;
 
@@ -66,13 +68,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
 
-    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, YouboraConfig pluginConfig) {
+    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, Options pluginConfig) {
         super(player);
         log.d("Start PKYouboraPlayerAdapter");
         this.messageBus = messageBus;
         this.mediaConfig = mediaConfig;
         updateDurationFromMediaConfig(mediaConfig);
-        this.houseHoldId = pluginConfig.getHouseHoldId();
+        this.houseHoldId = "household"; // TODO: getHousehold from options
         registerListeners();
     }
 
@@ -478,8 +480,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     }
 
-    public void setPluginConfig(YouboraConfig pluginConfig) {
-        this.houseHoldId = pluginConfig.getHouseHoldId();
+    public void setPluginConfig(Options pluginConfig) {
+        this.houseHoldId = "household"; // TODO: getHousehold from options
     }
 
     public void setLastReportedResource(String lastReportedResource) {

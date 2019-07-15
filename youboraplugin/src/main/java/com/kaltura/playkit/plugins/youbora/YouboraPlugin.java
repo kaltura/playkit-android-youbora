@@ -1,6 +1,7 @@
 package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -14,6 +15,7 @@ import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
+import com.npaw.youbora.lib6.plugin.Options;
 
 /**
  * Created by zivilan on 02/11/2016.
@@ -26,7 +28,7 @@ public class YouboraPlugin extends PKPlugin {
     private static PKYouboraAdsAdapter adsManager;
 
     private PKMediaConfig mediaConfig;
-    private YouboraConfig pluginConfig;
+    private Options pluginConfig;
     private NPAWPlugin npawPlugin;
     private Player player;
     private MessageBus messageBus;
@@ -64,7 +66,7 @@ public class YouboraPlugin extends PKPlugin {
 
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        npawPlugin = new NPAWPlugin(pluginConfig.getYouboraOptions());
+        npawPlugin = new NPAWPlugin(pluginConfig);
         loadPlugin();
     }
 
@@ -108,7 +110,7 @@ public class YouboraPlugin extends PKPlugin {
             pluginManager.setPluginConfig(pluginConfig);
         }
 
-        npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+        npawPlugin.setOptions(pluginConfig);
         npawPlugin.setAdapter(pluginManager);
 
         if (!isAdsMonitoring) {
@@ -132,7 +134,7 @@ public class YouboraPlugin extends PKPlugin {
         this.pluginConfig = parseConfig(config);
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
-            npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+            npawPlugin.setOptions(pluginConfig);
         }
 
         if (pluginManager == null) {
@@ -202,12 +204,16 @@ public class YouboraPlugin extends PKPlugin {
         }
     }
 
-    private static YouboraConfig parseConfig(Object config) {
+    private static Options parseConfig(Object config) {
         if (config instanceof YouboraConfig) {
-            return ((YouboraConfig) config);
+            return ((YouboraConfig) config).getYouboraOptions();
 
         } else if (config instanceof JsonObject) {
-            return new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
+            YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
+            return youboraConfig.getYouboraOptions();
+
+        } else if (config instanceof Bundle) {
+            return new Options((Bundle) config);
         }
         return null;
     }
