@@ -37,7 +37,7 @@ public class YouboraConfig {
 
     private String houseHoldId;    // which device is used to play
 
-    private boolean obfuscateIP;   // ip in dahsbord will be encrytpted
+    private boolean obfuscateIP;   // ip in dashboard will be encrypted
 
     private boolean httpSecure = true; // youbora events will be sent via https
 
