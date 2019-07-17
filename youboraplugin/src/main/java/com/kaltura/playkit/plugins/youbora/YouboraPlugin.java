@@ -210,12 +210,10 @@ public class YouboraPlugin extends PKPlugin {
         if (config instanceof YouboraConfig) {
             houseHoldId = ((YouboraConfig) config).getHouseHoldId();
             return ((YouboraConfig) config).getYouboraOptions();
-
         } else if (config instanceof JsonObject) {
             YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
             houseHoldId = youboraConfig.getHouseHoldId();
             return youboraConfig.getYouboraOptions();
-
         } else if (config instanceof Bundle) {
             Options options = new Options((Bundle) config);
             houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
