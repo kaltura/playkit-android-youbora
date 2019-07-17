@@ -15,6 +15,8 @@ import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.npaw.youbora.lib6.plugin.Options;
 
+import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY_HOUSEHOLD_ID;
+
 /**
  * Created by zivilan on 02/11/2016.
  */
@@ -30,6 +32,7 @@ public class YouboraPlugin extends PKPlugin {
     private NPAWPlugin npawPlugin;
     private Player player;
     private MessageBus messageBus;
+    private static String houseHoldId;
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
@@ -99,13 +102,13 @@ public class YouboraPlugin extends PKPlugin {
         if (!isMonitoring) {
             isMonitoring = true;
             if (pluginManager == null) {
-                pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
+                pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, houseHoldId);
             } else {
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
             pluginManager.setMediaConfig(mediaConfig);
-            pluginManager.setPluginConfig(pluginConfig);
+          //  pluginManager.setPluginConfig(pluginConfig);
         }
 
         npawPlugin.setOptions(pluginConfig);
@@ -129,6 +132,7 @@ public class YouboraPlugin extends PKPlugin {
         if (config == null) {
             return;
         }
+
         this.pluginConfig = parseConfig(config);
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
@@ -204,14 +208,18 @@ public class YouboraPlugin extends PKPlugin {
 
     private static Options parseConfig(Object config) {
         if (config instanceof YouboraConfig) {
+            houseHoldId = ((YouboraConfig) config).getHouseHoldId();
             return ((YouboraConfig) config).getYouboraOptions();
 
         } else if (config instanceof JsonObject) {
             YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
+            houseHoldId = youboraConfig.getHouseHoldId();
             return youboraConfig.getYouboraOptions();
 
         } else if (config instanceof Bundle) {
-            return new Options((Bundle) config);
+//            Options options = new Options((Bundle) config);
+//            houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
+//            return options;
         }
         return null;
     }

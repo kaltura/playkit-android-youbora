@@ -13,26 +13,7 @@ public class YouboraConfig {
 
     // Kaltura Youbora Keys for Bundle
 
-    public static final String KEY_HALT_ON_ERROR = "haltOnError";
-
-    public static final String KEY_SMART_ADS = "enableSmartAds";
-
-    public static final String KEY_ADS_EXPECTED = "adsExpected";
-
-    public static final String KEY_CONTENT_YEAR = "content.year";
-
-    public static final String KEY_CONTENT_CAST = "content.cast";
-
-    public static final String KEY_CONTENT_DIRECTOR = "content.director";
-
-    public static final String KEY_CONTENT_OWNER = "content.owner";
-
-    public static final String KEY_CONTENT_PARENTAL = "content.parental";
-
-    public static final String KEY_CONTENT_RATING = "content.rating";
-
-    public static final String KEY_CONTENT_QUALITY = "content.quality";
-
+    public static final String KEY_HOUSEHOLD_ID = "houseHoldId";
 
     private String accountCode;
 
@@ -197,7 +178,6 @@ public class YouboraConfig {
             youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
         }
 
-
         youboraLocalConfig.setAdResource(null);
         if (ads != null) {
             youboraLocalConfig.setAdCampaign(ads.getCampaign());
@@ -233,7 +213,6 @@ public class YouboraConfig {
         }
         return youboraLocalConfig;
     }
-
 
     private Bundle getPropertiesBundle() {
         if (getProperties() == null) {

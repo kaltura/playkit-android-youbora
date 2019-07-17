@@ -68,13 +68,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
 
-    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, Options pluginConfig) {
+    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, String houseHoldId) {
         super(player);
         log.d("Start PKYouboraPlayerAdapter");
         this.messageBus = messageBus;
         this.mediaConfig = mediaConfig;
         updateDurationFromMediaConfig(mediaConfig);
-        this.houseHoldId = "household"; // TODO: getHousehold from options
+        this.houseHoldId = houseHoldId;
         registerListeners();
     }
 
@@ -363,6 +363,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public String getHouseholdId() {
+        log.d("Household Id: " + houseHoldId);
         return houseHoldId;
     }
 
@@ -480,9 +481,9 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     }
 
-    public void setPluginConfig(Options pluginConfig) {
-        this.houseHoldId = "household"; // TODO: getHousehold from options
-    }
+//    public void setPluginConfig(Options pluginConfig) {
+//        this.plugin = pluginConfig;
+//    }
 
     public void setLastReportedResource(String lastReportedResource) {
         this.lastReportedResource = lastReportedResource;
