@@ -12,7 +12,6 @@
 
 package com.kaltura.playkit.plugins.youbora;
 
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.kaltura.playkit.BuildConfig;
@@ -30,11 +29,9 @@ import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
-import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
-import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.LinkedHashSet;
 
@@ -481,9 +478,9 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     }
 
-//    public void setPluginConfig(Options pluginConfig) {
-//        this.plugin = pluginConfig;
-//    }
+    public void setHouseHoldId(String houseHoldId) {
+        this.houseHoldId = houseHoldId;
+    }
 
     public void setLastReportedResource(String lastReportedResource) {
         this.lastReportedResource = lastReportedResource;

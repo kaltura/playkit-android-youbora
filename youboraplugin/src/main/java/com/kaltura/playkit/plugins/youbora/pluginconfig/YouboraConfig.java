@@ -15,6 +15,20 @@ public class YouboraConfig {
 
     public static final String KEY_HOUSEHOLD_ID = "houseHoldId";
 
+    public static final String KEY_CONTENT_METADATA_YEAR = "year";
+
+    public static final String KEY_CONTENT_METADATA_CAST = "cast";
+
+    public static final String KEY_CONTENT_METADATA_DIRECTOR = "director";
+
+    public static final String KEY_CONTENT_METADATA_OWNER = "owner";
+
+    public static final String KEY_CONTENT_METADATA_PARENTAL = "parental";
+
+    public static final String KEY_CONTENT_METADATA_RATING = "rating";
+
+    public static final String KEY_CONTENT_METADATA_QUALITY = "quality";
+
     private String accountCode;
 
     private String username;

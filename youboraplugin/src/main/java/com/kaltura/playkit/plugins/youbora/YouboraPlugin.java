@@ -84,7 +84,7 @@ public class YouboraPlugin extends PKPlugin {
         });
 
         messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
-                log.d("YouboraPlugin DURATION_CHANGE");
+            log.d("YouboraPlugin DURATION_CHANGE");
         });
 
         messageBus.addListener(this, PlayerEvent.stopped, event -> {
@@ -108,7 +108,7 @@ public class YouboraPlugin extends PKPlugin {
                 pluginManager.registerListeners();
             }
             pluginManager.setMediaConfig(mediaConfig);
-          //  pluginManager.setPluginConfig(pluginConfig);
+            pluginManager.setHouseHoldId(houseHoldId);
         }
 
         npawPlugin.setOptions(pluginConfig);
@@ -217,9 +217,9 @@ public class YouboraPlugin extends PKPlugin {
             return youboraConfig.getYouboraOptions();
 
         } else if (config instanceof Bundle) {
-//            Options options = new Options((Bundle) config);
-//            houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
-//            return options;
+            Options options = new Options((Bundle) config);
+            houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
+            return options;
         }
         return null;
     }
