@@ -142,90 +142,91 @@ public class YouboraConfig {
 
 
     public Options getYouboraOptions() {
-        Options youboraLocalConfig =  new Options();
+        Options youboraOptions =  new Options();
 
-        youboraLocalConfig.setAccountCode(accountCode);
-        youboraLocalConfig.setUsername(username);
-        youboraLocalConfig.setUserType(userType);
-        youboraLocalConfig.setNetworkObfuscateIp(obfuscateIP);
-        youboraLocalConfig.setHttpSecure(httpSecure);
+        youboraOptions.setAccountCode(accountCode);
+        youboraOptions.setUsername(username);
+        youboraOptions.setUserType(userType);
+        youboraOptions.setNetworkObfuscateIp(obfuscateIP);
+        youboraOptions.setHttpSecure(httpSecure);
 
-        youboraLocalConfig.setParseHls(false);
-        youboraLocalConfig.setParseCdnNode(false);
+        youboraOptions.setParseHls(false);
+        youboraOptions.setParseCdnNode(false);
 
-        youboraLocalConfig.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
-        youboraLocalConfig.setContentCdn(null);
+        youboraOptions.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
+        youboraOptions.setContentCdn(null);
+
 
         if (device != null) {
             if (device.getDeviceCode() != null) {
                 //Generic Data by code see in Device class what Codes are available
-                youboraLocalConfig.setDeviceCode(device.getDeviceCode());
+                youboraOptions.setDeviceCode(device.getDeviceCode());
             }
             // Specific Data
             if (device.getModel() != null) {
-                youboraLocalConfig.setDeviceModel(device.getModel());
+                youboraOptions.setDeviceModel(device.getModel());
             }
 
             if (device.getBrand() != null) {
-                youboraLocalConfig.setDeviceBrand(device.getBrand());
+                youboraOptions.setDeviceBrand(device.getBrand());
             }
 
             if (device.getType() != null) {
-                youboraLocalConfig.setDeviceType(device.getType());
+                youboraOptions.setDeviceType(device.getType());
             }
 
             if (device.getOsName() != null) {
-                youboraLocalConfig.setDeviceOsName(device.getOsName());
+                youboraOptions.setDeviceOsName(device.getOsName());
             }
 
             if (device.getOsVersion() != null) {
-                youboraLocalConfig.setDeviceOsVersion(device.getOsVersion());
+                youboraOptions.setDeviceOsVersion(device.getOsVersion());
             }
         }
 
         if (media != null) {
-            youboraLocalConfig.setContentIsLive(media.getIsLive());
-            youboraLocalConfig.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
-            youboraLocalConfig.setContentDuration(media.getDuration());
-            youboraLocalConfig.setContentTitle(media.getTitle());
-            youboraLocalConfig.setProgram(media.getTitle2());
-            youboraLocalConfig.setContentTransactionCode(media.getTransactionCode());
+            youboraOptions.setContentIsLive(media.getIsLive());
+            youboraOptions.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
+            youboraOptions.setContentDuration(media.getDuration());
+            youboraOptions.setContentTitle(media.getTitle());
+            youboraOptions.setProgram(media.getTitle2());
+            youboraOptions.setContentTransactionCode(media.getTransactionCode());
         }
 
-        youboraLocalConfig.setAdResource(null);
+        youboraOptions.setAdResource(null);
         if (ads != null) {
-            youboraLocalConfig.setAdCampaign(ads.getCampaign());
+            youboraOptions.setAdCampaign(ads.getCampaign());
         }
-        youboraLocalConfig.setAdTitle("");
+        youboraOptions.setAdTitle("");
 
-        youboraLocalConfig.setContentMetadata(getPropertiesBundle());
+        youboraOptions.setContentMetadata(getPropertiesBundle());
 
         if (ads != null && ads.getExtraParams() != null) {
-            youboraLocalConfig.setAdCustomDimension1(ads.getExtraParams().getParam1());
-            youboraLocalConfig.setAdCustomDimension2(ads.getExtraParams().getParam2());
-            youboraLocalConfig.setAdCustomDimension3(ads.getExtraParams().getParam3());
-            youboraLocalConfig.setAdCustomDimension4(ads.getExtraParams().getParam4());
-            youboraLocalConfig.setAdCustomDimension5(ads.getExtraParams().getParam5());
-            youboraLocalConfig.setAdCustomDimension6(ads.getExtraParams().getParam6());
-            youboraLocalConfig.setAdCustomDimension7(ads.getExtraParams().getParam7());
-            youboraLocalConfig.setAdCustomDimension8(ads.getExtraParams().getParam8());
-            youboraLocalConfig.setAdCustomDimension9(ads.getExtraParams().getParam9());
-            youboraLocalConfig.setAdCustomDimension10(ads.getExtraParams().getParam10());
+            youboraOptions.setAdCustomDimension1(ads.getExtraParams().getParam1());
+            youboraOptions.setAdCustomDimension2(ads.getExtraParams().getParam2());
+            youboraOptions.setAdCustomDimension3(ads.getExtraParams().getParam3());
+            youboraOptions.setAdCustomDimension4(ads.getExtraParams().getParam4());
+            youboraOptions.setAdCustomDimension5(ads.getExtraParams().getParam5());
+            youboraOptions.setAdCustomDimension6(ads.getExtraParams().getParam6());
+            youboraOptions.setAdCustomDimension7(ads.getExtraParams().getParam7());
+            youboraOptions.setAdCustomDimension8(ads.getExtraParams().getParam8());
+            youboraOptions.setAdCustomDimension9(ads.getExtraParams().getParam9());
+            youboraOptions.setAdCustomDimension10(ads.getExtraParams().getParam10());
         }
 
         if (extraParams != null) {
-            youboraLocalConfig.setContentCustomDimension1(extraParams.getParam1());
-            youboraLocalConfig.setContentCustomDimension2(extraParams.getParam2());
-            youboraLocalConfig.setContentCustomDimension3(extraParams.getParam3());
-            youboraLocalConfig.setContentCustomDimension4(extraParams.getParam4());
-            youboraLocalConfig.setContentCustomDimension5(extraParams.getParam5());
-            youboraLocalConfig.setContentCustomDimension6(extraParams.getParam6());
-            youboraLocalConfig.setContentCustomDimension7(extraParams.getParam7());
-            youboraLocalConfig.setContentCustomDimension8(extraParams.getParam8());
-            youboraLocalConfig.setContentCustomDimension9(extraParams.getParam9());
-            youboraLocalConfig.setContentCustomDimension10(extraParams.getParam10());
+            youboraOptions.setContentCustomDimension1(extraParams.getParam1());
+            youboraOptions.setContentCustomDimension2(extraParams.getParam2());
+            youboraOptions.setContentCustomDimension3(extraParams.getParam3());
+            youboraOptions.setContentCustomDimension4(extraParams.getParam4());
+            youboraOptions.setContentCustomDimension5(extraParams.getParam5());
+            youboraOptions.setContentCustomDimension6(extraParams.getParam6());
+            youboraOptions.setContentCustomDimension7(extraParams.getParam7());
+            youboraOptions.setContentCustomDimension8(extraParams.getParam8());
+            youboraOptions.setContentCustomDimension9(extraParams.getParam9());
+            youboraOptions.setContentCustomDimension10(extraParams.getParam10());
         }
-        return youboraLocalConfig;
+        return youboraOptions;
     }
 
     private Bundle getPropertiesBundle() {
