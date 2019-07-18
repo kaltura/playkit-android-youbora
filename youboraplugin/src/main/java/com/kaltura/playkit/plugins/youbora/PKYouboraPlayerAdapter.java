@@ -29,7 +29,6 @@ import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
-import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
@@ -66,13 +65,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
 
-    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, YouboraConfig pluginConfig) {
+    PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, String houseHoldId) {
         super(player);
         log.d("Start PKYouboraPlayerAdapter");
         this.messageBus = messageBus;
         this.mediaConfig = mediaConfig;
         updateDurationFromMediaConfig(mediaConfig);
-        this.houseHoldId = pluginConfig.getHouseHoldId();
+        this.houseHoldId = houseHoldId;
         registerListeners();
     }
 
@@ -361,6 +360,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public String getHouseholdId() {
+        log.d("Household Id: " + houseHoldId);
         return houseHoldId;
     }
 
@@ -478,8 +478,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     }
 
-    public void setPluginConfig(YouboraConfig pluginConfig) {
-        this.houseHoldId = pluginConfig.getHouseHoldId();
+    public void setHouseHoldId(String houseHoldId) {
+        this.houseHoldId = houseHoldId;
     }
 
     public void setLastReportedResource(String lastReportedResource) {

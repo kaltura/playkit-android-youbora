@@ -1,6 +1,7 @@
 package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -12,6 +13,9 @@ import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
+import com.npaw.youbora.lib6.plugin.Options;
+
+import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY_HOUSEHOLD_ID;
 
 /**
  * Created by zivilan on 02/11/2016.
@@ -24,10 +28,11 @@ public class YouboraPlugin extends PKPlugin {
     private static PKYouboraAdsAdapter adsManager;
 
     private PKMediaConfig mediaConfig;
-    private YouboraConfig pluginConfig;
+    private Options pluginConfig;
     private NPAWPlugin npawPlugin;
     private Player player;
     private MessageBus messageBus;
+    private static String houseHoldId;
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
@@ -62,7 +67,7 @@ public class YouboraPlugin extends PKPlugin {
 
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        npawPlugin = new NPAWPlugin(pluginConfig.getYouboraOptions());
+        npawPlugin = new NPAWPlugin(pluginConfig);
         loadPlugin();
     }
 
@@ -79,7 +84,7 @@ public class YouboraPlugin extends PKPlugin {
         });
 
         messageBus.addListener(this, PlayerEvent.durationChanged, event -> {
-                log.d("YouboraPlugin DURATION_CHANGE");
+            log.d("YouboraPlugin DURATION_CHANGE");
         });
 
         messageBus.addListener(this, PlayerEvent.stopped, event -> {
@@ -97,16 +102,16 @@ public class YouboraPlugin extends PKPlugin {
         if (!isMonitoring) {
             isMonitoring = true;
             if (pluginManager == null) {
-                pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, pluginConfig);
+                pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, houseHoldId);
             } else {
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
             pluginManager.setMediaConfig(mediaConfig);
-            pluginManager.setPluginConfig(pluginConfig);
+            pluginManager.setHouseHoldId(houseHoldId);
         }
 
-        npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+        npawPlugin.setOptions(pluginConfig);
         npawPlugin.setAdapter(pluginManager);
 
         if (!isAdsMonitoring) {
@@ -127,10 +132,11 @@ public class YouboraPlugin extends PKPlugin {
         if (config == null) {
             return;
         }
+
         this.pluginConfig = parseConfig(config);
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
-            npawPlugin.setOptions(pluginConfig.getYouboraOptions());
+            npawPlugin.setOptions(pluginConfig);
         }
 
         if (pluginManager == null) {
@@ -200,12 +206,18 @@ public class YouboraPlugin extends PKPlugin {
         }
     }
 
-    private static YouboraConfig parseConfig(Object config) {
+    private static Options parseConfig(Object config) {
         if (config instanceof YouboraConfig) {
-            return ((YouboraConfig) config);
-
+            houseHoldId = ((YouboraConfig) config).getHouseHoldId();
+            return ((YouboraConfig) config).getYouboraOptions();
         } else if (config instanceof JsonObject) {
-            return new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
+            YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
+            houseHoldId = youboraConfig.getHouseHoldId();
+            return youboraConfig.getYouboraOptions();
+        } else if (config instanceof Bundle) {
+            Options options = new Options((Bundle) config);
+            houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
+            return options;
         }
         return null;
     }
