@@ -17,11 +17,11 @@ try {
 
     publish {
         artifactId = 'youboraplugin'
-        description = 'PlayKit Kava Plugin'
+        desc = 'PlayKit Kava Plugin'
         repoName = 'android'
         userOrg = 'kaltura'
         groupId = 'com.kaltura.playkit'
-        version = libVersion
+        publishVersion = libVersion
         autoPublish = true
         licences = ['AGPL-3.0']
     }
