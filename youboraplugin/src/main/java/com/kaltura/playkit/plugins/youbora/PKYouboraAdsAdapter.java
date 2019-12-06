@@ -360,7 +360,6 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
                 return;
             }
             printLastReportedAdPlayhead();
-            fireAllAdsCompleted();
             sendReportEvent(event.eventType());
         });
     }

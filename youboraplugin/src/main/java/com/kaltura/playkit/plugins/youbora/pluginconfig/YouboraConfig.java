@@ -37,8 +37,6 @@ public class YouboraConfig {
 
     private String houseHoldId;    // which device is used to play
 
-    private boolean obfuscateIP;   // ip in dashboard will be encrypted
-
     private boolean httpSecure = true; // youbora events will be sent via https
 
     private Device device;
@@ -75,10 +73,6 @@ public class YouboraConfig {
         this.userType = userType;
     }
 
-    public boolean isObfuscateIP() {
-        return obfuscateIP;
-    }
-
     public boolean getHttpSecure() {
         return httpSecure;
     }
@@ -93,11 +87,6 @@ public class YouboraConfig {
 
     public void setHouseHoldId(String houseHoldId) {
         this.houseHoldId = houseHoldId;
-    }
-
-
-    public void setObfuscateIP(boolean obfuscateIP) {
-        this.obfuscateIP = obfuscateIP;
     }
 
     public Device getDevice() {
@@ -147,7 +136,6 @@ public class YouboraConfig {
         youboraOptions.setAccountCode(accountCode);
         youboraOptions.setUsername(username);
         youboraOptions.setUserType(userType);
-        youboraOptions.setNetworkObfuscateIp(obfuscateIP);
         youboraOptions.setHttpSecure(httpSecure);
 
         youboraOptions.setParseHls(false);
@@ -258,7 +246,6 @@ public class YouboraConfig {
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
@@ -266,7 +253,7 @@ public class YouboraConfig {
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isObfuscateIP, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
+        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
         return youboraConfig;
     }
 
@@ -320,14 +307,13 @@ public class YouboraConfig {
     }
 
     @NonNull
-    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive obfuscateIP, JsonPrimitive httpSecure,
+    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive httpSecure,
                                                   JsonObject device, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
         youboraConfig.add("userType", userType);
         youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("obfuscateIP", obfuscateIP);
         youboraConfig.add("httpSecure", httpSecure);
 
         youboraConfig.add("device", device);
