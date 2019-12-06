@@ -253,8 +253,7 @@ public class YouboraConfig {
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
-        return youboraConfig;
+        return getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
     }
 
     private JsonObject getDeviceJsonObject() {

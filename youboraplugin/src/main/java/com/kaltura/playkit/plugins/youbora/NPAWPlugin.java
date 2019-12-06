@@ -2,7 +2,6 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
 
-import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import com.npaw.youbora.lib6.plugin.Options;
 import com.npaw.youbora.lib6.plugin.Plugin;
 

@@ -384,18 +384,17 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
 
         PKAdErrorType adErrorType = (PKAdErrorType) error.errorType;
 
-        switch (adErrorType) {
-            case QUIET_LOG_ERROR:
-                log.d("QUIET_LOG_ERROR. Avoid sending to Youbora.");
-                fireError(error.message, PKAdErrorType.QUIET_LOG_ERROR.name(), null, null);
-                return;
-            default:
-                log.e("onAdError " + adErrorType.name());
-                Exception adException = null;
-                if (error.exception instanceof  Exception) {
-                    adException = (Exception) error.exception;
-                }
-                fireFatalError(error.message, adErrorType.name(), null, adException);
+        if (adErrorType == PKAdErrorType.QUIET_LOG_ERROR) {
+            log.d("QUIET_LOG_ERROR. Avoid sending to Youbora.");
+            fireError(error.message, PKAdErrorType.QUIET_LOG_ERROR.name(), null, null);
+            return;
+        } else {
+            log.e("onAdError " + adErrorType.name());
+            Exception adException = null;
+            if (error.exception instanceof Exception) {
+                adException = (Exception) error.exception;
+            }
+            fireFatalError(error.message, adErrorType.name(), null, adException);
         }
         sendReportEvent(adErrorType);
     }

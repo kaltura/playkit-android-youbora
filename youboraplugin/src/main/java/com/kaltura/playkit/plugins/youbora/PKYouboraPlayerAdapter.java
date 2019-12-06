@@ -164,7 +164,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private void addListeners() {
         messageBus.addListener(this, PlayerEvent.playbackInfoUpdated, event -> {
             printReceivedPlayerEvent(event);
-            PlaybackInfo currentPlaybackInfo = ((PlayerEvent.PlaybackInfoUpdated) event).playbackInfo;
+            PlaybackInfo currentPlaybackInfo = event.playbackInfo;
             lastReportedBitrate = currentPlaybackInfo.getVideoBitrate();
             lastReportedThroughput = currentPlaybackInfo.getVideoThroughput();
             lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
