@@ -238,6 +238,7 @@ public class YouboraConfig {
 
         youboraOptions.setContentGenre((prop.getGenre() != null) ? prop.getGenre() : "");
         youboraOptions.setContentType((prop.getType() != null) ? prop.getType() : "");
+        youboraOptions.setContentTransactionCode((prop.getTransactionType() != null) ? prop.getTransactionType() : "");
         youboraOptions.setContentPrice((prop.getPrice() != null) ? prop.getPrice() : "");
         youboraOptions.setContentRendition((prop.getQuality() != null) ? prop.getQuality() : ""); // Name or value of the current rendition (quality) of the content.
         youboraOptions.setContentPackage((prop.getContentPackage() != null) ? prop.getContentPackage() : "");
@@ -273,8 +274,14 @@ public class YouboraConfig {
         Bundle propertiesBundle = new Bundle();
         propertiesBundle.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
         propertiesBundle.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
+        propertiesBundle.putString("audioType", (prop.getAudioType() != null) ? prop.getAudioType() : "");
         propertiesBundle.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
         propertiesBundle.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
+        propertiesBundle.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
+        propertiesBundle.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
+        propertiesBundle.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
+        propertiesBundle.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
+
         return propertiesBundle;
     }
 
@@ -347,11 +354,11 @@ public class YouboraConfig {
     private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive isUserObfuscateIp, JsonPrimitive httpSecure,
                                                   JsonObject device, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
-        youboraConfig.add("config.accountCode", accountCode);
+        youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
         youboraConfig.add("userType", userType);
         youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("user.ObfuscateIp", isUserObfuscateIp);
+        youboraConfig.add("obfuscateIP", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
 
         youboraConfig.add("device", device);
