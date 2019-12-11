@@ -359,7 +359,7 @@ public class YouboraConfig {
         youboraConfig.add("username", username);
         youboraConfig.add("userType", userType);
         youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("obfuscateIP", isUserObfuscateIp);
+        youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
 
         youboraConfig.add("device", device);
