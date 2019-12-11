@@ -283,6 +283,7 @@ public class YouboraConfig {
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
+        JsonPrimitive isUserObfuscateIp = new JsonPrimitive(isUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
@@ -290,7 +291,7 @@ public class YouboraConfig {
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        return getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
+        return getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isUserObfuscateIp, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
     }
 
     private JsonObject getDeviceJsonObject() {
@@ -343,13 +344,14 @@ public class YouboraConfig {
     }
 
     @NonNull
-    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive httpSecure,
+    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive isUserObfuscateIp, JsonPrimitive httpSecure,
                                                   JsonObject device, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
-        youboraConfig.add("accountCode", accountCode);
+        youboraConfig.add("config.accountCode", accountCode);
         youboraConfig.add("username", username);
         youboraConfig.add("userType", userType);
         youboraConfig.add("houseHoldId", houseHoldId);
+        youboraConfig.add("user.ObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
 
         youboraConfig.add("device", device);
