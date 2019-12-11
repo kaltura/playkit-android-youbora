@@ -1,6 +1,7 @@
 package com.kaltura.playkit.plugins.youbora;
 
-import com.npaw.youbora.lib6.adapter.PlayerAdapter;
+import android.content.Context;
+
 import com.npaw.youbora.lib6.plugin.Options;
 import com.npaw.youbora.lib6.plugin.Plugin;
 
@@ -10,11 +11,7 @@ import com.npaw.youbora.lib6.plugin.Plugin;
 
 public class NPAWPlugin extends Plugin {
 
-    public NPAWPlugin(Options options) {
-        super(options);
-    }
-
-    public NPAWPlugin(Options options, PlayerAdapter adapter) {
-        super(options, adapter);
+    public NPAWPlugin(Options options, Context context) {
+        super(options, context);
     }
 }

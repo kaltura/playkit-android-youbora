@@ -67,7 +67,7 @@ public class YouboraPlugin extends PKPlugin {
 
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        npawPlugin = new NPAWPlugin(pluginConfig);
+        npawPlugin = new NPAWPlugin(pluginConfig, context);
         loadPlugin();
     }
 
