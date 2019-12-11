@@ -236,28 +236,29 @@ public class YouboraConfig {
             return;
         }
 
-        youboraOptions.setContentGenre((prop.getGenre() != null) ? prop.getGenre() : "");
-        youboraOptions.setContentType((prop.getType() != null) ? prop.getType() : "");
-        youboraOptions.setContentTransactionCode((prop.getTransactionType() != null) ? prop.getTransactionType() : "");
-        youboraOptions.setContentPrice((prop.getPrice() != null) ? prop.getPrice() : "");
-        youboraOptions.setContentRendition((prop.getQuality() != null) ? prop.getQuality() : ""); // Name or value of the current rendition (quality) of the content.
-        youboraOptions.setContentPackage((prop.getContentPackage() != null) ? prop.getContentPackage() : "");
-        youboraOptions.setContentSaga((prop.getContentSaga() != null) ? prop.getContentSaga() : "");
-        youboraOptions.setContentTvShow((prop.getContentTvShow() != null) ? prop.getContentTvShow() : "");
-        youboraOptions.setContentSeason((prop.getContentSeason() != null) ? prop.getContentSeason() : "");
-        youboraOptions.setContentEpisodeTitle((prop.getContentEpisodeTitle() != null) ? prop.getContentEpisodeTitle() : "");
-        youboraOptions.setContentChannel((prop.getContentChannel() != null) ? prop.getContentChannel() : "");
-        youboraOptions.setContentId((prop.getContentId() != null) ? prop.getContentId() : "");
-        youboraOptions.setContentImdbId((prop.getContentImdbId() != null) ? prop.getContentImdbId() : "");
-        youboraOptions.setContentGracenoteId((prop.getContentGracenoteId() != null) ? prop.getContentGracenoteId() : "");
-        youboraOptions.setContentLanguage((prop.getContentLanguage() != null) ? prop.getContentLanguage() : "");
-        youboraOptions.setContentSubtitles((prop.getContentSubtitles() != null) ? prop.getContentSubtitles() : "");
-        youboraOptions.setContentContractedResolution((prop.getContentContractedResolution() != null) ? prop.getContentContractedResolution() : "");
-        youboraOptions.setContentPlaybackType((prop.getContentPlaybackType() != null) ? prop.getContentPlaybackType() : "");
-        youboraOptions.setContentDrm((prop.getContentDrm() != null) ? prop.getContentDrm() : "");
-        youboraOptions.setContentEncodingVideoCodec((prop.getContentEncodingVideoCodec() != null) ? prop.getContentEncodingVideoCodec() : "");
-        youboraOptions.setContentEncodingAudioCodec((prop.getContentEncodingAudioCodec() != null) ? prop.getContentEncodingAudioCodec() : "");
-        youboraOptions.setContentEncodingContainerFormat((prop.getContentEncodingContainerFormat() != null) ? prop.getContentEncodingContainerFormat() : "");
+        youboraOptions.setContentGenre(prop.getGenre());
+        youboraOptions.setContentType(prop.getType());
+        youboraOptions.setContentTransactionCode(prop.getTransactionType());
+        youboraOptions.setContentPrice(prop.getPrice());
+        youboraOptions.setContentRendition(prop.getQuality()); // Name or value of the current rendition (quality) of the content.
+        youboraOptions.setContentPackage(prop.getContentPackage());
+        youboraOptions.setContentSaga(prop.getContentSaga());
+        youboraOptions.setContentTvShow(prop.getContentTvShow());
+        youboraOptions.setContentSeason(prop.getContentSeason());
+        youboraOptions.setContentEpisodeTitle(prop.getContentEpisodeTitle());
+        youboraOptions.setContentChannel(prop.getContentChannel());
+        youboraOptions.setContentId(prop.getContentId());
+        youboraOptions.setContentImdbId(prop.getContentImdbId());
+        youboraOptions.setContentGracenoteId(prop.getContentGracenoteId());
+        youboraOptions.setContentLanguage(prop.getContentLanguage());
+        youboraOptions.setContentSubtitles(prop.getContentSubtitles());
+        youboraOptions.setContentContractedResolution(prop.getContentContractedResolution());
+        youboraOptions.setContentPlaybackType(prop.getContentPlaybackType());
+        youboraOptions.setContentDrm(prop.getContentDrm());
+        youboraOptions.setContentEncodingVideoCodec(prop.getContentEncodingVideoCodec());
+        youboraOptions.setContentEncodingAudioCodec(prop.getContentEncodingAudioCodec());
+        youboraOptions.setContentEncodingCodecProfile(prop.getContentEncodingCodecProfile());
+        youboraOptions.setContentEncodingContainerFormat(prop.getContentEncodingContainerFormat());
     }
 
     /**
