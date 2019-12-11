@@ -392,6 +392,26 @@ public class YouboraConfig {
         propertiesEntry.addProperty("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
         propertiesEntry.addProperty("device", (prop.getDevice() != null) ? prop.getDevice() : "");
         propertiesEntry.addProperty("quality", (prop.getQuality() != null) ? prop.getQuality() : "");
+
+        propertiesEntry.addProperty("contentPackage", (prop.getContentPackage() != null) ? prop.getContentPackage() : "");
+        propertiesEntry.addProperty("contentSaga", (prop.getContentSaga() != null) ? prop.getContentSaga() : "");
+        propertiesEntry.addProperty("contentTvShow", (prop.getContentTvShow() != null) ? prop.getContentTvShow() : "");
+        propertiesEntry.addProperty("contentSeason", (prop.getContentSeason() != null) ? prop.getContentSeason() : "");
+        propertiesEntry.addProperty("contentEpisodeTitle", (prop.getContentEpisodeTitle() != null) ? prop.getContentEpisodeTitle() : "");
+        propertiesEntry.addProperty("contentChannel", (prop.getContentChannel() != null) ? prop.getContentChannel() : "");
+        propertiesEntry.addProperty("contentId", (prop.getContentId() != null) ? prop.getContentId() : "");
+        propertiesEntry.addProperty("contentImdbId", (prop.getContentImdbId() != null) ? prop.getContentImdbId() : "");
+        propertiesEntry.addProperty("contentGracenoteId", (prop.getContentGracenoteId() != null) ? prop.getContentGracenoteId() : "");
+        propertiesEntry.addProperty("contentLanguage", (prop.getContentLanguage() != null) ? prop.getContentLanguage() : "");
+        propertiesEntry.addProperty("contentSubtitles", (prop.getContentSubtitles() != null) ? prop.getContentSubtitles() : "");
+        propertiesEntry.addProperty("contentContractedResolution", (prop.getContentContractedResolution() != null) ? prop.getContentContractedResolution() : "");
+        propertiesEntry.addProperty("contentPlaybackType", (prop.getContentPlaybackType() != null) ? prop.getContentPlaybackType() : "");
+        propertiesEntry.addProperty("contentDrm", (prop.getContentDrm() != null) ? prop.getContentDrm() : "");
+        propertiesEntry.addProperty("contentEncodingVideoCodec", (prop.getContentEncodingVideoCodec() != null) ? prop.getContentEncodingVideoCodec() : "");
+        propertiesEntry.addProperty("contentEncodingAudioCodec", (prop.getContentEncodingAudioCodec() != null) ? prop.getContentEncodingAudioCodec() : "");
+        propertiesEntry.addProperty("contentEncodingCodecProfile", (prop.getContentEncodingCodecProfile() != null) ? prop.getContentEncodingCodecProfile() : "");
+        propertiesEntry.addProperty("contentEncodingContainerFormat", (prop.getContentEncodingContainerFormat() != null) ? prop.getContentEncodingContainerFormat() : "");
+
         return propertiesEntry;
     }
 
