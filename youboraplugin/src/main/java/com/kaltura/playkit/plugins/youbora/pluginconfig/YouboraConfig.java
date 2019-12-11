@@ -37,6 +37,8 @@ public class YouboraConfig {
 
     private String houseHoldId;    // which device is used to play
 
+    private boolean userObfuscateIp; // Option to obfuscate the IP.
+
     private boolean httpSecure = true; // youbora events will be sent via https
 
     private Device device;
@@ -89,6 +91,14 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
+    public boolean isUserObfuscateIp() {
+        return userObfuscateIp;
+    }
+
+    public void setUserObfuscateIp(boolean userObfuscateIp) {
+        this.userObfuscateIp = userObfuscateIp;
+    }
+
     public Device getDevice() {
         return device;
     }
@@ -136,6 +146,7 @@ public class YouboraConfig {
         youboraOptions.setAccountCode(accountCode);
         youboraOptions.setUsername(username);
         youboraOptions.setUserType(userType);
+        youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
 
         youboraOptions.setParseHls(false);
@@ -187,7 +198,9 @@ public class YouboraConfig {
         }
         youboraOptions.setAdTitle("");
 
-        youboraOptions.setContentMetadata(getPropertiesBundle());
+        setContentPropertiesBundle(youboraOptions);
+
+        youboraOptions.setContentMetadata(getContentMetaDataBundle());
 
         if (ads != null && ads.getExtraParams() != null) {
             youboraOptions.setAdCustomDimension1(ads.getExtraParams().getParam1());
@@ -217,28 +230,52 @@ public class YouboraConfig {
         return youboraOptions;
     }
 
-    private Bundle getPropertiesBundle() {
-        if (getProperties() == null) {
+    private void setContentPropertiesBundle(Options youboraOptions) {
+        Properties prop = getProperties();
+        if (prop == null) {
+            return;
+        }
+
+        youboraOptions.setContentGenre((prop.getGenre() != null) ? prop.getGenre() : "");
+        youboraOptions.setContentType((prop.getType() != null) ? prop.getType() : "");
+        youboraOptions.setContentPrice((prop.getPrice() != null) ? prop.getPrice() : "");
+        youboraOptions.setContentRendition((prop.getQuality() != null) ? prop.getQuality() : ""); // Name or value of the current rendition (quality) of the content.
+        youboraOptions.setContentPackage((prop.getContentPackage() != null) ? prop.getContentPackage() : "");
+        youboraOptions.setContentSaga((prop.getContentSaga() != null) ? prop.getContentSaga() : "");
+        youboraOptions.setContentTvShow((prop.getContentTvShow() != null) ? prop.getContentTvShow() : "");
+        youboraOptions.setContentSeason((prop.getContentSeason() != null) ? prop.getContentSeason() : "");
+        youboraOptions.setContentEpisodeTitle((prop.getContentEpisodeTitle() != null) ? prop.getContentEpisodeTitle() : "");
+        youboraOptions.setContentChannel((prop.getContentChannel() != null) ? prop.getContentChannel() : "");
+        youboraOptions.setContentId((prop.getContentId() != null) ? prop.getContentId() : "");
+        youboraOptions.setContentImdbId((prop.getContentImdbId() != null) ? prop.getContentImdbId() : "");
+        youboraOptions.setContentGracenoteId((prop.getContentGracenoteId() != null) ? prop.getContentGracenoteId() : "");
+        youboraOptions.setContentLanguage((prop.getContentLanguage() != null) ? prop.getContentLanguage() : "");
+        youboraOptions.setContentSubtitles((prop.getContentSubtitles() != null) ? prop.getContentSubtitles() : "");
+        youboraOptions.setContentContractedResolution((prop.getContentContractedResolution() != null) ? prop.getContentContractedResolution() : "");
+        youboraOptions.setContentPlaybackType((prop.getContentPlaybackType() != null) ? prop.getContentPlaybackType() : "");
+        youboraOptions.setContentDrm((prop.getContentDrm() != null) ? prop.getContentDrm() : "");
+        youboraOptions.setContentEncodingVideoCodec((prop.getContentEncodingVideoCodec() != null) ? prop.getContentEncodingVideoCodec() : "");
+        youboraOptions.setContentEncodingAudioCodec((prop.getContentEncodingAudioCodec() != null) ? prop.getContentEncodingAudioCodec() : "");
+        youboraOptions.setContentEncodingContainerFormat((prop.getContentEncodingContainerFormat() != null) ? prop.getContentEncodingContainerFormat() : "");
+    }
+
+    /**
+     * Containing mixed extra information about the content like: director,
+     * parental rating, device info or the audio channels.
+     * @return bundle having properties
+     */
+    private Bundle getContentMetaDataBundle() {
+        Properties prop = getProperties();
+        if (prop == null) {
             return new Bundle();
         }
 
-        Properties prop = getProperties();
-        Bundle propertiesBunble = new Bundle();
-        propertiesBunble.putString("genre", (prop.getGenre() != null) ? prop.getGenre() : "");
-        propertiesBunble.putString("type", (prop.getType() != null) ? prop.getType() : "");
-        propertiesBunble.putString("transaction_type", (prop.getTransactionType() != null) ? prop.getTransactionType() : "");
-        propertiesBunble.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
-        propertiesBunble.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
-        propertiesBunble.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
-        propertiesBunble.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
-        propertiesBunble.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
-        propertiesBunble.putString("price", (prop.getPrice() != null) ? prop.getPrice() : "");
-        propertiesBunble.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
-        propertiesBunble.putString("audioType", (prop.getAudioType() != null) ? prop.getAudioType() : "");
-        propertiesBunble.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
-        propertiesBunble.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
-        propertiesBunble.putString("quality", (prop.getQuality() != null) ? prop.getQuality() : "");
-        return propertiesBunble;
+        Bundle propertiesBundle = new Bundle();
+        propertiesBundle.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
+        propertiesBundle.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
+        propertiesBundle.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
+        propertiesBundle.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
+        return propertiesBundle;
     }
 
     public JsonObject toJson() {
