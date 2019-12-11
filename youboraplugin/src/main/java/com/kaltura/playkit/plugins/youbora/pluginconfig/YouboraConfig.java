@@ -37,7 +37,7 @@ public class YouboraConfig {
 
     private String houseHoldId;    // which device is used to play
 
-    private boolean obfuscateIP;   // ip in dashboard will be encrypted
+    private boolean userObfuscateIp; // Option to obfuscate the IP.
 
     private boolean httpSecure = true; // youbora events will be sent via https
 
@@ -75,10 +75,6 @@ public class YouboraConfig {
         this.userType = userType;
     }
 
-    public boolean isObfuscateIP() {
-        return obfuscateIP;
-    }
-
     public boolean getHttpSecure() {
         return httpSecure;
     }
@@ -95,9 +91,12 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
+    public boolean isUserObfuscateIp() {
+        return userObfuscateIp;
+    }
 
-    public void setObfuscateIP(boolean obfuscateIP) {
-        this.obfuscateIP = obfuscateIP;
+    public void setUserObfuscateIp(boolean userObfuscateIp) {
+        this.userObfuscateIp = userObfuscateIp;
     }
 
     public Device getDevice() {
@@ -147,7 +146,7 @@ public class YouboraConfig {
         youboraOptions.setAccountCode(accountCode);
         youboraOptions.setUsername(username);
         youboraOptions.setUserType(userType);
-        youboraOptions.setNetworkObfuscateIp(obfuscateIP);
+        youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
 
         youboraOptions.setParseHls(false);
@@ -199,7 +198,9 @@ public class YouboraConfig {
         }
         youboraOptions.setAdTitle("");
 
-        youboraOptions.setContentMetadata(getPropertiesBundle());
+        setContentPropertiesBundle(youboraOptions);
+
+        youboraOptions.setContentMetadata(getContentMetaDataBundle());
 
         if (ads != null && ads.getExtraParams() != null) {
             youboraOptions.setAdCustomDimension1(ads.getExtraParams().getParam1());
@@ -229,28 +230,60 @@ public class YouboraConfig {
         return youboraOptions;
     }
 
-    private Bundle getPropertiesBundle() {
-        if (getProperties() == null) {
+    private void setContentPropertiesBundle(Options youboraOptions) {
+        Properties prop = getProperties();
+        if (prop == null) {
+            return;
+        }
+
+        youboraOptions.setContentGenre(prop.getGenre());
+        youboraOptions.setContentType(prop.getType());
+        youboraOptions.setContentTransactionCode(prop.getTransactionType());
+        youboraOptions.setContentPrice(prop.getPrice());
+        youboraOptions.setContentRendition(prop.getQuality()); // Name or value of the current rendition (quality) of the content.
+        youboraOptions.setContentPackage(prop.getContentPackage());
+        youboraOptions.setContentSaga(prop.getContentSaga());
+        youboraOptions.setContentTvShow(prop.getContentTvShow());
+        youboraOptions.setContentSeason(prop.getContentSeason());
+        youboraOptions.setContentEpisodeTitle(prop.getContentEpisodeTitle());
+        youboraOptions.setContentChannel(prop.getContentChannel());
+        youboraOptions.setContentId(prop.getContentId());
+        youboraOptions.setContentImdbId(prop.getContentImdbId());
+        youboraOptions.setContentGracenoteId(prop.getContentGracenoteId());
+        youboraOptions.setContentLanguage(prop.getContentLanguage());
+        youboraOptions.setContentSubtitles(prop.getContentSubtitles());
+        youboraOptions.setContentContractedResolution(prop.getContentContractedResolution());
+        youboraOptions.setContentPlaybackType(prop.getContentPlaybackType());
+        youboraOptions.setContentDrm(prop.getContentDrm());
+        youboraOptions.setContentEncodingVideoCodec(prop.getContentEncodingVideoCodec());
+        youboraOptions.setContentEncodingAudioCodec(prop.getContentEncodingAudioCodec());
+        youboraOptions.setContentEncodingCodecProfile(prop.getContentEncodingCodecProfile());
+        youboraOptions.setContentEncodingContainerFormat(prop.getContentEncodingContainerFormat());
+    }
+
+    /**
+     * Containing mixed extra information about the content like: director,
+     * parental rating, device info or the audio channels.
+     * @return bundle having properties
+     */
+    private Bundle getContentMetaDataBundle() {
+        Properties prop = getProperties();
+        if (prop == null) {
             return new Bundle();
         }
 
-        Properties prop = getProperties();
-        Bundle propertiesBunble = new Bundle();
-        propertiesBunble.putString("genre", (prop.getGenre() != null) ? prop.getGenre() : "");
-        propertiesBunble.putString("type", (prop.getType() != null) ? prop.getType() : "");
-        propertiesBunble.putString("transaction_type", (prop.getTransactionType() != null) ? prop.getTransactionType() : "");
-        propertiesBunble.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
-        propertiesBunble.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
-        propertiesBunble.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
-        propertiesBunble.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
-        propertiesBunble.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
-        propertiesBunble.putString("price", (prop.getPrice() != null) ? prop.getPrice() : "");
-        propertiesBunble.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
-        propertiesBunble.putString("audioType", (prop.getAudioType() != null) ? prop.getAudioType() : "");
-        propertiesBunble.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
-        propertiesBunble.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
-        propertiesBunble.putString("quality", (prop.getQuality() != null) ? prop.getQuality() : "");
-        return propertiesBunble;
+        Bundle propertiesBundle = new Bundle();
+        propertiesBundle.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
+        propertiesBundle.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
+        propertiesBundle.putString("audioType", (prop.getAudioType() != null) ? prop.getAudioType() : "");
+        propertiesBundle.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
+        propertiesBundle.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
+        propertiesBundle.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
+        propertiesBundle.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
+        propertiesBundle.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
+        propertiesBundle.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
+
+        return propertiesBundle;
     }
 
     public JsonObject toJson() {
@@ -258,7 +291,7 @@ public class YouboraConfig {
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive isObfuscateIP = new JsonPrimitive(isObfuscateIP());
+        JsonPrimitive isUserObfuscateIp = new JsonPrimitive(isUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
@@ -266,8 +299,7 @@ public class YouboraConfig {
         adsEntry.addProperty("campaign", (getAds() != null && getAds().getCampaign() != null) ? getAds().getCampaign() : "");
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
-        JsonObject youboraConfig = getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isObfuscateIP, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
-        return youboraConfig;
+        return getYouboraConfigJsonObject(accountCode, username, userType, houseHoldId, isUserObfuscateIp, httpSecure, device, mediaEntry, adsEntry, propertiesEntry, extraParamEntry);
     }
 
     private JsonObject getDeviceJsonObject() {
@@ -320,14 +352,14 @@ public class YouboraConfig {
     }
 
     @NonNull
-    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive obfuscateIP, JsonPrimitive httpSecure,
+    private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode, JsonPrimitive username, JsonPrimitive userType, JsonPrimitive houseHoldId, JsonPrimitive isUserObfuscateIp, JsonPrimitive httpSecure,
                                                   JsonObject device, JsonObject mediaEntry, JsonObject adsEntry, JsonObject propertiesEntry, JsonObject extraParamEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
         youboraConfig.add("userType", userType);
         youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("obfuscateIP", obfuscateIP);
+        youboraConfig.add("obfuscateIP", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
 
         youboraConfig.add("device", device);
