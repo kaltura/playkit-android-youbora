@@ -11,9 +11,14 @@ import com.kaltura.playkit.PKMediaConfig;
 import com.kaltura.playkit.PKPlugin;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
+import com.kaltura.playkit.player.AudioTrack;
+import com.kaltura.playkit.player.PKTracks;
+import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.npaw.youbora.lib6.plugin.Options;
+
+import java.util.List;
 
 import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY_HOUSEHOLD_ID;
 
@@ -80,6 +85,24 @@ public class YouboraPlugin extends PKPlugin {
                 if (pluginManager != null) {
                     pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
                 }
+            }
+        });
+
+        messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
+            if (npawPlugin != null) {
+                handleTracksAvailable(event, npawPlugin);
+            }
+        });
+
+        messageBus.addListener(this, PlayerEvent.textTrackChanged, event -> {
+            if (npawPlugin != null && npawPlugin.getOptions() != null) {
+                npawPlugin.getOptions().setContentSubtitles(event.newTrack.getLanguage());
+            }
+        });
+
+        messageBus.addListener(this, PlayerEvent.audioTrackChanged, event -> {
+            if (npawPlugin != null && npawPlugin.getOptions() != null) {
+                npawPlugin.getOptions().setContentLanguage(event.newTrack.getLanguage());
             }
         });
 
@@ -202,6 +225,28 @@ public class YouboraPlugin extends PKPlugin {
                     npawPlugin.removeAdapter();
                 }
                 isMonitoring = false;
+            }
+        }
+    }
+
+    /**
+     * Player tracks available handler.
+     *
+     * @param event =  TracksAvailable event.
+     */
+    private void handleTracksAvailable(PlayerEvent.TracksAvailable event, NPAWPlugin npawPlugin) {
+        PKTracks trackInfo = event.tracksInfo;
+        if (trackInfo != null) {
+            List<AudioTrack> trackInfoAudioTracks = trackInfo.getAudioTracks();
+            int defaultAudioTrackIndex = trackInfo.getDefaultAudioTrackIndex();
+            if (defaultAudioTrackIndex < trackInfoAudioTracks.size() && trackInfoAudioTracks.get(defaultAudioTrackIndex) != null) {
+                npawPlugin.getOptions().setContentLanguage(trackInfoAudioTracks.get(defaultAudioTrackIndex).getLanguage());
+            }
+
+            List<TextTrack> trackInfoTextTracks = trackInfo.getTextTracks();
+            int defaultTextTrackIndex = trackInfo.getDefaultTextTrackIndex();
+            if (defaultTextTrackIndex < trackInfoTextTracks.size() && trackInfoTextTracks.get(defaultTextTrackIndex) != null) {
+                npawPlugin.getOptions().setContentSubtitles(trackInfoTextTracks.get(defaultTextTrackIndex).getLanguage());
             }
         }
     }
