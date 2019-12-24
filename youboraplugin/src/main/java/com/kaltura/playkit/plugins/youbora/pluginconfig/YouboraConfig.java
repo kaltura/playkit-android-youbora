@@ -185,11 +185,10 @@ public class YouboraConfig {
 
         if (media != null) {
             youboraOptions.setContentIsLive(media.getIsLive());
-            youboraOptions.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : null);
+            youboraOptions.setContentIsLiveNoSeek((media.getIsDVR() != null) ? !media.getIsDVR() : Boolean.FALSE);
             youboraOptions.setContentDuration(media.getDuration());
             youboraOptions.setContentTitle(media.getTitle());
             youboraOptions.setProgram(media.getTitle2());
-            youboraOptions.setContentTransactionCode(media.getTransactionCode());
         }
 
         youboraOptions.setAdResource(null);
@@ -343,11 +342,15 @@ public class YouboraConfig {
             return mediaEntry;
         }
 
+        mediaEntry.addProperty("resource", media.getResource() != null ? media.getResource() : "");
         mediaEntry.addProperty("isLive", media.getIsLive() != null ? media.getIsLive() : Boolean.FALSE);
+        mediaEntry.addProperty("isDVR",  media.getIsDVR() != null ? media.getIsDVR() : Boolean.FALSE);
         mediaEntry.addProperty("title",  media.getTitle() != null ? media.getTitle() : "");
+        mediaEntry.addProperty("title2",  media.getTitle2() != null ? media.getTitle2() : "");
         if (media.getDuration() != null) {
             mediaEntry.addProperty("duration", media.getDuration());
         }
+        mediaEntry.addProperty("transactionCode",  media.getTransactionCode() != null ? media.getTransactionCode() : "");
         return mediaEntry;
     }
 
@@ -380,7 +383,7 @@ public class YouboraConfig {
         Properties prop = getProperties();
         propertiesEntry.addProperty("genre", (prop.getGenre() != null) ? prop.getGenre() : "");
         propertiesEntry.addProperty("type", (prop.getType() != null) ? prop.getType() : "");
-        propertiesEntry.addProperty("transaction_type", (prop.getTransactionType() != null) ? prop.getTransactionType() : "");
+        propertiesEntry.addProperty("transactionType", (prop.getTransactionType() != null) ? prop.getTransactionType() : "");
         propertiesEntry.addProperty("year", (prop.getYear() != null) ? prop.getYear() : "");
         propertiesEntry.addProperty("cast", (prop.getCast() != null) ? prop.getCast() : "");
         propertiesEntry.addProperty("director", (prop.getDirector() != null) ? prop.getDirector() : "");
