@@ -89,7 +89,7 @@ public class YouboraPlugin extends PKPlugin {
         });
 
         messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
-            if (npawPlugin != null) {
+            if (npawPlugin != null && npawPlugin.getOptions() != null) {
                 handleTracksAvailable(event, npawPlugin);
             }
         });
