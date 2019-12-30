@@ -174,9 +174,7 @@ public class YouboraPlugin extends PKPlugin {
             return;
         }
 
-        if (player != null && mediaConfig != null && mediaConfig.getMediaEntry() != null && mediaConfig.getMediaEntry().getMetadata() != null) {
-            this.pluginConfig = parseConfig(config);
-        }
+        this.pluginConfig = parseConfig(config);
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
             npawPlugin.setOptions(pluginConfig);
