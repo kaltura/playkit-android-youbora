@@ -130,6 +130,7 @@ public class YouboraPlugin extends PKPlugin {
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
+            addKalturaInfoProperty(mediaConfig);
             pluginManager.setMediaConfig(mediaConfig);
             pluginManager.setHouseHoldId(houseHoldId);
         }
@@ -149,6 +150,23 @@ public class YouboraPlugin extends PKPlugin {
         }
     }
 
+    private void addKalturaInfoProperty(PKMediaConfig mediaConfig) {
+        if (npawPlugin != null &&
+                npawPlugin.getOptions() != null &&
+                npawPlugin.getOptions().getContentMetadata() != null &&
+                player != null &&
+                mediaConfig != null &&
+                mediaConfig.getMediaEntry() != null &&
+                mediaConfig.getMediaEntry().getMetadata() != null
+        ) {
+            Bundle kalturaInfoBundle = new Bundle();
+            kalturaInfoBundle.putString("entryId", mediaConfig.getMediaEntry().getMetadata().get("entryId"));
+            kalturaInfoBundle.putString("sessionId", player.getSessionId());
+            kalturaInfoBundle.putString("uiConfId", "");
+            npawPlugin.getOptions().getContentMetadata().putBundle("kalturaInfo", kalturaInfoBundle);
+        }
+    }
+
     @Override
     protected void onUpdateConfig(Object config) {
         log.d("youbora - onUpdateConfig");
@@ -156,7 +174,9 @@ public class YouboraPlugin extends PKPlugin {
             return;
         }
 
-        this.pluginConfig = parseConfig(config);
+        if (player != null && mediaConfig != null && mediaConfig.getMediaEntry() != null && mediaConfig.getMediaEntry().getMetadata() != null) {
+            this.pluginConfig = parseConfig(config);
+        }
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
             npawPlugin.setOptions(pluginConfig);
