@@ -162,7 +162,6 @@ public class YouboraPlugin extends PKPlugin {
             Bundle kalturaInfoBundle = new Bundle();
             kalturaInfoBundle.putString("entryId", mediaConfig.getMediaEntry().getMetadata().get("entryId"));
             kalturaInfoBundle.putString("sessionId", player.getSessionId());
-            kalturaInfoBundle.putString("uiConfId", "");
             npawPlugin.getOptions().getContentMetadata().putBundle("kalturaInfo", kalturaInfoBundle);
         }
     }
