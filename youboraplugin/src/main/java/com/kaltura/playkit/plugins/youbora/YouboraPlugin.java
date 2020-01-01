@@ -130,6 +130,7 @@ public class YouboraPlugin extends PKPlugin {
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
+            addKalturaInfoProperty(mediaConfig);
             pluginManager.setMediaConfig(mediaConfig);
             pluginManager.setHouseHoldId(houseHoldId);
         }
@@ -146,6 +147,22 @@ public class YouboraPlugin extends PKPlugin {
             }
             npawPlugin.setAdsAdapter(adsManager);
             isAdsMonitoring = true;
+        }
+    }
+
+    private void addKalturaInfoProperty(PKMediaConfig mediaConfig) {
+        if (npawPlugin != null &&
+                npawPlugin.getOptions() != null &&
+                npawPlugin.getOptions().getContentMetadata() != null &&
+                player != null &&
+                mediaConfig != null &&
+                mediaConfig.getMediaEntry() != null &&
+                mediaConfig.getMediaEntry().getMetadata() != null
+        ) {
+            Bundle kalturaInfoBundle = new Bundle();
+            kalturaInfoBundle.putString("entryId", mediaConfig.getMediaEntry().getMetadata().get("entryId"));
+            kalturaInfoBundle.putString("sessionId", player.getSessionId());
+            npawPlugin.getOptions().getContentMetadata().putBundle("kalturaInfo", kalturaInfoBundle);
         }
     }
 
