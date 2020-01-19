@@ -343,10 +343,10 @@ public class YouboraConfig {
         }
 
         mediaEntry.addProperty("resource", media.getResource() != null ? media.getResource() : "");
-        mediaEntry.addProperty("isLive", media.getIsLive() != null ? media.getIsLive() : Boolean.FALSE);
+        mediaEntry.addProperty("isLive", media.getIsLive());
         mediaEntry.addProperty("isDVR",  media.getIsDVR() != null ? media.getIsDVR() : Boolean.FALSE);
         mediaEntry.addProperty("title",  media.getTitle() != null ? media.getTitle() : "");
-        mediaEntry.addProperty("title2",  media.getTitle2() != null ? media.getTitle2() : "");
+        mediaEntry.addProperty("title2", media.getTitle2() != null ? media.getTitle2() : "");
         if (media.getDuration() != null) {
             mediaEntry.addProperty("duration", media.getDuration());
         }

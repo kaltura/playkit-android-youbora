@@ -326,14 +326,17 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
 
+    @Override
     public Long getBitrate() {
         return this.lastReportedBitrate;
     }
 
+    @Override
     public Long getThroughput() {
         return this.lastReportedThroughput;
     }
 
+    @Override
     public String getRendition() {
         return lastReportedRendition;
     }
@@ -364,10 +367,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         return houseHoldId;
     }
 
+    @Override
     public Double getPlayhead() {
         return (lastReportedMediaPosition != null && lastReportedMediaPosition >= 0) ? lastReportedMediaPosition : 0;
     }
 
+    @Override
     public String getResource() {
         //log.d("getResource = " + lastReportedResource);
         return lastReportedResource;
@@ -389,6 +394,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 //        return lastPlayrate
 //    }
 
+    @Override
     public String getTitle() {
         if (mediaConfig == null || mediaConfig.getMediaEntry() == null) {
             return "unknown";
@@ -397,6 +403,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
     }
 
+    @Override
     public Boolean getIsLive() {
         Boolean isLive = Boolean.FALSE;
         if (mediaConfig != null && mediaConfig.getMediaEntry() != null && (player == null || player.getDuration() <= 0)) {
