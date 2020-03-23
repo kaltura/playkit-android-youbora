@@ -16,6 +16,8 @@ import com.kaltura.playkit.player.PKTracks;
 import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
+import com.npaw.youbora.lib6.adapter.AdAdapter;
+import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.List;
@@ -136,7 +138,7 @@ public class YouboraPlugin extends PKPlugin {
         }
 
         npawPlugin.setOptions(pluginConfig);
-        npawPlugin.setAdapter(pluginManager);
+        npawPlugin.setAdapter((PlayerAdapter) pluginManager);
 
         if (!isAdsMonitoring) {
             if (adsManager == null) {
@@ -145,7 +147,7 @@ public class YouboraPlugin extends PKPlugin {
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
-            npawPlugin.setAdsAdapter(adsManager);
+            npawPlugin.setAdsAdapter((AdAdapter) adsManager);
             isAdsMonitoring = true;
         }
     }

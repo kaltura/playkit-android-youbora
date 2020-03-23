@@ -1,10 +1,10 @@
 /*
  * ============================================================================
  * Copyright (C) 2017 Kaltura Inc.
- * 
+ *
  * Licensed under the AGPLv3 license, unless a different license for a
  * particular library is specified in the applicable library path.
- * 
+ *
  * You may obtain a copy of the License at
  * https://www.gnu.org/licenses/agpl-3.0.html
  * ============================================================================
@@ -21,18 +21,17 @@ import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdErrorType;
-
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
 import com.kaltura.playkit.utils.Consts;
-import com.npaw.youbora.lib6.adapter.PlayerAdapter;
+import com.npaw.youbora.lib6.adapter.AdAdapter;
 
 /**
  * @hide
  */
 
-class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
+class PKYouboraAdsAdapter extends AdAdapter<Player> {
     private static final PKLog log = PKLog.get("PKYouboraAdsAdapter");
 
     private boolean isFirstPlay = true;
@@ -214,7 +213,7 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             currentAdInfo = event.adInfo;
             populateAdValues();
             if (isNullAdapter()) {
-               return;
+                return;
             }
             getPlugin().getAdapter().fireStart();
             fireStart();
@@ -369,8 +368,8 @@ class PKYouboraAdsAdapter extends PlayerAdapter<Player> {
             return  lastReportedAdPluginType;
         }
 
-        if (player != null) {
-            AdController adController = player.getController(AdController.class);
+        if (getPlayer() != null) {
+            AdController adController = getPlayer().getController(AdController.class);
             if (adController != null && !adController.isAdError()) {
                 lastReportedAdPluginType = adController.getAdPluginType();
             } else {
