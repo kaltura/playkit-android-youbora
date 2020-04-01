@@ -149,7 +149,7 @@ public class YouboraConfig {
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
 
-        youboraOptions.setParseHls(false);
+        youboraOptions.setParseManifest(false);
         youboraOptions.setParseCdnNode(false);
 
         youboraOptions.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
