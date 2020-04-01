@@ -13,7 +13,6 @@ android {
         versionName libVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
