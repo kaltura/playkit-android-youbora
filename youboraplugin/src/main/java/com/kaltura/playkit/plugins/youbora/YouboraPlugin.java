@@ -138,7 +138,7 @@ public class YouboraPlugin extends PKPlugin {
         }
 
         npawPlugin.setOptions(pluginConfig);
-        npawPlugin.setAdapter((PlayerAdapter) pluginManager);
+        npawPlugin.setAdapter(pluginManager);
 
         if (!isAdsMonitoring) {
             if (adsManager == null) {
@@ -147,7 +147,7 @@ public class YouboraPlugin extends PKPlugin {
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
-            npawPlugin.setAdsAdapter((AdAdapter) adsManager);
+            npawPlugin.setAdsAdapter(adsManager);
             isAdsMonitoring = true;
         }
     }
