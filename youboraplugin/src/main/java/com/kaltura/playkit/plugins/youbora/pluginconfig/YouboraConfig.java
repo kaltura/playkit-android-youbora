@@ -99,7 +99,9 @@ public class YouboraConfig {
         return appReleaseVersion;
     }
 
-    public void setAppReleaseVersion(String appReleaseVersion) { this.appReleaseVersion = appReleaseVersion; }
+    public void setAppReleaseVersion(String appReleaseVersion) {
+        this.appReleaseVersion = appReleaseVersion;
+    }
 
     public String getHouseHoldId() {
         return houseHoldId;
