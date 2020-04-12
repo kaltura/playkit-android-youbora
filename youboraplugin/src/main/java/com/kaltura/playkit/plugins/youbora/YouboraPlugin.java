@@ -220,6 +220,9 @@ public class YouboraPlugin extends PKPlugin {
         if (isMonitoring) {
             stopMonitoring();
         }
+        if (messageBus != null) {
+            messageBus.removeListeners(this);
+        }
         if (pluginManager != null) {
             pluginManager.unregisterListeners();
             pluginManager = null;

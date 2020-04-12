@@ -80,7 +80,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
 
     @Override
     public void unregisterListeners() {
-        messageBus.removeListeners(this);
+        if (messageBus != null) {
+            messageBus.removeListeners(this);
+        }
         super.unregisterListeners();
     }
 
