@@ -406,10 +406,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     @Override
     public Boolean getIsLive() {
         Boolean isLive = Boolean.FALSE;
-        if (mediaConfig != null && mediaConfig.getMediaEntry() != null && (player == null || player.getDuration() <= 0)) {
+        if (mediaConfig != null && mediaConfig.getMediaEntry() != null && (getPlayer() == null || getPlayer().getDuration() <= 0)) {
             isLive = mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.Live || mediaConfig.getMediaEntry().getMediaType() == PKMediaEntry.MediaEntryType.DvrLive;
-        } else if (player != null) {
-            isLive = player.isLive();
+        } else if (getPlayer() != null) {
+            isLive = getPlayer().isLive();
         }
         return isLive;
     }
@@ -426,8 +426,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             return  lastReportedAdPluginType;
         }
 
-        if (player != null) {
-            AdController adController = player.getController(AdController.class);
+        if (getPlayer() != null) {
+            AdController adController = getPlayer().getController(AdController.class);
             if (adController != null && !adController.isAdError()) {
                 lastReportedAdPluginType = adController.getAdPluginType();
             } else {
