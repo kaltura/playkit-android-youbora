@@ -220,6 +220,18 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             sendReportEvent(event.eventType());
         });
 
+        messageBus.addListener(this, AdEvent.firstQuartile, event -> {
+            fireQuartile(1);
+        });
+
+        messageBus.addListener(this, AdEvent.midpoint, event -> {
+            fireQuartile(2);
+        });
+
+        messageBus.addListener(this, AdEvent.thirdQuartile, event -> {
+            fireQuartile(3);
+        });
+
         messageBus.addListener(this, AdEvent.started, event -> {
             printEventName(event);
             if (isNullAdapter()) {
