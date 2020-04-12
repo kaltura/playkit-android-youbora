@@ -64,6 +64,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String houseHoldId;
     private boolean isAdPlaying;
     private AdCuePoints adCuePoints;
+    private boolean isFatalErrorSent;
 
     PKYouboraPlayerAdapter(Player player, MessageBus messageBus, PKMediaConfig mediaConfig, String houseHoldId) {
         super(player);
@@ -218,11 +219,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         messageBus.addListener(this, PlayerEvent.error, event -> {
             printReceivedPlayerEvent(event);
             PKError error = event.error;
-            if (error != null && !error.isFatal()) {
+            if (isFatalErrorSent || error != null && !error.isFatal()) {
                 log.v("Error eventType = " + error.errorType + " severity = " + error.severity + " errorMessage = " + error.message);
                 return;
             }
+
             sendErrorHandler(event);
+            isFatalErrorSent = true;
             adCuePoints = null;
             sendReportEvent(event);
         });
@@ -321,7 +324,9 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public void unregisterListeners() {
-        messageBus.removeListeners(this);
+        if (messageBus != null) {
+            messageBus.removeListeners(this);
+        }
         super.unregisterListeners();
     }
 
@@ -468,6 +473,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         mediaConfig = null;
         houseHoldId = null;
         isFirstPlay = true;
+        isFatalErrorSent = false;
     }
 
     public void resetPlaybackValues() {
