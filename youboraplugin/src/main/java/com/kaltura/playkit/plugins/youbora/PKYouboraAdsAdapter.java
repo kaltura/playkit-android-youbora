@@ -199,6 +199,14 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             sendReportEvent(event.eventType());
         });
 
+        messageBus.addListener(this, AdEvent.adBreakStarted, event -> {
+            fireAdBreakStart();
+        });
+
+        messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
+            fireAdBreakStop();
+        });
+
         messageBus.addListener(this, AdEvent.loaded, event -> {
             printEventName(event);
             if (isNullAdapter()) {
@@ -240,6 +248,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
+
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
@@ -314,7 +323,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         messageBus.addListener(this, AdEvent.thirdQuartile, event -> {
             fireQuartile(3);
         });
-        
+
         messageBus.addListener(this, AdEvent.error, event -> {
             printEventName(event);
             if (isNullAdapter()) {
