@@ -15,7 +15,10 @@ import com.kaltura.playkit.player.AudioTrack;
 import com.kaltura.playkit.player.PKTracks;
 import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
+import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
+import com.npaw.youbora.lib6.adapter.AdAdapter;
+import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.List;
@@ -38,6 +41,7 @@ public class YouboraPlugin extends PKPlugin {
     private Player player;
     private MessageBus messageBus;
     private static String houseHoldId;
+    private static AdAdapter<Object> customAdAdapter;
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
@@ -145,7 +149,12 @@ public class YouboraPlugin extends PKPlugin {
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
-            npawPlugin.setAdsAdapter(adsManager);
+            if (customAdAdapter != null) {
+                npawPlugin.setAdsAdapter(customAdAdapter);
+            } else {
+                npawPlugin.setAdsAdapter(adsManager);
+            }
+
             isAdsMonitoring = true;
         }
     }
@@ -282,6 +291,12 @@ public class YouboraPlugin extends PKPlugin {
         } else if (config instanceof Bundle) {
             Options options = new Options((Bundle) config);
             houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
+            return options;
+        } else if (config instanceof YouboraAdAdapterConfig) {
+            YouboraAdAdapterConfig adAdapterConfig = (YouboraAdAdapterConfig) config;
+            Options options = new Options(adAdapterConfig.getOptBundle());
+            houseHoldId = adAdapterConfig.getOptBundle().getString(KEY_HOUSEHOLD_ID);
+            customAdAdapter = adAdapterConfig.getCustomAdsAdapter();
             return options;
         }
         return null;
