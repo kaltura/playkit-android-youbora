@@ -19,6 +19,7 @@ import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
+import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class YouboraPlugin extends PKPlugin {
     private MessageBus messageBus;
     private static String houseHoldId;
     private static AdAdapter<Object> customAdAdapter;
+    private static ViewTransform.FastDataConfig fastDataConfig;
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
@@ -76,7 +78,7 @@ public class YouboraPlugin extends PKPlugin {
 
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        npawPlugin = new NPAWPlugin(pluginConfig, context);
+        npawPlugin = new NPAWPlugin(pluginConfig, context, fastDataConfig);
         loadPlugin();
     }
 
@@ -283,6 +285,7 @@ public class YouboraPlugin extends PKPlugin {
     private static Options parseConfig(Object config) {
         if (config instanceof YouboraConfig) {
             houseHoldId = ((YouboraConfig) config).getHouseHoldId();
+            fastDataConfig = ((YouboraConfig) config).getFastDataConfig();
             return ((YouboraConfig) config).getYouboraOptions();
         } else if (config instanceof JsonObject) {
             YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
