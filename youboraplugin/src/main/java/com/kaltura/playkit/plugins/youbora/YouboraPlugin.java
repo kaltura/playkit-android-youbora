@@ -18,7 +18,6 @@ import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
-import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.constants.FastDataConfigFields;
 import com.npaw.youbora.lib6.plugin.Options;
