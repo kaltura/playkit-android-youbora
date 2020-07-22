@@ -15,7 +15,11 @@ import com.kaltura.playkit.player.AudioTrack;
 import com.kaltura.playkit.player.PKTracks;
 import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
+import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
+import com.npaw.youbora.lib6.adapter.AdAdapter;
+import com.npaw.youbora.lib6.comm.transform.ViewTransform;
+import com.npaw.youbora.lib6.constants.FastDataConfigFields;
 import com.npaw.youbora.lib6.plugin.Options;
 
 import java.util.List;
@@ -38,6 +42,8 @@ public class YouboraPlugin extends PKPlugin {
     private Player player;
     private MessageBus messageBus;
     private static String houseHoldId;
+    private static AdAdapter<Object> customAdAdapter;
+    private static ViewTransform.FastDataConfig fastDataConfig;
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
@@ -72,7 +78,7 @@ public class YouboraPlugin extends PKPlugin {
 
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
-        npawPlugin = new NPAWPlugin(pluginConfig, context);
+        npawPlugin = new NPAWPlugin(pluginConfig, context, fastDataConfig);
         loadPlugin();
     }
 
@@ -145,7 +151,12 @@ public class YouboraPlugin extends PKPlugin {
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
-            npawPlugin.setAdsAdapter(adsManager);
+            if (customAdAdapter != null) {
+                npawPlugin.setAdsAdapter(customAdAdapter);
+            } else {
+                npawPlugin.setAdsAdapter(adsManager);
+            }
+
             isAdsMonitoring = true;
         }
     }
@@ -274,16 +285,36 @@ public class YouboraPlugin extends PKPlugin {
     private static Options parseConfig(Object config) {
         if (config instanceof YouboraConfig) {
             houseHoldId = ((YouboraConfig) config).getHouseHoldId();
+            fastDataConfig = ((YouboraConfig) config).getFastDataConfig();
             return ((YouboraConfig) config).getYouboraOptions();
         } else if (config instanceof JsonObject) {
             YouboraConfig youboraConfig = new Gson().fromJson(((JsonObject) config), YouboraConfig.class);
             houseHoldId = youboraConfig.getHouseHoldId();
+            fastDataConfig = youboraConfig.getFastDataConfig();
             return youboraConfig.getYouboraOptions();
         } else if (config instanceof Bundle) {
-            Options options = new Options((Bundle) config);
+            Bundle configBundle = (Bundle) config;
+            Options options = new Options(configBundle);
             houseHoldId = ((Bundle) config).getString(KEY_HOUSEHOLD_ID);
+            fillFastDataConfig(configBundle);
+            return options;
+        } else if (config instanceof YouboraAdAdapterConfig) {
+            YouboraAdAdapterConfig adAdapterConfig = (YouboraAdAdapterConfig) config;
+            Options options = new Options(adAdapterConfig.getOptBundle());
+            houseHoldId = adAdapterConfig.getOptBundle().getString(KEY_HOUSEHOLD_ID);
+            customAdAdapter = adAdapterConfig.getCustomAdsAdapter();
+            fillFastDataConfig(adAdapterConfig.getOptBundle());
             return options;
         }
         return null;
+    }
+
+    private static void fillFastDataConfig(Bundle configBundle) {
+        fastDataConfig = new ViewTransform.FastDataConfig();
+        fastDataConfig.host = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_HOST);
+        fastDataConfig.code = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_CODE);
+        fastDataConfig.pingTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_PINGTIME);
+        fastDataConfig.beatTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_BEATTIME);
+        fastDataConfig.expirationTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_EXPIRATIONTIME);
     }
 }
