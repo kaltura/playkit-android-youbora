@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
 public class YouboraConfig {
@@ -54,6 +55,8 @@ public class YouboraConfig {
     private Properties properties;
 
     private ExtraParams extraParams;
+
+    private ViewTransform.FastDataConfig fastDataConfig;
 
     public String getAccountCode() {
         return accountCode;
@@ -157,6 +160,14 @@ public class YouboraConfig {
 
     public void setExtraParams(ExtraParams extraParams) {
         this.extraParams = extraParams;
+    }
+
+    public ViewTransform.FastDataConfig getFastDataConfig() {
+        return fastDataConfig;
+    }
+
+    public void setFastDataConfig(ViewTransform.FastDataConfig fastDataConfig) {
+        this.fastDataConfig = fastDataConfig;
     }
 
 

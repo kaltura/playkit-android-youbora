@@ -2,6 +2,7 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
 
+import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 import com.npaw.youbora.lib6.plugin.Plugin;
 
@@ -11,7 +12,7 @@ import com.npaw.youbora.lib6.plugin.Plugin;
 
 public class NPAWPlugin extends Plugin {
 
-    public NPAWPlugin(Options options, Context context) {
-        super(options, context);
+    public NPAWPlugin(Options options, Context context, ViewTransform.FastDataConfig fastDataConfig) {
+        super(options, context, fastDataConfig);
     }
 }
