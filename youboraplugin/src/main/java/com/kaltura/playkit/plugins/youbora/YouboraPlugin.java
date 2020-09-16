@@ -310,15 +310,27 @@ public class YouboraPlugin extends PKPlugin {
     }
 
     private static void fillFastDataConfig(Bundle configBundle) {
-        if (configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_HOST) != null &&
-                configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_CODE) != null) {
+        fastDataConfig = null;
+        if (configBundle == null) {
+            return;
+        }
 
+        String host = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_HOST);
+        String code = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_CODE);
+        int pingTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_PINGTIME);
+        int beatTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_BEATTIME);
+        int expirationTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_EXPIRATIONTIME);
+        if (host != null &&
+                code != null &&
+                pingTime > 0 &&
+                beatTime > 0 &&
+                expirationTime > 0) {
             fastDataConfig = new ViewTransform.FastDataConfig();
-            fastDataConfig.host = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_HOST);
-            fastDataConfig.code = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_CODE);
-            fastDataConfig.pingTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_PINGTIME);
-            fastDataConfig.beatTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_BEATTIME);
-            fastDataConfig.expirationTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_EXPIRATIONTIME);
+            fastDataConfig.host = host;
+            fastDataConfig.code = code;
+            fastDataConfig.pingTime = pingTime;
+            fastDataConfig.beatTime = beatTime;
+            fastDataConfig.expirationTime = expirationTime;
         }
     }
 }
