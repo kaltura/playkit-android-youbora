@@ -310,6 +310,12 @@ public class YouboraPlugin extends PKPlugin {
     }
 
     private static void fillFastDataConfig(Bundle configBundle) {
+
+        fastDataConfig = null;
+        if (configBundle == null) {
+            return;
+        }
+
         fastDataConfig = new ViewTransform.FastDataConfig();
         fastDataConfig.host = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_HOST);
         fastDataConfig.code = configBundle.getString(FastDataConfigFields.FASTDATA_CONFIG_CODE);
@@ -318,3 +324,4 @@ public class YouboraPlugin extends PKPlugin {
         fastDataConfig.expirationTime = configBundle.getInt(FastDataConfigFields.FASTDATA_CONFIG_EXPIRATIONTIME);
     }
 }
+
