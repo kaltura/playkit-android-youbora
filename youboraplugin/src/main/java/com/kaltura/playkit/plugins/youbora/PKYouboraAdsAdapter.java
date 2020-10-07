@@ -24,6 +24,7 @@ import com.kaltura.playkit.ads.PKAdErrorType;
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
+import com.kaltura.playkit.plugins.ads.AdPositionType;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
 
@@ -225,8 +226,10 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
-            getPlugin().getAdapter().fireStart();
-            fireStart();
+            if (currentAdInfo != null && currentAdInfo.getAdPositionType() == AdPositionType.PRE_ROLL) {
+                getPlugin().getAdapter().fireStart();
+                fireStart();
+            }
             sendReportEvent(event.eventType());
         });
 
@@ -234,6 +237,10 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             printEventName(event);
             if (isNullAdapter()) {
                 return;
+            }
+            if (currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
+                getPlugin().getAdapter().fireStart();
+                fireStart();
             }
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
@@ -362,6 +369,10 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 return;
             }
             printLastReportedAdPlayhead();
+            if (currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
+                getPlugin().getAdapter().fireStart();
+                fireStart();
+            }
             fireBufferBegin();
             sendReportEvent(event.eventType());
         });
