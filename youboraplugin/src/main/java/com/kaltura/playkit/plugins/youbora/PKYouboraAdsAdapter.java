@@ -216,11 +216,13 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 return;
             }
             log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
-            if (isFirstPlay && PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+            if (isFirstPlay) {
                 isFirstPlay = false;
-                getPlugin().getAdapter().fireStart();
-                getPlugin().getAdapter().fireJoin();
-                fireStart();
+                if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                    getPlugin().getAdapter().fireStart();
+                    getPlugin().getAdapter().fireJoin();
+                    fireStart();
+                }
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
@@ -362,10 +364,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
-            if (isFirstPlay) {
-                isFirstPlay = false;
-            }
-
+            
             getPlugin().getAdapter().fireStart();
             fireStart();
             printLastReportedAdPlayhead();
