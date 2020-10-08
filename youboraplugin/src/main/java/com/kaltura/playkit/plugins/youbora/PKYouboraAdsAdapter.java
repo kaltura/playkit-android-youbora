@@ -220,9 +220,14 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
                 getPlugin().getAdapter().fireJoin();
+                fireStart();
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
+            if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                getPlugin().getAdapter().fireStart();
+                fireStart();
+            }
             sendReportEvent(event.eventType());
         });
 
