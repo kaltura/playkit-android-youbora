@@ -201,7 +201,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.adBreakStarted, event -> {
-            fireAdBreakStart();
+            if(currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
+                fireAdBreakStart();
+            }
         });
 
         messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
@@ -214,22 +216,13 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 return;
             }
             log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
-            if (isFirstPlay) {
+            if (isFirstPlay && PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
                 isFirstPlay = false;
                 getPlugin().getAdapter().fireStart();
-                if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
-                    getPlugin().getAdapter().fireJoin();
-                }
+                getPlugin().getAdapter().fireJoin();
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
-            if (isNullAdapter()) {
-                return;
-            }
-            if (currentAdInfo != null && currentAdInfo.getAdPositionType() == AdPositionType.PRE_ROLL) {
-                getPlugin().getAdapter().fireStart();
-                fireStart();
-            }
             sendReportEvent(event.eventType());
         });
 
@@ -237,10 +230,6 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             printEventName(event);
             if (isNullAdapter()) {
                 return;
-            }
-            if (currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
-                getPlugin().getAdapter().fireStart();
-                fireStart();
             }
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
@@ -368,11 +357,13 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
-            printLastReportedAdPlayhead();
-            if (currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
-                getPlugin().getAdapter().fireStart();
-                fireStart();
+            if (isFirstPlay) {
+                isFirstPlay = false;
             }
+
+            getPlugin().getAdapter().fireStart();
+            fireStart();
+            printLastReportedAdPlayhead();
             fireBufferBegin();
             sendReportEvent(event.eventType());
         });
