@@ -24,6 +24,7 @@ import com.kaltura.playkit.ads.PKAdErrorType;
 import com.kaltura.playkit.ads.PKAdPluginType;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.plugins.ads.AdInfo;
+import com.kaltura.playkit.plugins.ads.AdPositionType;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
 
@@ -200,7 +201,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.adBreakStarted, event -> {
-            fireAdBreakStart();
+            if(currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
+                fireAdBreakStart();
+            }
         });
 
         messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
@@ -215,18 +218,18 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             log.d("AD LOADED: isFirstPlay = " + isFirstPlay);
             if (isFirstPlay) {
                 isFirstPlay = false;
-                getPlugin().getAdapter().fireStart();
                 if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                    getPlugin().getAdapter().fireStart();
                     getPlugin().getAdapter().fireJoin();
+                    fireStart();
                 }
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
-            if (isNullAdapter()) {
-                return;
+            if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                getPlugin().getAdapter().fireStart();
+                fireStart();
             }
-            getPlugin().getAdapter().fireStart();
-            fireStart();
             sendReportEvent(event.eventType());
         });
 
@@ -361,6 +364,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
+            
+            getPlugin().getAdapter().fireStart();
+            fireStart();
             printLastReportedAdPlayhead();
             fireBufferBegin();
             sendReportEvent(event.eventType());
