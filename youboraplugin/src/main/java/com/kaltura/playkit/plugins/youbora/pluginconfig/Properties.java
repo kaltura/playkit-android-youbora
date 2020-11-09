@@ -35,6 +35,7 @@ public class Properties {
     private String contentEncodingAudioCodec;
     private String contentEncodingCodecProfile;
     private String contentEncodingContainerFormat;
+    private String contentCdnCode;
 
     public String getGenre() {
         return genre;
@@ -290,5 +291,13 @@ public class Properties {
 
     public void setContentEncodingContainerFormat(String contentEncodingContainerFormat) {
         this.contentEncodingContainerFormat = contentEncodingContainerFormat;
+    }
+
+    public String getContentCdnCode() {
+        return contentCdnCode;
+    }
+
+    public void setContentCdnCode(String contentCdnCode) {
+        this.contentCdnCode = contentCdnCode;
     }
 }

@@ -185,9 +185,6 @@ public class YouboraConfig {
         youboraOptions.setParseManifest(false);
         youboraOptions.setParseCdnNode(false);
 
-        youboraOptions.setDeviceCode(null); //TODO  // List of device codes http://mapi.youbora.com:8081/devices
-        youboraOptions.setContentCdn(null);
-
         if (device != null) {
             if (device.getDeviceCode() != null) {
                 //Generic Data by code see in Device class what Codes are available
@@ -273,6 +270,7 @@ public class YouboraConfig {
         youboraOptions.setContentPrice(prop.getPrice());
         youboraOptions.setContentRendition(prop.getQuality()); // Name or value of the current rendition (quality) of the content.
         youboraOptions.setContentPackage(prop.getContentPackage());
+        youboraOptions.setContentCdn(prop.getContentCdnCode());
         youboraOptions.setContentSaga(prop.getContentSaga());
         youboraOptions.setContentTvShow(prop.getContentTvShow());
         youboraOptions.setContentSeason(prop.getContentSeason());
@@ -456,6 +454,7 @@ public class YouboraConfig {
         propertiesEntry.addProperty("quality", (prop.getQuality() != null) ? prop.getQuality() : "");
 
         propertiesEntry.addProperty("contentPackage", (prop.getContentPackage() != null) ? prop.getContentPackage() : "");
+        propertiesEntry.addProperty("contentCdnCode", (prop.getContentCdnCode() != null) ? prop.getContentCdnCode() : "");
         propertiesEntry.addProperty("contentSaga", (prop.getContentSaga() != null) ? prop.getContentSaga() : "");
         propertiesEntry.addProperty("contentTvShow", (prop.getContentTvShow() != null) ? prop.getContentTvShow() : "");
         propertiesEntry.addProperty("contentSeason", (prop.getContentSeason() != null) ? prop.getContentSeason() : "");

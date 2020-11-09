@@ -5,8 +5,8 @@ public class Device {
 //If device info config is not given Youbora will add this info according to their internal logic so actually this is optional configuration
 
 
-//// If you want generic information
-//youboraOptions.setDeviceCode("xbox360"); // Device will be detected as Xbox 360
+// Use {@link com.kaltura.playkit.plugins.youbora.DeviceCode}
+//youboraOptions.setDeviceCode(DeviceCode.ArrisSTB.getDeviceCode()); // Device will be detected as Xbox 360
 //
 //// Or in case you want full customised information of the device:
 //
