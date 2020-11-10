@@ -35,6 +35,8 @@ public class Properties {
     private String contentEncodingAudioCodec;
     private String contentEncodingCodecProfile;
     private String contentEncodingContainerFormat;
+    // Fetch Codename of the CDN where the content is streaming from.
+    // See a list of codes in http://mapi.youbora.com:8081/cdns
     private String contentCdnCode;
 
     public String getGenre() {
