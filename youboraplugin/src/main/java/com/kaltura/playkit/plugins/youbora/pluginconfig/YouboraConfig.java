@@ -170,7 +170,6 @@ public class YouboraConfig {
         this.fastDataConfig = fastDataConfig;
     }
 
-
     public Options getYouboraOptions() {
         Options youboraOptions =  new Options();
 
