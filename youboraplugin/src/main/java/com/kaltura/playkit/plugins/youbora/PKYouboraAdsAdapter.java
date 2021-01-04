@@ -196,7 +196,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
-            getPlugin().getAdapter().fireStart();
+            if (event.isAutoPlay) {
+                getPlugin().getAdapter().fireStart();
+            }
             sendReportEvent(event.eventType());
         });
 
