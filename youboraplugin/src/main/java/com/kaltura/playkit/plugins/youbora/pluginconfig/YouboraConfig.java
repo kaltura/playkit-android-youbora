@@ -194,6 +194,10 @@ public class YouboraConfig {
                 youboraOptions.setDeviceModel(device.getModel());
             }
 
+            if (device.getId() != null) {
+                youboraOptions.setDeviceId(device.getId());
+            }
+
             if (device.getBrand() != null) {
                 youboraOptions.setDeviceBrand(device.getBrand());
             }
@@ -359,12 +363,16 @@ public class YouboraConfig {
             deviceJsonObject.addProperty("model", device.getModel());
         }
 
+        if (device.getId() != null) {
+            deviceJsonObject.addProperty("id", device.getId());
+        }
+
         if (device.getBrand() != null) {
             deviceJsonObject.addProperty("brand", device.getBrand());
         }
 
         if (device.getType() != null) {
-            deviceJsonObject.addProperty("deviceCode", device.getType());
+            deviceJsonObject.addProperty("type", device.getType());
         }
 
         if (device.getOsName() != null) {
