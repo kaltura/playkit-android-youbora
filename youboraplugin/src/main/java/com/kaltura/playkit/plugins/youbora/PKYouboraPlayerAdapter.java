@@ -418,6 +418,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         }
         return isLive;
     }
+    
 
     private void sendReportEvent(PKEvent event) {
         if (event.eventType() != PLAYHEAD_UPDATED) {
