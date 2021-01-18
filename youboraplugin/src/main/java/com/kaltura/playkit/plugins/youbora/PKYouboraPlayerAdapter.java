@@ -27,6 +27,7 @@ import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
+import com.kaltura.playkit.player.PKPlayerErrorType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.utils.Consts;
@@ -140,8 +141,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             }
         }
 
-        String errorCode = (errorEvent.error.errorType != null) ? errorEvent.error.errorType + " - " : "";
-        fireFatalError(exceptionCauseBuilder.toString(), errorCode + exceptionClass, errorMetadata);
+        String errorCode = ((PKPlayerErrorType) errorEvent.error.errorType != null) ? "" + ((PKPlayerErrorType) errorEvent.error.errorType).errorCode : "";
+        fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata);
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {

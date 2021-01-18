@@ -424,7 +424,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (error.exception instanceof Exception) {
                 adException = (Exception) error.exception;
             }
-            fireFatalError(error.message, adErrorType.name(), null, adException);
+            fireFatalError("" + adErrorType.errorCode, error.message, adErrorType.name(), adException);
         }
         sendReportEvent(adErrorType);
     }
