@@ -34,6 +34,10 @@ public class YouboraConfig {
 
     private String username;
 
+    private boolean parseManifest;
+
+    private boolean parseCdnNode;
+
     private String userType;        // any string - free / paid etc.
 
     private String houseHoldId;    // which device is used to play
@@ -72,6 +76,22 @@ public class YouboraConfig {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean getParseManifest() {
+        return parseManifest;
+    }
+
+    public void setParseManifest(boolean parseManifest) {
+        this.parseManifest = parseManifest;
+    }
+
+    public boolean getParseCdnNode() {
+        return parseCdnNode;
+    }
+
+    public void setParseCdnNode(boolean parseCdnNode) {
+        this.parseCdnNode = parseCdnNode;
     }
 
     public String getUserType() {
@@ -181,8 +201,9 @@ public class YouboraConfig {
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
 
-        youboraOptions.setParseManifest(false);
-        youboraOptions.setParseCdnNode(false);
+        youboraOptions.setParseManifest(parseManifest);
+        youboraOptions.setParseCdnNode(parseCdnNode);
+
 
         if (device != null) {
             if (device.getDeviceCode() != null) {
@@ -325,6 +346,8 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
+        JsonPrimitive parseManifest = new JsonPrimitive(getParseManifest());
+        JsonPrimitive parseCdnNode = new JsonPrimitive(getParseCdnNode());
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(isUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonObject device = getDeviceJsonObject();
@@ -339,6 +362,8 @@ public class YouboraConfig {
                 appName,
                 appReleaseVersion,
                 houseHoldId,
+                parseManifest,
+                parseCdnNode,
                 isUserObfuscateIp,
                 httpSecure,
                 device,
@@ -412,6 +437,8 @@ public class YouboraConfig {
                                                   JsonPrimitive appName,
                                                   JsonPrimitive appReleaseVersion,
                                                   JsonPrimitive houseHoldId,
+                                                  JsonPrimitive parseManifest,
+                                                  JsonPrimitive parseCdnNode,
                                                   JsonPrimitive isUserObfuscateIp,
                                                   JsonPrimitive httpSecure,
                                                   JsonObject device,
@@ -425,6 +452,8 @@ public class YouboraConfig {
         youboraConfig.add("userType", userType);
         youboraConfig.add("appName", appName);
         youboraConfig.add("appReleaseVersion", appReleaseVersion);
+        youboraConfig.add("parseManifest", parseManifest);
+        youboraConfig.add("parseCdnNode", parseCdnNode);
         youboraConfig.add("houseHoldId", houseHoldId);
         youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
