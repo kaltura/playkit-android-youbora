@@ -3,6 +3,7 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig
 import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.Nullable
+import com.google.gson.Gson
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -83,4 +84,55 @@ internal class YouboraSmartSwitchExecutor {
             return builder.build()
         }
     }
+
+    //TODO: FIX ME
+    /*var test: String = "{\n" +
+              "   \"smartSwitch\":{\n" +
+              "      \"switchingMethod\":\"optimized\",\n" +
+              "      \"CDNList\":[\n" +
+              "         {\n" +
+              "            \"1\":{\n" +
+              "               \"CDN_NAME\":\"Akamai\",\n" +
+              "               \"CDN_CODE\":\"AKAMAI\",\n" +
+              "               \"URL\":\"http://live123438.ak.com/livechannel/master.m3u8\",\n" +
+              "               \"CDN_SCORE\":0.9408753455914173\n" +
+              "            }\n" +
+              "         },\n" +
+              "         {\n" +
+              "            \"2\":{\n" +
+              "               \"CDN_NAME\":\"CenturyLink\",\n" +
+              "               \"CDN_CODE\":\"LEVEL3\",\n" +
+              "               \"URL\":\"http://l3.live.com/434783dhsjkfhe1327/streamers/l1/master.m3u8\",\n" +
+              "               \"CDN_SCORE\":0.9138440135931004\n" +
+              "            }\n" +
+              "         },\n" +
+              "         {\n" +
+              "            \"3\":{\n" +
+              "               \"CDN_NAME\":\"Fastly\",\n" +
+              "               \"CDN_CODE\":\"FASTLY\",\n" +
+              "               \"URL\":\"http://fast.ly/l1/broadpeak123/livestreamer/master.m3u8\",\n" +
+              "               \"CDN_SCORE\":0.7305910419102666\n" +
+              "            }\n" +
+              "         }\n" +
+              "      ],\n" +
+              "      \"UUID\":\"cf5803d4-1fbe-447e-9b35-a826bb6da1ec\"\n" +
+              "   }\n" +
+              "}"
+
+      var gson: SmartSwitchParser = Gson().fromJson(test, SmartSwitchParser::class.java)
+
+    var errorBody = "{\n" +
+            "\n" +
+            "    \"messages\": [\n" +
+            "        {\n" +
+            "            \"type\": \"ERROR\",\n" +
+            "            \"code\": \"3001\",\n" +
+            "            \"message\": \"Configuration not found.\",\n" +
+            "            \"parameters\": [ ]\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"data\": [ ]\n" +
+            "\n" +
+            "}"
+    var gson: SmartSwitchErrorResponse = Gson().fromJson(errorBody, SmartSwitchErrorResponse::class.java)*/
 }
