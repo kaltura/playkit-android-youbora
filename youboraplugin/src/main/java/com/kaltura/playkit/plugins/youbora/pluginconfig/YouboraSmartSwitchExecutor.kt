@@ -45,6 +45,7 @@ internal class YouboraSmartSwitchExecutor {
                 var smartSwitchUri: Uri  = Uri.parse(smartSwitchUrl)
                 smartSwitchUri = appendQueryParams(smartSwitchUri)
                 val url = URL(smartSwitchUri.toString())
+
                 connection = url.openConnection() as HttpURLConnection
                 connection.readTimeout = connectionReadTimeOut
                 connection.connectTimeout = connectionTimeOut
@@ -53,13 +54,12 @@ internal class YouboraSmartSwitchExecutor {
                 connection.connect()
 
                 if (connection.responseCode == successResponseCode) {
-                    inputStream = connection.inputStream
+                   // inputStream = connection.inputStream
                 } else {
                 //    log.e("Error downloading the image. Response code = " + connection.responseMessage)
                 }
-              //  spritesHashMap = framesFromImageStream(inputStream, spriteSlicesCount)
             } catch (exception: IOException) {
-              //  log.e(exception.toString())
+                // log.e(exception.toString())
             } finally {
                 connection?.disconnect()
             }
@@ -67,6 +67,9 @@ internal class YouboraSmartSwitchExecutor {
             return "TEST"
         }
 
+        /**
+         * Add the incoming query params.
+         */
         private fun appendQueryParams(uri: Uri): Uri {
             val builder: Uri.Builder = uri.buildUpon()
             builder.appendQueryParameter(accountCodeKey, accountCode)
