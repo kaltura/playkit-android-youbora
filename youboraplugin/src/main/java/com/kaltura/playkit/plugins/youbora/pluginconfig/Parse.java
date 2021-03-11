@@ -1,6 +1,5 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
-
 import java.util.ArrayList;
 
 public class Parse {
