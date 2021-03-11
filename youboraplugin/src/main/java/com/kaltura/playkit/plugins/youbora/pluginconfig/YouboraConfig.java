@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
@@ -45,6 +46,8 @@ public class YouboraConfig {
     private String appName = "";
 
     private String appReleaseVersion = "";
+
+    private Parse parse;
 
     private Device device;
 
@@ -122,6 +125,10 @@ public class YouboraConfig {
         this.userObfuscateIp = userObfuscateIp;
     }
 
+    public Parse getParse() {
+        return parse;
+    }
+
     public Device getDevice() {
         return device;
     }
@@ -181,8 +188,26 @@ public class YouboraConfig {
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
 
-        youboraOptions.setParseManifest(false);
-        youboraOptions.setParseCdnNode(false);
+        if (parse != null) {
+            if (parse.getParseManifest() != null) {
+                youboraOptions.setParseManifest(parse.getParseManifest());
+            }
+            if (parse.getParseCdnNode() != null) {
+                youboraOptions.setParseCdnNode(parse.getParseCdnNode());
+            }
+            if (parse.getParseCdnSwitchHeader() != null) {
+                youboraOptions.setParseCdnSwitchHeader(parse.getParseCdnSwitchHeader());
+            }
+            if (parse.getCdnNodeList() != null) {
+                youboraOptions.setParseCdnNodeList(parse.getCdnNodeList());
+            }
+            if (parse.getCdnNameHeaders() != null) {
+                youboraOptions.setParseCdnNameHeader(parse.getCdnNameHeaders());
+            }
+            if (parse.getParseCdnTTL() != null) {
+                youboraOptions.setParseCdnTTL(parse.getParseCdnTTL());
+            }
+        }
 
         if (device != null) {
             if (device.getDeviceCode() != null) {
@@ -327,6 +352,7 @@ public class YouboraConfig {
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(isUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
+        JsonObject parse = getParseJsonObject();
         JsonObject device = getDeviceJsonObject();
         JsonObject mediaEntry = getMediaJsonObject();
         JsonObject adsEntry = new JsonObject();
@@ -341,11 +367,50 @@ public class YouboraConfig {
                 houseHoldId,
                 isUserObfuscateIp,
                 httpSecure,
+                parse,
                 device,
                 mediaEntry,
                 adsEntry,
                 propertiesEntry,
                 extraParamEntry);
+    }
+
+    private JsonObject getParseJsonObject() {
+        JsonObject parseJsonObject = new JsonObject();
+        Parse parse = getParse();
+        if (parse == null) {
+            return parseJsonObject;
+        }
+
+        if (parse.getParseManifest() != null) {
+            parseJsonObject.addProperty("parseManifest", parse.getParseManifest());
+        }
+
+        if (parse.getParseCdnNode() != null) {
+            parseJsonObject.addProperty("parseCdnNode", parse.getParseCdnNode());
+        }
+
+        if (parse.getParseCdnSwitchHeader() != null) {
+            parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
+        }
+
+        if (parse.getCdnNodeList() != null) {
+            JsonArray cdnNodeListJsonArray = new JsonArray();
+            for(String cdn : parse.getCdnNodeList()) {
+                cdnNodeListJsonArray.add(cdn);
+            }
+            parseJsonObject.add("cdnNodeList", cdnNodeListJsonArray);
+        }
+
+        if (parse.getCdnNameHeaders() != null) {
+            parseJsonObject.addProperty("cdnNameHeaders", parse.getCdnNameHeaders() );
+        }
+
+        if (parse.getParseCdnTTL() != null) {
+            parseJsonObject.addProperty("parseCdnTTL", parse.getParseCdnTTL());
+        }
+
+        return parseJsonObject;
     }
 
     private JsonObject getDeviceJsonObject() {
@@ -414,6 +479,7 @@ public class YouboraConfig {
                                                   JsonPrimitive houseHoldId,
                                                   JsonPrimitive isUserObfuscateIp,
                                                   JsonPrimitive httpSecure,
+                                                  JsonObject parse,
                                                   JsonObject device,
                                                   JsonObject mediaEntry,
                                                   JsonObject adsEntry,
@@ -428,7 +494,7 @@ public class YouboraConfig {
         youboraConfig.add("houseHoldId", houseHoldId);
         youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
-
+        youboraConfig.add("parse", parse);
         youboraConfig.add("device", device);
         youboraConfig.add("media", mediaEntry);
         youboraConfig.add("ads", adsEntry);
