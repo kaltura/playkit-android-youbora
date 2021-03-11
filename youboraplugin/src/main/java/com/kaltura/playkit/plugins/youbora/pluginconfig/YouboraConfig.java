@@ -11,8 +11,6 @@ import com.google.gson.JsonPrimitive;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
-import java.util.ArrayList;
-
 public class YouboraConfig {
 
     // Kaltura Youbora Keys for Bundle
