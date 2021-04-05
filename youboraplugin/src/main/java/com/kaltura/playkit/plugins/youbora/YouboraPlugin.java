@@ -2,14 +2,12 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
-import com.kaltura.playkit.PKMediaEntry;
 import com.kaltura.playkit.PKPlugin;
 import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
@@ -17,12 +15,8 @@ import com.kaltura.playkit.player.AudioTrack;
 import com.kaltura.playkit.player.PKTracks;
 import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
-import com.kaltura.playkit.plugins.youbora.pluginconfig.SmartSwitchInfo;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig;
-import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraSmartSwitchConfig;
-import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraSmartSwitchExecutor;
-import com.kaltura.tvplayer.PKMediaEntryInterceptor;
 import com.npaw.youbora.lib6.YouboraLog;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
@@ -38,7 +32,7 @@ import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY
  * Created by zivilan on 02/11/2016.
  */
 
-public class YouboraPlugin extends PKPlugin implements PKMediaEntryInterceptor {
+public class YouboraPlugin extends PKPlugin {
     private static final PKLog log = PKLog.get("YouboraPlugin");
 
     private static PKYouboraPlayerAdapter pluginManager;
@@ -214,27 +208,6 @@ public class YouboraPlugin extends PKPlugin implements PKMediaEntryInterceptor {
     }
 
     @Override
-    public void apply(PKMediaEntry mediaEntry, Listener listener) {
-        log.e("in interceptor Apply  =>  " +  mediaEntry.getId());
-        if (TextUtils.isEmpty(accountCode) && TextUtils.isEmpty(origincode)) {
-            listener.onComplete();
-            return;
-        }
-
-        if (mediaEntry != null &&
-                mediaEntry.getSources() != null &&
-                !mediaEntry.getSources().isEmpty() &&
-                mediaEntry.getSources().get(0) != null) {
-            String sourceUrl = mediaEntry.getSources().get(0).getUrl();
-            if (!TextUtils.isEmpty(sourceUrl)) {
-                YouboraSmartSwitchExecutor youboraSmartSwitchExecutor = new YouboraSmartSwitchExecutor();
-                youboraSmartSwitchExecutor.sendRequestToYoubora(accountCode, origincode, sourceUrl, optionalParams);
-            }
-        }
-        listener.onComplete();
-    }
-
-    @Override
     protected void onApplicationPaused() {
         log.d("YOUBORA onApplicationPaused");
         if (npawPlugin != null) {
@@ -339,17 +312,8 @@ public class YouboraPlugin extends PKPlugin implements PKMediaEntryInterceptor {
             customAdAdapter = adAdapterConfig.getCustomAdsAdapter();
             fillFastDataConfig(adAdapterConfig.getOptBundle());
             return options;
-        } else if (config instanceof YouboraSmartSwitchConfig) {
-            YouboraSmartSwitchConfig youboraSmartSwitchConfig = (YouboraSmartSwitchConfig) config;
-            Options options = new Options(youboraSmartSwitchConfig.getOptBundle());
-            accountCode = options.getAccountCode();
-            SmartSwitchInfo smartSwitchInfo = youboraSmartSwitchConfig.getSmartSwitchInfo();
-            if (smartSwitchInfo != null) {
-                origincode = youboraSmartSwitchConfig.getSmartSwitchInfo().getOriginCode();
-                optionalParams = youboraSmartSwitchConfig.getSmartSwitchInfo().getOptionalParams();
-            }
-            return options;
         }
+
         return null;
     }
 
