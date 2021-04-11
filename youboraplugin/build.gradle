@@ -30,17 +30,19 @@ dependencies {
     implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
     //implementation project(":playkit")
 
-    api 'com.nicepeopleatwork:youboralib:6.7.32'
+    api 'com.npaw.youbora:youboralib:6.7.24'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.3.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
 
 }
 
 repositories {
     google()
     jcenter()
+    mavenCentral()
     maven { url "https://jitpack.io" }
-    maven { url  "https://npaw.jfrog.io/artifactory/youbora/" }
 }
+
+apply from: './gradle-mvn-push.gradle'
