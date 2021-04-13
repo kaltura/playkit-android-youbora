@@ -35,6 +35,8 @@ public class YouboraConfig {
 
     private String username;
 
+    private String userEmail;
+
     private String userType;        // any string - free / paid etc.
 
     private String houseHoldId;    // which device is used to play
@@ -75,6 +77,14 @@ public class YouboraConfig {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getUserType() {
@@ -182,6 +192,7 @@ public class YouboraConfig {
 
         youboraOptions.setAccountCode(accountCode);
         youboraOptions.setUsername(username);
+        youboraOptions.setUserEmail(userEmail);
         youboraOptions.setUserType(userType);
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
@@ -346,6 +357,7 @@ public class YouboraConfig {
     public JsonObject toJson() {
         JsonPrimitive accountCode = new JsonPrimitive(getAccountCode() != null ? getAccountCode() : "");
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
+        JsonPrimitive userEmail = new JsonPrimitive(getUserEmail() != null ? getUserEmail() : "");
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
@@ -361,6 +373,7 @@ public class YouboraConfig {
         JsonObject extraParamEntry = getExtraParamJsonObject();
         return getYouboraConfigJsonObject(accountCode,
                 username,
+                userEmail,
                 userType,
                 appName,
                 appReleaseVersion,
@@ -473,6 +486,7 @@ public class YouboraConfig {
     @NonNull
     private JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode,
                                                   JsonPrimitive username,
+                                                  JsonPrimitive userEmail,
                                                   JsonPrimitive userType,
                                                   JsonPrimitive appName,
                                                   JsonPrimitive appReleaseVersion,
@@ -488,6 +502,7 @@ public class YouboraConfig {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
+        youboraConfig.add("userEmail", userEmail);
         youboraConfig.add("userType", userType);
         youboraConfig.add("appName", appName);
         youboraConfig.add("appReleaseVersion", appReleaseVersion);
@@ -600,6 +615,9 @@ public class YouboraConfig {
         if (TextUtils.isEmpty(username)) {
             username =  youboraConfigUiConf.getUsername();
         }
+        if (TextUtils.isEmpty(userEmail)) {
+            userEmail =  youboraConfigUiConf.getUserEmail();
+        }
 
         if (media != null) {
             if (youboraConfigUiConf.getMedia() != null) {
@@ -615,6 +633,31 @@ public class YouboraConfig {
             }
         } else {
             media = youboraConfigUiConf.getMedia();
+        }
+
+        if (parse != null) {
+            if (youboraConfigUiConf.getParse() != null) {
+                if (parse.getParseManifest() == null) {
+                    parse.setParseManifest(youboraConfigUiConf.getParse().getParseManifest());
+                }
+                if (parse.getParseCdnNode() == null) {
+                    parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
+                }
+                if (parse.getCdnNodeList() == null) {
+                    parse.setCdnNodeList(youboraConfigUiConf.getParse().getCdnNodeList());
+                }
+                if (parse.getParseCdnTTL() == null) {
+                    parse.setParseCdnTTL(youboraConfigUiConf.getParse().getParseCdnTTL());
+                }
+                if (parse.getCdnNameHeaders() == null) {
+                    parse.setCdnNameHeaders(youboraConfigUiConf.getParse().getCdnNameHeaders());
+                }
+                if (parse.getParseCdnSwitchHeader() == null) {
+                    parse.setParseCdnSwitchHeader(youboraConfigUiConf.getParse().getParseCdnSwitchHeader());
+                }
+            }
+        } else {
+            parse = youboraConfigUiConf.getParse();
         }
 
         if (ads != null) {
