@@ -2,7 +2,7 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Media {
+public class Content {
 
     private Long contentBitrate;
     private String contentCdn;
