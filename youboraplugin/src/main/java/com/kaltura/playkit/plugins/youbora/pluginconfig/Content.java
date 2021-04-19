@@ -38,7 +38,6 @@ public class Content {
 
     private String contentLanguage;
 
-    //private Bundle contentMetadata
     //private Bundle contentMetrics;
 
     private String contentPackage;
