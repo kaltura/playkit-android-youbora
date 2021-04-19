@@ -57,10 +57,10 @@ public class Content {
     private Long contentThroughput;
     @SerializedName(value="contentTitle", alternate={"title"})
     private String contentTitle;
-    @SerializedName(value="contentTransactionCode", alternate={"transactionCode"})
+    @SerializedName(value="contentTransactionCode", alternate={"transactionType"})
     private String contentTransactionCode;
     private Long contentTotalBytes;
-    private Boolean contentSendTotalBytes;
+    private boolean contentSendTotalBytes;
     private String contentTvShow;
     private String contentType;
 
@@ -353,11 +353,11 @@ public class Content {
         this.contentTotalBytes = contentTotalBytes;
     }
 
-    public Boolean getContentSendTotalBytes() {
+    public boolean getContentSendTotalBytes() {
         return contentSendTotalBytes;
     }
 
-    public void setContentSendTotalBytes(Boolean contentSendTotalBytes) {
+    public void setContentSendTotalBytes(boolean contentSendTotalBytes) {
         this.contentSendTotalBytes = contentSendTotalBytes;
     }
 

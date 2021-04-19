@@ -50,12 +50,24 @@ public class YouboraConfig {
 
     private String appReleaseVersion = "";
 
+    private boolean isAutoStart = true;
+
+    private boolean isAutoDetectBackground = true;
+
+    private boolean isEnabled = true;
+
+    private boolean isForceInit;
+
+    private boolean isOffline;
+
     private Parse parse;
 
     private Device device;
 
     @SerializedName(value="content", alternate={"media"})
     private Content content;
+
+    private Network network;
 
     private Ads ads;
 
@@ -137,12 +149,52 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
-    public boolean isUserObfuscateIp() {
+    public boolean getUserObfuscateIp() {
         return userObfuscateIp;
     }
 
     public void setUserObfuscateIp(boolean userObfuscateIp) {
         this.userObfuscateIp = userObfuscateIp;
+    }
+
+    public boolean getIsAutoStart() {
+        return isAutoStart;
+    }
+
+    public void setIsAutoStart(boolean isAutoStart) {
+        this.isAutoStart = isAutoStart;
+    }
+
+    public boolean getIsAutoDetectBackground() {
+        return isAutoDetectBackground;
+    }
+
+    public void setIsAutoDetectBackground(boolean isAutoDetectBackground) {
+        this.isAutoDetectBackground = isAutoDetectBackground;
+    }
+
+    public boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public boolean getIsForceInit() {
+        return isForceInit;
+    }
+
+    public void setForceInit(boolean forceInit) {
+        isForceInit = forceInit;
+    }
+
+    public boolean getIsOffline() {
+        return isOffline;
+    }
+
+    public void setIsOffline(boolean isOffline) {
+        this.isOffline = isOffline;
     }
 
     public Parse getParse() {
@@ -159,6 +211,10 @@ public class YouboraConfig {
 
     public Content getContent() {
         return content;
+    }
+
+    public Network getNetwork() {
+        return network;
     }
 
     public void setContent(Content content) {
@@ -209,6 +265,11 @@ public class YouboraConfig {
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
+        youboraOptions.setAutoStart(isAutoStart);
+        youboraOptions.setAutoDetectBackground(isAutoDetectBackground);
+        youboraOptions.setEnabled(isEnabled);
+        youboraOptions.setForceInit(isForceInit);
+        youboraOptions.setOffline(isOffline);
 
         if (parse != null) {
             if (parse.getParseManifest() != null) {
@@ -237,29 +298,34 @@ public class YouboraConfig {
                 youboraOptions.setDeviceCode(device.getDeviceCode());
             }
             // Specific Data
-            if (device.getModel() != null) {
-                youboraOptions.setDeviceModel(device.getModel());
+            if (device.getDeviceModel() != null) {
+                youboraOptions.setDeviceModel(device.getDeviceModel());
             }
 
-            if (device.getId() != null) {
-                youboraOptions.setDeviceId(device.getId());
+            if (device.getDeviceId() != null) {
+                youboraOptions.setDeviceId(device.getDeviceId());
             }
 
-            if (device.getBrand() != null) {
-                youboraOptions.setDeviceBrand(device.getBrand());
+            if (device.getDeviceBrand() != null) {
+                youboraOptions.setDeviceBrand(device.getDeviceBrand());
             }
 
-            if (device.getType() != null) {
-                youboraOptions.setDeviceType(device.getType());
+            if (device.getDeviceType() != null) {
+                youboraOptions.setDeviceType(device.getDeviceType());
             }
 
-            if (device.getOsName() != null) {
-                youboraOptions.setDeviceOsName(device.getOsName());
+            if (device.getDeviceOsName() != null) {
+                youboraOptions.setDeviceOsName(device.getDeviceOsName());
             }
 
-            if (device.getOsVersion() != null) {
-                youboraOptions.setDeviceOsVersion(device.getOsVersion());
+            if (device.getDeviceOsVersion() != null) {
+                youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
             }
+
+            if (device.getDeviceType() != null) {
+                youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
+            }
+            youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
         }
 
         if (content != null) {
@@ -367,7 +433,7 @@ public class YouboraConfig {
             if (content.getContentTotalBytes() != null) {
                 youboraOptions.setContentTotalBytes(content.getContentTotalBytes());
             }
-            youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes() != null ? content.getContentSendTotalBytes() : Boolean.FALSE);
+            youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes());
             if (content.getContentTvShow() != null) {
                 youboraOptions.setContentTvShow(content.getContentTvShow());
             }
@@ -380,11 +446,21 @@ public class YouboraConfig {
 
         youboraOptions.setContentMetadata(getContentMetaDataBundle());
 
-        //UNSUPPORTED YET
         //youboraOptions.setContentMetrics(getContentMetricsBundle());
         //youboraOptions.setContentEncodingCodecSettings(getContentEncodingCodecSettingsBundle());
-        //youboraOptions.setAdMetadata(getAdMetaDataBundle());
-        //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
+
+
+        if (network != null) {
+            if (network.getNetworkConnectionType() != null) {
+                youboraOptions.setNetworkConnectionType(network.getNetworkConnectionType());
+            }
+            if (network.getNetworkIP() != null) {
+                youboraOptions.setNetworkIP(network.getNetworkIP());
+            }
+            if (network.getNetworkIsp() != null) {
+                youboraOptions.setNetworkIsp(network.getNetworkIsp());
+            }
+        }
 
         if (ads != null) {
             if (ads.getAdBreaksTime() != null) {
@@ -417,6 +493,10 @@ public class YouboraConfig {
                 youboraOptions.setAdCustomDimension9(ads.getExtraParams().getParam9());
                 youboraOptions.setAdCustomDimension10(ads.getExtraParams().getParam10());
             }
+
+            //UNSUPPORTED YET
+            //youboraOptions.setAdMetadata(getAdMetaDataBundle());
+            //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
         }
 
         if (extraParams != null) {
@@ -620,11 +700,18 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive isUserObfuscateIp = new JsonPrimitive(isUserObfuscateIp());
+        JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
+        JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
+        JsonPrimitive isAutoDetectBackground = new JsonPrimitive(getIsAutoDetectBackground());
+        JsonPrimitive isEnabled = new JsonPrimitive(getIsEnabled());
+        JsonPrimitive isForceInit = new JsonPrimitive(getIsForceInit());
+        JsonPrimitive isOffline = new JsonPrimitive(getIsOffline());
+
         JsonObject parse = getParseJsonObject();
         JsonObject device = getDeviceJsonObject();
         JsonObject content = getContentJsonObject();
+        JsonObject network = getNetworkJsonObject();
         JsonObject adsEntry = getAdsJsonObject();
         JsonObject propertiesEntry = getPropertiesJsonObject();
         JsonObject extraParamEntry = getExtraParamJsonObject();
@@ -638,9 +725,15 @@ public class YouboraConfig {
                 houseHoldId,
                 isUserObfuscateIp,
                 httpSecure,
+                isAutoStart,
+                isAutoDetectBackground,
+                isEnabled,
+                isForceInit,
+                isOffline,
                 parse,
                 device,
                 content,
+                network,
                 adsEntry,
                 propertiesEntry,
                 extraParamEntry);
@@ -694,28 +787,28 @@ public class YouboraConfig {
             deviceJsonObject.addProperty("deviceCode", device.getDeviceCode());
         }
 
-        if (device.getModel() != null) {
-            deviceJsonObject.addProperty("model", device.getModel());
+        if (device.getDeviceModel() != null) {
+            deviceJsonObject.addProperty("model", device.getDeviceModel());
         }
 
-        if (device.getId() != null) {
-            deviceJsonObject.addProperty("id", device.getId());
+        if (device.getDeviceId() != null) {
+            deviceJsonObject.addProperty("id", device.getDeviceId());
         }
 
-        if (device.getBrand() != null) {
-            deviceJsonObject.addProperty("brand", device.getBrand());
+        if (device.getDeviceBrand() != null) {
+            deviceJsonObject.addProperty("brand", device.getDeviceBrand());
         }
 
-        if (device.getType() != null) {
-            deviceJsonObject.addProperty("type", device.getType());
+        if (device.getDeviceType() != null) {
+            deviceJsonObject.addProperty("type", device.getDeviceType());
         }
 
-        if (device.getOsName() != null) {
-            deviceJsonObject.addProperty("osName", device.getOsName());
+        if (device.getDeviceOsName() != null) {
+            deviceJsonObject.addProperty("osName", device.getDeviceOsName());
         }
 
-        if (device.getOsVersion() != null) {
-            deviceJsonObject.addProperty("osName", device.getOsVersion());
+        if (device.getDeviceOsVersion() != null) {
+            deviceJsonObject.addProperty("osName", device.getDeviceOsVersion());
         }
         return deviceJsonObject;
     }
@@ -832,7 +925,7 @@ public class YouboraConfig {
         if (content.getContentTotalBytes() != null) {
             contentEntry.addProperty("contentTotalBytes", content.getContentTotalBytes());
         }
-        contentEntry.addProperty("contentSendTotalBytes", (content.getContentSendTotalBytes() != null) ? content.getContentSendTotalBytes() : Boolean.FALSE);
+        contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
         if (content.getContentTvShow() != null) {
             contentEntry.addProperty("contentTvShow", content.getContentTvShow());
         }
@@ -841,6 +934,28 @@ public class YouboraConfig {
         }
 
         return contentEntry;
+    }
+
+    private JsonObject getNetworkJsonObject() {
+        JsonObject networkJsonObject = new JsonObject();
+        Network network = getNetwork();
+        if (network == null) {
+            return networkJsonObject;
+        }
+
+        if (network.getNetworkConnectionType() != null) {
+            networkJsonObject.addProperty("networkConnectionType", network.getNetworkConnectionType());
+        }
+
+        if (network.getNetworkIP() != null) {
+            networkJsonObject.addProperty("networkIP", network.getNetworkIP());
+        }
+
+        if (network.getNetworkIsp() != null) {
+            networkJsonObject.addProperty("parseCdnSwitchHeader", network.getNetworkIsp());
+        }
+
+        return networkJsonObject;
     }
 
     @NonNull
@@ -898,9 +1013,15 @@ public class YouboraConfig {
                                                   JsonPrimitive houseHoldId,
                                                   JsonPrimitive isUserObfuscateIp,
                                                   JsonPrimitive httpSecure,
+                                                  JsonPrimitive isAutoStart,
+                                                  JsonPrimitive isAutoDetectBackground,
+                                                  JsonPrimitive isEnabled,
+                                                  JsonPrimitive isForceInit,
+                                                  JsonPrimitive isOffline,
                                                   JsonObject parse,
                                                   JsonObject device,
                                                   JsonObject content,
+                                                  JsonObject network,
                                                   JsonObject adsEntry,
                                                   JsonObject propertiesEntry,
                                                   JsonObject extraParamEntry) {
@@ -915,9 +1036,17 @@ public class YouboraConfig {
         youboraConfig.add("houseHoldId", houseHoldId);
         youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
+
+        youboraConfig.add("isAutoStart", isAutoStart);
+        youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
+        youboraConfig.add("isEnabled", isEnabled);
+        youboraConfig.add("isForceInit", isForceInit);
+        youboraConfig.add("isOffline", isOffline);
+
         youboraConfig.add("parse", parse);
         youboraConfig.add("device", device);
         youboraConfig.add("content", content);
+        youboraConfig.add("network", network);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
         youboraConfig.add("extraParams", extraParamEntry);
@@ -1131,9 +1260,7 @@ public class YouboraConfig {
                 if (content.getContentTotalBytes() == null) {
                     content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
                 }
-                if (content.getContentSendTotalBytes() == null) {
-                    content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
-                }
+                content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
                 if (content.getContentTvShow() == null) {
                     content.setContentTvShow(youboraConfigUiConf.getContent().getContentTvShow());
                 }
@@ -1168,6 +1295,22 @@ public class YouboraConfig {
             }
         } else {
             parse = youboraConfigUiConf.getParse();
+        }
+
+        if (network != null) {
+            if (youboraConfigUiConf.getParse() != null) {
+                if (network.getNetworkConnectionType() == null) {
+                    network.setNetworkConnectionType(youboraConfigUiConf.getNetwork().getNetworkConnectionType());
+                }
+                if (network.getNetworkIP() == null) {
+                    network.setNetworkIP(youboraConfigUiConf.getNetwork().getNetworkIP());
+                }
+                if (network.getNetworkIsp() == null) {
+                    network.setNetworkIsp(youboraConfigUiConf.getNetwork().getNetworkIsp());
+                }
+            }
+        } else {
+            network = youboraConfigUiConf.getNetwork();
         }
 
         if (ads != null) {
