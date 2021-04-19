@@ -527,14 +527,33 @@ public class YouboraConfig {
         }
 
         Bundle propertiesBundle = new Bundle();
-        propertiesBundle.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
-        propertiesBundle.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
-        propertiesBundle.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
-        propertiesBundle.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
-        propertiesBundle.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
-        propertiesBundle.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
-        propertiesBundle.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
-        propertiesBundle.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
+        if (prop.getDirector() != null) {
+            propertiesBundle.putString("director", prop.getDirector());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("parental", prop.getParental());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("audioType", prop.getAudioType());
+        }
+        if (prop.getAudioChannels() != null) {
+            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
+        }
+        if (prop.getDevice() != null) {
+            propertiesBundle.putString("device", prop.getDevice());
+        }
+        if (prop.getRating() != null) {
+            propertiesBundle.putString("rating", prop.getRating());
+        }
+        if (prop.getYear() != null) {
+            propertiesBundle.putString("year", prop.getYear());
+        }
+        if (prop.getCast() != null) {
+            propertiesBundle.putString("cast", prop.getCast());
+        }
+        if (prop.getOwner() != null) {
+            propertiesBundle.putString("owner", prop.getOwner());
+        }
 
         return propertiesBundle;
     }
@@ -555,14 +574,34 @@ public class YouboraConfig {
 //        }
 //
 //        Bundle propertiesBundle = new Bundle();
-//        propertiesBundle.putString("director", (prop.getDirector() != null) ? prop.getDirector() : "");
-//        propertiesBundle.putString("parental", (prop.getParental() != null) ? prop.getParental() : "");
-//        propertiesBundle.putString("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
-//        propertiesBundle.putString("device", (prop.getDevice() != null) ? prop.getDevice() : "");
-//        propertiesBundle.putString("rating", (prop.getRating() != null) ? prop.getRating() : "");
-//        propertiesBundle.putString("year", (prop.getYear() != null) ? prop.getYear() : "");
-//        propertiesBundle.putString("cast", (prop.getCast() != null) ? prop.getCast() : "");
-//        propertiesBundle.putString("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
+//        if (prop.getDirector() != null) {
+//            propertiesBundle.putString("director", prop.getDirector());
+//        }
+//        if (prop.getParental() != null) {
+//            propertiesBundle.putString("parental", prop.getParental());
+//        }
+//        if (prop.getParental() != null) {
+//            propertiesBundle.putString("audioType", prop.getAudioType());
+//        }
+//        if (prop.getAudioChannels() != null) {
+//            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
+//        }
+//        if (prop.getDevice() != null) {
+//            propertiesBundle.putString("device", prop.getDevice());
+//        }
+//        if (prop.getRating() != null) {
+//            propertiesBundle.putString("rating", prop.getRating());
+//        }
+//        if (prop.getYear() != null) {
+//            propertiesBundle.putString("year", prop.getYear());
+//        }
+//        if (prop.getCast() != null) {
+//            propertiesBundle.putString("cast", prop.getCast());
+//        }
+//        if (prop.getOwner() != null) {
+//            propertiesBundle.putString("owner", prop.getOwner());
+//        }
+//
 //
 //        return propertiesBundle;
     }
@@ -577,7 +616,6 @@ public class YouboraConfig {
         JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
         JsonPrimitive userEmail = new JsonPrimitive(getUserEmail() != null ? getUserEmail() : "");
         JsonPrimitive userAnonymousId = new JsonPrimitive(getUserAnonymousId() != null ? getUserAnonymousId() : "");
-
         JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
@@ -894,14 +932,30 @@ public class YouboraConfig {
         }
 
         Properties prop = getProperties();
-        propertiesEntry.addProperty("year", (prop.getYear() != null) ? prop.getYear() : "");
-        propertiesEntry.addProperty("cast", (prop.getCast() != null) ? prop.getCast() : "");
-        propertiesEntry.addProperty("director", (prop.getDirector() != null) ? prop.getDirector() : "");
-        propertiesEntry.addProperty("owner", (prop.getOwner() != null) ? prop.getOwner() : "");
-        propertiesEntry.addProperty("parental", (prop.getParental() != null) ? prop.getParental() : "");
-        propertiesEntry.addProperty("rating", (prop.getRating() != null) ? prop.getRating() : "");
-        propertiesEntry.addProperty("device", (prop.getDevice() != null) ? prop.getDevice() : "");
-        propertiesEntry.addProperty("audioChannels", (prop.getAudioChannels() != null) ? prop.getAudioChannels() : "");
+        if (prop.getYear() != null) {
+            propertiesEntry.addProperty("year", prop.getYear());
+        }
+        if (prop.getCast() != null) {
+            propertiesEntry.addProperty("cast", prop.getCast());
+        }
+        if (prop.getDirector() != null) {
+            propertiesEntry.addProperty("director",  prop.getDirector());
+        }
+        if (prop.getOwner() != null) {
+            propertiesEntry.addProperty("owner", prop.getOwner());
+        }
+        if (prop.getParental() != null) {
+            propertiesEntry.addProperty("parental", prop.getParental());
+        }
+        if (prop.getRating() != null) {
+            propertiesEntry.addProperty("rating", prop.getRating());
+        }
+        if (prop.getDevice() != null) {
+            propertiesEntry.addProperty("device", prop.getDevice());
+        }
+        if (prop.getAudioChannels() != null) {
+            propertiesEntry.addProperty("audioChannels", prop.getAudioChannels());
+        }
 
         return propertiesEntry;
     }
