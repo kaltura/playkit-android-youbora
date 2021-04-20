@@ -60,6 +60,8 @@ public class YouboraConfig {
 
     private boolean isOffline;
 
+    private App app;
+
     private Parse parse;
 
     private Device device;
@@ -197,6 +199,10 @@ public class YouboraConfig {
         this.isOffline = isOffline;
     }
 
+    public App getApp() {
+        return app;
+    }
+
     public Parse getParse() {
         return parse;
     }
@@ -270,6 +276,15 @@ public class YouboraConfig {
         youboraOptions.setEnabled(isEnabled);
         youboraOptions.setForceInit(isForceInit);
         youboraOptions.setOffline(isOffline);
+
+        if (app != null) {
+            if (app.getAppName() != null) {
+                youboraOptions.setAppName(app.getAppName());
+            }
+            if (app.getAppReleaseVersion() != null) {
+                youboraOptions.setAppReleaseVersion(app.getAppReleaseVersion());
+            }
+        }
 
         if (parse != null) {
             if (parse.getParseManifest() != null) {
@@ -708,6 +723,7 @@ public class YouboraConfig {
         JsonPrimitive isForceInit = new JsonPrimitive(getIsForceInit());
         JsonPrimitive isOffline = new JsonPrimitive(getIsOffline());
 
+        JsonObject app = getAppJsonObject();
         JsonObject parse = getParseJsonObject();
         JsonObject device = getDeviceJsonObject();
         JsonObject content = getContentJsonObject();
@@ -730,6 +746,7 @@ public class YouboraConfig {
                 isEnabled,
                 isForceInit,
                 isOffline,
+                app,
                 parse,
                 device,
                 content,
@@ -738,6 +755,25 @@ public class YouboraConfig {
                 propertiesEntry,
                 extraParamEntry);
     }
+
+    private JsonObject getAppJsonObject() {
+        JsonObject appJsonObject = new JsonObject();
+        App app = getApp();
+        if (app == null) {
+            return appJsonObject;
+        }
+
+        if (app.getAppName() != null) {
+            appJsonObject.addProperty("appName", app.getAppName());
+        }
+
+        if (app.getAppReleaseVersion() != null) {
+            appJsonObject.addProperty("appName", app.getAppReleaseVersion());
+        }
+
+        return appJsonObject;
+    }
+
 
     private JsonObject getParseJsonObject() {
         JsonObject parseJsonObject = new JsonObject();
@@ -1018,6 +1054,7 @@ public class YouboraConfig {
                                                   JsonPrimitive isEnabled,
                                                   JsonPrimitive isForceInit,
                                                   JsonPrimitive isOffline,
+                                                  JsonObject app,
                                                   JsonObject parse,
                                                   JsonObject device,
                                                   JsonObject content,
@@ -1043,6 +1080,7 @@ public class YouboraConfig {
         youboraConfig.add("isForceInit", isForceInit);
         youboraConfig.add("isOffline", isOffline);
 
+        youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
         youboraConfig.add("device", device);
         youboraConfig.add("content", content);
@@ -1272,6 +1310,19 @@ public class YouboraConfig {
             content = youboraConfigUiConf.getContent();
         }
 
+        if (app != null) {
+            if (youboraConfigUiConf.getApp() != null) {
+                if (app.getAppName() == null) {
+                    app.setAppName(youboraConfigUiConf.getApp().getAppName());
+                }
+                if (app.getAppReleaseVersion() == null) {
+                    app.setAppReleaseVersion(youboraConfigUiConf.getAppReleaseVersion());
+                }
+            }  else {
+                app = youboraConfigUiConf.getApp();
+            }
+        }
+
         if (parse != null) {
             if (youboraConfigUiConf.getParse() != null) {
                 if (parse.getParseManifest() == null) {
@@ -1298,7 +1349,7 @@ public class YouboraConfig {
         }
 
         if (network != null) {
-            if (youboraConfigUiConf.getParse() != null) {
+            if (youboraConfigUiConf.getNetwork() != null) {
                 if (network.getNetworkConnectionType() == null) {
                     network.setNetworkConnectionType(youboraConfigUiConf.getNetwork().getNetworkConnectionType());
                 }
