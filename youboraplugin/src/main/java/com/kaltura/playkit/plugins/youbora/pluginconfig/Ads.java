@@ -18,7 +18,8 @@ public class Ads {
     private String adResource;
     private String adTitle;
 
-    private ExtraParams extraParams;
+    @SerializedName(value="adCustomDimensions", alternate={"extraParams"})
+    private AdCustomDimensions adCustomDimensions;
 
     public ArrayList<Integer> getAdBreaksTime() {
         return adBreaksTime;
@@ -84,11 +85,11 @@ public class Ads {
         this.adTitle = adTitle;
     }
 
-    public ExtraParams getExtraParams() {
-        return extraParams;
+    public AdCustomDimensions getAdCustomDimensions() {
+        return adCustomDimensions;
     }
 
-    public void setExtraParams(ExtraParams extraParams) {
-        this.extraParams = extraParams;
+    public void setAdCustomDimensions(AdCustomDimensions adCustomDimensions) {
+        this.adCustomDimensions = adCustomDimensions;
     }
 }

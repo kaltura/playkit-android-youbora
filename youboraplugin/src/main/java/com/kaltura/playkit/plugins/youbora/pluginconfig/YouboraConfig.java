@@ -71,11 +71,14 @@ public class YouboraConfig {
 
     private Network network;
 
+    private Errors errors;
+
     private Ads ads;
 
     private Properties properties;
 
-    private ExtraParams extraParams;
+    @SerializedName(value="customDimensions", alternate={"extraParams"})
+    private CustomDimensions customDimensions;
 
     private ViewTransform.FastDataConfig fastDataConfig;
 
@@ -203,8 +206,16 @@ public class YouboraConfig {
         return app;
     }
 
+    public void setApp(App app) {
+        this.app = app;
+    }
+
     public Parse getParse() {
         return parse;
+    }
+
+    public void setParse(Parse parse) {
+        this.parse = parse;
     }
 
     public Device getDevice() {
@@ -219,12 +230,24 @@ public class YouboraConfig {
         return content;
     }
 
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
     public Network getNetwork() {
         return network;
     }
 
-    public void setContent(Content content) {
-        this.content = content;
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    public Errors getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Errors errors) {
+        this.errors = errors;
     }
 
     public Ads getAds() {
@@ -243,12 +266,12 @@ public class YouboraConfig {
         this.properties = properties;
     }
 
-    public ExtraParams getExtraParams() {
-        return extraParams;
+    public CustomDimensions getCustomDimensions() {
+        return customDimensions;
     }
 
-    public void setExtraParams(ExtraParams extraParams) {
-        this.extraParams = extraParams;
+    public void setCustomDimensions(CustomDimensions customDimensions) {
+        this.customDimensions = customDimensions;
     }
 
     public ViewTransform.FastDataConfig getFastDataConfig() {
@@ -477,6 +500,18 @@ public class YouboraConfig {
             }
         }
 
+        if (errors != null) {
+            if (errors.getErrorsIgnore() != null) {
+                youboraOptions.setErrorsToIgnore(errors.getErrorsIgnore());
+            }
+            if (errors.getErrorsFatal() != null) {
+                youboraOptions.setFatalErrors(errors.getErrorsFatal());
+            }
+            if (errors.getErrorsNonFatal() != null) {
+                youboraOptions.setNonFatalErrors(errors.getErrorsNonFatal());
+            }
+        }
+
         if (ads != null) {
             if (ads.getAdBreaksTime() != null) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
@@ -496,17 +531,17 @@ public class YouboraConfig {
             youboraOptions.setAdResource(ads.getAdResource());
             youboraOptions.setAdTitle(ads.getAdTitle());
 
-            if (ads.getExtraParams() != null) {
-                youboraOptions.setAdCustomDimension1(ads.getExtraParams().getParam1());
-                youboraOptions.setAdCustomDimension2(ads.getExtraParams().getParam2());
-                youboraOptions.setAdCustomDimension3(ads.getExtraParams().getParam3());
-                youboraOptions.setAdCustomDimension4(ads.getExtraParams().getParam4());
-                youboraOptions.setAdCustomDimension5(ads.getExtraParams().getParam5());
-                youboraOptions.setAdCustomDimension6(ads.getExtraParams().getParam6());
-                youboraOptions.setAdCustomDimension7(ads.getExtraParams().getParam7());
-                youboraOptions.setAdCustomDimension8(ads.getExtraParams().getParam8());
-                youboraOptions.setAdCustomDimension9(ads.getExtraParams().getParam9());
-                youboraOptions.setAdCustomDimension10(ads.getExtraParams().getParam10());
+            if (ads.getAdCustomDimensions() != null) {
+                youboraOptions.setAdCustomDimension1(ads.getAdCustomDimensions().getAdCustomDimension1());
+                youboraOptions.setAdCustomDimension2(ads.getAdCustomDimensions().getAdCustomDimension2());
+                youboraOptions.setAdCustomDimension3(ads.getAdCustomDimensions().getAdCustomDimension3());
+                youboraOptions.setAdCustomDimension4(ads.getAdCustomDimensions().getAdCustomDimension4());
+                youboraOptions.setAdCustomDimension5(ads.getAdCustomDimensions().getAdCustomDimension5());
+                youboraOptions.setAdCustomDimension6(ads.getAdCustomDimensions().getAdCustomDimension6());
+                youboraOptions.setAdCustomDimension7(ads.getAdCustomDimensions().getAdCustomDimension7());
+                youboraOptions.setAdCustomDimension8(ads.getAdCustomDimensions().getAdCustomDimension8());
+                youboraOptions.setAdCustomDimension9(ads.getAdCustomDimensions().getAdCustomDimension9());
+                youboraOptions.setAdCustomDimension10(ads.getAdCustomDimensions().getAdCustomDimension10());
             }
 
             //UNSUPPORTED YET
@@ -514,17 +549,27 @@ public class YouboraConfig {
             //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
         }
 
-        if (extraParams != null) {
-            youboraOptions.setContentCustomDimension1(extraParams.getParam1());
-            youboraOptions.setContentCustomDimension2(extraParams.getParam2());
-            youboraOptions.setContentCustomDimension3(extraParams.getParam3());
-            youboraOptions.setContentCustomDimension4(extraParams.getParam4());
-            youboraOptions.setContentCustomDimension5(extraParams.getParam5());
-            youboraOptions.setContentCustomDimension6(extraParams.getParam6());
-            youboraOptions.setContentCustomDimension7(extraParams.getParam7());
-            youboraOptions.setContentCustomDimension8(extraParams.getParam8());
-            youboraOptions.setContentCustomDimension9(extraParams.getParam9());
-            youboraOptions.setContentCustomDimension10(extraParams.getParam10());
+        if (customDimensions != null) {
+            youboraOptions.setContentCustomDimension1(customDimensions.getCustomDimension1());
+            youboraOptions.setContentCustomDimension2(customDimensions.getCustomDimension2());
+            youboraOptions.setContentCustomDimension3(customDimensions.getCustomDimension3());
+            youboraOptions.setContentCustomDimension4(customDimensions.getCustomDimension4());
+            youboraOptions.setContentCustomDimension5(customDimensions.getCustomDimension5());
+            youboraOptions.setContentCustomDimension6(customDimensions.getCustomDimension6());
+            youboraOptions.setContentCustomDimension7(customDimensions.getCustomDimension7());
+            youboraOptions.setContentCustomDimension8(customDimensions.getCustomDimension8());
+            youboraOptions.setContentCustomDimension9(customDimensions.getCustomDimension9());
+            youboraOptions.setContentCustomDimension10(customDimensions.getCustomDimension10());
+            youboraOptions.setContentCustomDimension11(customDimensions.getCustomDimension11());
+            youboraOptions.setContentCustomDimension12(customDimensions.getCustomDimension12());
+            youboraOptions.setContentCustomDimension13(customDimensions.getCustomDimension13());
+            youboraOptions.setContentCustomDimension14(customDimensions.getCustomDimension14());
+            youboraOptions.setContentCustomDimension15(customDimensions.getCustomDimension15());
+            youboraOptions.setContentCustomDimension16(customDimensions.getCustomDimension16());
+            youboraOptions.setContentCustomDimension17(customDimensions.getCustomDimension17());
+            youboraOptions.setContentCustomDimension18(customDimensions.getCustomDimension18());
+            youboraOptions.setContentCustomDimension19(customDimensions.getCustomDimension19());
+            youboraOptions.setContentCustomDimension20(customDimensions.getCustomDimension20());
         }
         return youboraOptions;
     }
@@ -728,9 +773,10 @@ public class YouboraConfig {
         JsonObject device = getDeviceJsonObject();
         JsonObject content = getContentJsonObject();
         JsonObject network = getNetworkJsonObject();
+        JsonObject errors = getErrorsJsonObject();
         JsonObject adsEntry = getAdsJsonObject();
         JsonObject propertiesEntry = getPropertiesJsonObject();
-        JsonObject extraParamEntry = getExtraParamJsonObject();
+        JsonObject customDimentionsEntry = getCustomDimentionsJsonObject();
         return getYouboraConfigJsonObject(accountCode,
                 username,
                 userEmail,
@@ -751,9 +797,10 @@ public class YouboraConfig {
                 device,
                 content,
                 network,
+                errors,
                 adsEntry,
                 propertiesEntry,
-                extraParamEntry);
+                customDimentionsEntry);
     }
 
     private JsonObject getAppJsonObject() {
@@ -994,6 +1041,42 @@ public class YouboraConfig {
         return networkJsonObject;
     }
 
+    private JsonObject getErrorsJsonObject() {
+        JsonObject errorsJsonObject = new JsonObject();
+        Errors errors = getErrors();
+        if (errors == null) {
+            return errorsJsonObject;
+        }
+
+        if (errors.getErrorsIgnore() != null) {
+            JsonArray errorsIgnoreJsonArray = new JsonArray();
+            for(String  errorIgnore : errors.getErrorsIgnore()) {
+                errorsIgnoreJsonArray.add(errorIgnore);
+            }
+            errorsJsonObject.add("errorsIgnore", errorsIgnoreJsonArray);
+        }
+
+        if (errors.getErrorsFatal() != null) {
+            JsonArray errorsFatalJsonArray = new JsonArray();
+            for(String  errorFatal : errors.getErrorsFatal()) {
+                errorsFatalJsonArray.add(errorFatal);
+            }
+            errorsJsonObject.add("errorsFatal", errorsFatalJsonArray);
+        }
+
+        if (errors.getErrorsNonFatal() != null) {
+            JsonArray errorsNonFatalJsonArray = new JsonArray();
+
+            for(String  errorNonFatal : errors.getErrorsNonFatal()) {
+                errorsNonFatalJsonArray.add(errorNonFatal);
+            }
+            errorsJsonObject.add("errorsNonFatal", errorsNonFatalJsonArray);
+        }
+
+        return errorsJsonObject;
+    }
+
+
     @NonNull
     private JsonObject getAdsJsonObject() {
 
@@ -1059,9 +1142,10 @@ public class YouboraConfig {
                                                   JsonObject device,
                                                   JsonObject content,
                                                   JsonObject network,
+                                                  JsonObject errors,
                                                   JsonObject adsEntry,
                                                   JsonObject propertiesEntry,
-                                                  JsonObject extraParamEntry) {
+                                                  JsonObject customDimentionsEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
         youboraConfig.add("username", username);
@@ -1085,9 +1169,10 @@ public class YouboraConfig {
         youboraConfig.add("device", device);
         youboraConfig.add("content", content);
         youboraConfig.add("network", network);
+        youboraConfig.add("errors", errors);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("extraParams", extraParamEntry);
+        youboraConfig.add("customDimentionsEntry", customDimentionsEntry);
         return youboraConfig;
     }
 
@@ -1128,43 +1213,73 @@ public class YouboraConfig {
     }
 
     @NonNull
-    private JsonObject getExtraParamJsonObject() {
-        JsonObject extraParamEntry = new JsonObject();
-        if (getExtraParams() == null) {
-            return extraParamEntry;
+    private JsonObject getCustomDimentionsJsonObject() {
+        JsonObject customDimensionsEntry = new JsonObject();
+        if (getCustomDimensions() == null) {
+            return customDimensionsEntry;
         }
-        ExtraParams extraParams = getExtraParams();
-        if (extraParams.getParam1() != null) {
-            extraParamEntry.addProperty("param1", extraParams.getParam1());
+        CustomDimensions customDimensions = getCustomDimensions();
+        if (customDimensions.getCustomDimension1() != null) {
+            customDimensionsEntry.addProperty("customDimension1", customDimensions.getCustomDimension1());
         }
-        if (extraParams.getParam2() != null) {
-            extraParamEntry.addProperty("param2", extraParams.getParam2());
+        if (customDimensions.getCustomDimension2() != null) {
+            customDimensionsEntry.addProperty("customDimension2", customDimensions.getCustomDimension2());
         }
-        if (extraParams.getParam3() != null) {
-            extraParamEntry.addProperty("param3", extraParams.getParam3());
+        if (customDimensions.getCustomDimension3() != null) {
+            customDimensionsEntry.addProperty("customDimension3", customDimensions.getCustomDimension3());
         }
-        if (extraParams.getParam4() != null) {
-            extraParamEntry.addProperty("param4", extraParams.getParam4());
+        if (customDimensions.getCustomDimension4() != null) {
+            customDimensionsEntry.addProperty("customDimension4", customDimensions.getCustomDimension4());
         }
-        if (extraParams.getParam5() != null) {
-            extraParamEntry.addProperty("param5", extraParams.getParam5());
+        if (customDimensions.getCustomDimension5() != null) {
+            customDimensionsEntry.addProperty("customDimension5", customDimensions.getCustomDimension5());
         }
-        if (extraParams.getParam6() != null) {
-            extraParamEntry.addProperty("param6", extraParams.getParam6());
+        if (customDimensions.getCustomDimension6() != null) {
+            customDimensionsEntry.addProperty("customDimension6", customDimensions.getCustomDimension6());
         }
-        if (extraParams.getParam7() != null) {
-            extraParamEntry.addProperty("param7", extraParams.getParam7());
+        if (customDimensions.getCustomDimension7() != null) {
+            customDimensionsEntry.addProperty("customDimension7", customDimensions.getCustomDimension7());
         }
-        if (extraParams.getParam8() != null) {
-            extraParamEntry.addProperty("param8", extraParams.getParam8());
+        if (customDimensions.getCustomDimension8() != null) {
+            customDimensionsEntry.addProperty("customDimension8", customDimensions.getCustomDimension8());
         }
-        if (extraParams.getParam9() != null) {
-            extraParamEntry.addProperty("param9", extraParams.getParam9());
+        if (customDimensions.getCustomDimension9() != null) {
+            customDimensionsEntry.addProperty("customDimension9", customDimensions.getCustomDimension9());
         }
-        if (extraParams.getParam10() != null) {
-            extraParamEntry.addProperty("param10", extraParams.getParam10());
+        if (customDimensions.getCustomDimension10() != null) {
+            customDimensionsEntry.addProperty("customDimension10", customDimensions.getCustomDimension10());
         }
-        return extraParamEntry;
+        if (customDimensions.getCustomDimension11() != null) {
+            customDimensionsEntry.addProperty("customDimension11", customDimensions.getCustomDimension11());
+        }
+        if (customDimensions.getCustomDimension12() != null) {
+            customDimensionsEntry.addProperty("customDimension12", customDimensions.getCustomDimension12());
+        }
+        if (customDimensions.getCustomDimension13() != null) {
+            customDimensionsEntry.addProperty("customDimension13", customDimensions.getCustomDimension13());
+        }
+        if (customDimensions.getCustomDimension14() != null) {
+            customDimensionsEntry.addProperty("customDimension14", customDimensions.getCustomDimension14());
+        }
+        if (customDimensions.getCustomDimension15() != null) {
+            customDimensionsEntry.addProperty("customDimension15", customDimensions.getCustomDimension15());
+        }
+        if (customDimensions.getCustomDimension16() != null) {
+            customDimensionsEntry.addProperty("customDimension16", customDimensions.getCustomDimension16());
+        }
+        if (customDimensions.getCustomDimension17() != null) {
+            customDimensionsEntry.addProperty("customDimension17", customDimensions.getCustomDimension17());
+        }
+        if (customDimensions.getCustomDimension18() != null) {
+            customDimensionsEntry.addProperty("customDimension18", customDimensions.getCustomDimension18());
+        }
+        if (customDimensions.getCustomDimension19() != null) {
+            customDimensionsEntry.addProperty("customDimension19", customDimensions.getCustomDimension19());
+        }
+        if (customDimensions.getCustomDimension20() != null) {
+            customDimensionsEntry.addProperty("customDimension20", customDimensions.getCustomDimension20());
+        }
+        return customDimensionsEntry;
     }
 
     public void merge(YouboraConfig youboraConfigUiConf) {
@@ -1364,6 +1479,22 @@ public class YouboraConfig {
             network = youboraConfigUiConf.getNetwork();
         }
 
+        if (errors != null) {
+            if (youboraConfigUiConf.getErrors() != null) {
+                if (errors.getErrorsIgnore() == null) {
+                    errors.setErrorsIgnore(youboraConfigUiConf.getErrors().getErrorsIgnore());
+                }
+                if (errors.getErrorsFatal() == null) {
+                    errors.setErrorsFatal(youboraConfigUiConf.getErrors().getErrorsFatal());
+                }
+                if (errors.getErrorsNonFatal() == null) {
+                    errors.setErrorsNonFatal(youboraConfigUiConf.getErrors().getErrorsNonFatal());
+                }
+            }
+        } else {
+            errors = youboraConfigUiConf.getErrors();
+        }
+
         if (ads != null) {
             if (youboraConfigUiConf.getAds() != null) {
                 if (ads.getAdBreaksTime() == null) {
@@ -1428,45 +1559,72 @@ public class YouboraConfig {
             properties = youboraConfigUiConf.getProperties();
         }
 
-        if (extraParams != null) {
-            if (youboraConfigUiConf.getExtraParams() != null) {
-                ExtraParams extraParamsUiConf = youboraConfigUiConf.getExtraParams();
-                if (TextUtils.isEmpty((extraParams.getParam1()))) {
-                    extraParams.setParam1(extraParamsUiConf.getParam1());
+        if (customDimensions != null) {
+            if (youboraConfigUiConf.getCustomDimensions() != null) {
+                CustomDimensions customDimensionsUiConf = youboraConfigUiConf.getCustomDimensions();
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension1()))) {
+                    customDimensions.setCustomDimension1(customDimensionsUiConf.getCustomDimension1());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam1()))) {
-                    extraParams.setParam1(extraParamsUiConf.getParam1());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension2()))) {
+                    customDimensions.setCustomDimension2(customDimensionsUiConf.getCustomDimension2());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam2()))) {
-                    extraParams.setParam2(extraParamsUiConf.getParam2());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension3()))) {
+                    customDimensions.setCustomDimension3(customDimensionsUiConf.getCustomDimension3());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam3()))) {
-                    extraParams.setParam3(extraParamsUiConf.getParam3());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension4()))) {
+                    customDimensions.setCustomDimension4(customDimensionsUiConf.getCustomDimension4());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam4()))) {
-                    extraParams.setParam4(extraParamsUiConf.getParam4());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension5()))) {
+                    customDimensions.setCustomDimension5(customDimensionsUiConf.getCustomDimension5());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam5()))) {
-                    extraParams.setParam5(extraParamsUiConf.getParam5());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension6()))) {
+                    customDimensions.setCustomDimension6(customDimensionsUiConf.getCustomDimension6());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam6()))) {
-                    extraParams.setParam6(extraParamsUiConf.getParam6());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension7()))) {
+                    customDimensions.setCustomDimension7(customDimensionsUiConf.getCustomDimension7());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam7()))) {
-                    extraParams.setParam7(extraParamsUiConf.getParam7());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension8()))) {
+                    customDimensions.setCustomDimension8(customDimensionsUiConf.getCustomDimension8());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam8()))) {
-                    extraParams.setParam8(extraParamsUiConf.getParam8());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension9()))) {
+                    customDimensions.setCustomDimension9(customDimensionsUiConf.getCustomDimension9());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam1()))) {
-                    extraParams.setParam9(extraParamsUiConf.getParam9());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension10()))) {
+                    customDimensions.setCustomDimension10(customDimensionsUiConf.getCustomDimension10());
                 }
-                if (TextUtils.isEmpty((extraParams.getParam10()))) {
-                    extraParams.setParam10(extraParamsUiConf.getParam10());
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension11()))) {
+                    customDimensions.setCustomDimension11(customDimensionsUiConf.getCustomDimension11());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension12()))) {
+                    customDimensions.setCustomDimension12(customDimensionsUiConf.getCustomDimension12());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension13()))) {
+                    customDimensions.setCustomDimension13(customDimensionsUiConf.getCustomDimension13());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension14()))) {
+                    customDimensions.setCustomDimension14(customDimensionsUiConf.getCustomDimension14());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension15()))) {
+                    customDimensions.setCustomDimension15(customDimensionsUiConf.getCustomDimension15());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension16()))) {
+                    customDimensions.setCustomDimension16(customDimensionsUiConf.getCustomDimension16());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension17()))) {
+                    customDimensions.setCustomDimension17(customDimensionsUiConf.getCustomDimension17());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension18()))) {
+                    customDimensions.setCustomDimension18(customDimensionsUiConf.getCustomDimension18());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension19()))) {
+                    customDimensions.setCustomDimension19(customDimensionsUiConf.getCustomDimension19());
+                }
+                if (TextUtils.isEmpty((customDimensions.getCustomDimension20()))) {
+                    customDimensions.setCustomDimension20(customDimensionsUiConf.getCustomDimension20());
                 }
             }
         } else {
-            extraParams = youboraConfigUiConf.getExtraParams();
+            customDimensions = youboraConfigUiConf.getCustomDimensions();
         }
     }
 }
