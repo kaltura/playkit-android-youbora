@@ -1,5 +1,7 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Device {
 
 //If device info config is not given Youbora will add this info according to their internal logic so actually this is optional configuration
@@ -17,13 +19,28 @@ public class Device {
 //youboraOptions.setDeviceOsName("android");
 //youboraOptions.setDeviceOsVersion("8.1");
 
+    @SerializedName(value="deviceBrand", alternate={"brand"})
+    private String deviceBrand;
     private String deviceCode;
-    private String brand;
-    private String id;
-    private String model;
-    private String type;
-    private String osName;
-    private String osVersion;
+    @SerializedName(value="deviceId", alternate={"id"})
+    private String deviceId;
+    @SerializedName(value="deviceModel", alternate={"model"})
+    private String deviceModel;
+    @SerializedName(value="deviceOsName", alternate={"osName"})
+    private String deviceOsName;
+    @SerializedName(value="deviceOsVersion", alternate={"osVersion"})
+    private String deviceOsVersion;
+    @SerializedName(value="deviceType", alternate={"type"})
+    private String deviceType;
+    private boolean deviceIsAnonymous;
+
+    public String getDeviceBrand() {
+        return deviceBrand;
+    }
+
+    public void setDeviceBrand(String deviceBrand) {
+        this.deviceBrand = deviceBrand;
+    }
 
     public String getDeviceCode() {
         return deviceCode;
@@ -33,52 +50,52 @@ public class Device {
         this.deviceCode = deviceCode;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getId() {
-        return id;
+    public String getDeviceModel() {
+        return deviceModel;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
     }
 
-    public String getModel() {
-        return model;
+    public String getDeviceOsName() {
+        return deviceOsName;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setDeviceOsName(String deviceOsName) {
+        this.deviceOsName = deviceOsName;
     }
 
-    public String getType() {
-        return type;
+    public String getDeviceOsVersion() {
+        return deviceOsVersion;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDeviceOsVersion(String deviceOsVersion) {
+        this.deviceOsVersion = deviceOsVersion;
     }
 
-    public String getOsName() {
-        return osName;
+    public String getDeviceType() {
+        return deviceType;
     }
 
-    public void setOsName(String osName) {
-        this.osName = osName;
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
-    public String getOsVersion() {
-        return osVersion;
+    public boolean getDeviceIsAnonymous() {
+        return deviceIsAnonymous;
     }
 
-    public void setOsVersion(String osVersion) {
-        this.osVersion = osVersion;
+    public void setDeviceIsAnonymous(boolean deviceIsAnonymous) {
+        this.deviceIsAnonymous = deviceIsAnonymous;
     }
 }
 
