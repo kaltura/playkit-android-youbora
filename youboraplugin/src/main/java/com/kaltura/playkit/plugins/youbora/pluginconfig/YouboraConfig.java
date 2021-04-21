@@ -871,27 +871,27 @@ public class YouboraConfig {
         }
 
         if (device.getDeviceModel() != null) {
-            deviceJsonObject.addProperty("model", device.getDeviceModel());
+            deviceJsonObject.addProperty("deviceModel", device.getDeviceModel());
         }
 
         if (device.getDeviceId() != null) {
-            deviceJsonObject.addProperty("id", device.getDeviceId());
+            deviceJsonObject.addProperty("deviceId", device.getDeviceId());
         }
 
         if (device.getDeviceBrand() != null) {
-            deviceJsonObject.addProperty("brand", device.getDeviceBrand());
+            deviceJsonObject.addProperty("deviceBrand", device.getDeviceBrand());
         }
 
         if (device.getDeviceType() != null) {
-            deviceJsonObject.addProperty("type", device.getDeviceType());
+            deviceJsonObject.addProperty("deviceType", device.getDeviceType());
         }
 
         if (device.getDeviceOsName() != null) {
-            deviceJsonObject.addProperty("osName", device.getDeviceOsName());
+            deviceJsonObject.addProperty("deviceOsName", device.getDeviceOsName());
         }
 
         if (device.getDeviceOsVersion() != null) {
-            deviceJsonObject.addProperty("osName", device.getDeviceOsVersion());
+            deviceJsonObject.addProperty("deviceOsVersion", device.getDeviceOsVersion());
         }
         return deviceJsonObject;
     }
@@ -1035,7 +1035,7 @@ public class YouboraConfig {
         }
 
         if (network.getNetworkIsp() != null) {
-            networkJsonObject.addProperty("parseCdnSwitchHeader", network.getNetworkIsp());
+            networkJsonObject.addProperty("setNetworkIsp", network.getNetworkIsp());
         }
 
         return networkJsonObject;
