@@ -64,7 +64,6 @@ public class Content {
     private String contentTvShow;
     private String contentType;
 
-
     public Long getContentBitrate() {
         return contentBitrate;
     }
