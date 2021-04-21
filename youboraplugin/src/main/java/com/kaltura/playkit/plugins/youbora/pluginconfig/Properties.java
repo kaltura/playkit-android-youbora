@@ -1,67 +1,14 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
 public class Properties {
-
-    private String genre;
-    private String type;
-    private String transactionType;
     private String year;
     private String cast;
     private String director;
     private String owner;
     private String parental;
-    private String price;
     private String rating;
-    private String audioType;
-    private String audioChannels;
     private String device;
-    private String quality;
-
-    private String contentPackage;
-    private String contentSaga;
-    private String contentTvShow;
-    private String contentSeason;
-    private String contentEpisodeTitle;
-    private String contentChannel;
-    private String contentId;
-    private String contentImdbId;
-    private String contentGracenoteId;
-    private String contentLanguage;
-    private String contentSubtitles;
-    private String contentContractedResolution;
-    private String contentPlaybackType;
-    private String contentDrm;
-    private String contentEncodingVideoCodec;
-    private String contentEncodingAudioCodec;
-    private String contentEncodingCodecProfile;
-    private String contentEncodingContainerFormat;
-    // Fetch Codename of the CDN where the content is streaming from.
-    // See a list of codes in http://mapi.youbora.com:8081/cdns
-    private String contentCdnCode;
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
-    }
+    private String audioChannels;
 
     public String getYear() {
         return year;
@@ -103,14 +50,6 @@ public class Properties {
         this.parental = parental;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
     public String getRating() {
         return rating;
     }
@@ -119,12 +58,12 @@ public class Properties {
         this.rating = rating;
     }
 
-    public String getAudioType() {
-        return audioType;
+    public String getDevice() {
+        return device;
     }
 
-    public void setAudioType(String audioType) {
-        this.audioType = audioType;
+    public void setDevice(String device) {
+        this.device = device;
     }
 
     public String getAudioChannels() {
@@ -135,12 +74,74 @@ public class Properties {
         this.audioChannels = audioChannels;
     }
 
-    public String getDevice() {
-        return device;
+    /// DEPRECATED LEGACY MOVED TO Media
+
+    private String genre;
+    private String type;
+    private String transactionType;
+
+    private String price;
+    private String audioType;
+    private String quality;
+
+    private String contentPackage;
+    private String contentSaga;
+    private String contentTvShow;
+    private String contentSeason;
+    private String contentEpisodeTitle;
+    private String contentChannel;
+    private String contentId;
+    private String contentImdbId;
+    private String contentGracenoteId;
+    private String contentLanguage;
+    private String contentSubtitles;
+    private String contentContractedResolution;
+    private String contentPlaybackType;
+    private String contentDrm;
+    private String contentEncodingVideoCodec;
+    private String contentEncodingAudioCodec;
+    private String contentEncodingCodecProfile;
+    private String contentEncodingContainerFormat;
+    private String contentCdnCode;
+
+    public String getGenre() {
+        return genre;
     }
 
-    public void setDevice(String device) {
-        this.device = device;
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getAudioType() {
+        return audioType;
+    }
+
+    public void setAudioType(String audioType) {
+        this.audioType = audioType;
     }
 
     public String getQuality() {
