@@ -1209,6 +1209,80 @@ public class YouboraConfig {
             propertiesEntry.addProperty("audioChannels", prop.getAudioChannels());
         }
 
+        /// LEGACY SUPPORT:
+        if (prop.getGenre() != null) {
+            propertiesEntry.addProperty("genre", prop.getGenre());
+        }
+        if (prop.getType() != null) {
+            propertiesEntry.addProperty("type", prop.getType());
+        }
+        if (prop.getTransactionType() != null) {
+            propertiesEntry.addProperty("transactionType", prop.getTransactionType());
+        }
+        if (prop.getDevice() != null) {
+            propertiesEntry.addProperty("device", prop.getDevice());
+        }
+        if (prop.getQuality() != null) {
+            propertiesEntry.addProperty("quality", prop.getQuality());
+        }
+        if (prop.getContentPackage() != null) {
+            propertiesEntry.addProperty("contentPackage", prop.getContentPackage());
+        }
+        if (prop.getContentCdnCode() != null) {
+            propertiesEntry.addProperty("contentCdnCode", prop.getContentCdnCode());
+        }
+        if (prop.getContentSaga() != null) {
+            propertiesEntry.addProperty("contentSaga", prop.getContentSaga());
+        }
+        if (prop.getContentTvShow() != null) {
+            propertiesEntry.addProperty("contentTvShow", prop.getContentTvShow());
+        }
+        if (prop.getContentSeason() != null) {
+            propertiesEntry.addProperty("contentSeason", prop.getContentSeason());
+        }
+        if (prop.getContentEpisodeTitle() != null) {
+            propertiesEntry.addProperty("contentEpisodeTitle", prop.getContentEpisodeTitle());
+        }
+        if (prop.getContentChannel() != null) {
+            propertiesEntry.addProperty("contentChannel", prop.getContentChannel());
+        }
+        if (prop.getContentId() != null) {
+            propertiesEntry.addProperty("contentId", prop.getContentId());
+        }
+        if (prop.getContentImdbId() != null) {
+            propertiesEntry.addProperty("contentImdbId", prop.getContentImdbId());
+        }
+        if (prop.getContentGracenoteId() != null) {
+            propertiesEntry.addProperty("contentGracenoteId", prop.getContentGracenoteId());
+        }
+        if (prop.getContentLanguage() != null) {
+            propertiesEntry.addProperty("contentLanguage", prop.getContentLanguage());
+        }
+        if (prop.getContentSubtitles() != null) {
+            propertiesEntry.addProperty("contentSubtitles", prop.getContentSubtitles());
+        }
+        if (prop.getContentContractedResolution() != null) {
+            propertiesEntry.addProperty("contentContractedResolution", prop.getContentContractedResolution());
+        }
+        if (prop.getContentPlaybackType() != null) {
+            propertiesEntry.addProperty("contentPlaybackType", prop.getContentPlaybackType());
+        }
+        if (prop.getContentDrm() != null) {
+            propertiesEntry.addProperty("contentDrm", prop.getContentDrm());
+        }
+        if (prop.getContentEncodingVideoCodec() != null) {
+            propertiesEntry.addProperty("contentEncodingVideoCodec", prop.getContentEncodingVideoCodec());
+        }
+        if (prop.getContentEncodingAudioCodec() != null) {
+            propertiesEntry.addProperty("contentEncodingAudioCodec", prop.getContentEncodingAudioCodec());
+        }
+        if (prop.getContentEncodingCodecProfile() != null) {
+            propertiesEntry.addProperty("contentEncodingCodecProfile", prop.getContentEncodingCodecProfile());
+        }
+        if (prop.getContentEncodingContainerFormat() != null) {
+            propertiesEntry.addProperty("contentEncodingContainerFormat", prop.getContentEncodingContainerFormat());
+        }
+        
         return propertiesEntry;
     }
 
