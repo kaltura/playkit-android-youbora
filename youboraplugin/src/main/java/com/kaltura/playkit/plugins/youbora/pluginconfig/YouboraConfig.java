@@ -30,6 +30,8 @@ public class YouboraConfig {
 
     public static final String KEY_CONTENT_METADATA_RATING = "rating";
 
+    public static final String KEY_CONTENT_METADATA_QUALITY = "quality";
+
     private String accountCode;
 
     private String username;
@@ -425,7 +427,12 @@ public class YouboraConfig {
                 youboraOptions.setContentImdbId(content.getContentImdbId());
             }
             youboraOptions.setContentIsLive(content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
-            youboraOptions.setContentIsLiveNoSeek((content.getContentIsLiveNoSeek() != null) ? content.getContentIsLiveNoSeek() : Boolean.FALSE);
+            if ((content.getContentIsLiveNoSeek() != null)) {
+                youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
+            } else if (content.getIsDVR() != null) {
+                youboraOptions.setContentIsLiveNoSeek(!content.getIsDVR());
+            }
+
             if (content.getContentLanguage() != null) {
                 youboraOptions.setContentLanguage(content.getContentLanguage());
             }
@@ -886,8 +893,11 @@ public class YouboraConfig {
                 if (content.getContentIsLive() == null) {
                     content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
                 }
-                if (content.getContentIsLiveNoSeek() == null) {
-                    content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                if (content.getContentIsLiveNoSeek() == null && youboraConfigUiConf.getContent().getContentIsLiveNoSeek() != null) {
+                        content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                }
+                if (content.getIsDVR() == null && youboraConfigUiConf.getContent().getIsDVR() != null) {
+                        content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().getIsDVR());
                 }
                 if (content.getContentLanguage() == null) {
                     content.setContentLanguage(youboraConfigUiConf.getContent().getContentLanguage());

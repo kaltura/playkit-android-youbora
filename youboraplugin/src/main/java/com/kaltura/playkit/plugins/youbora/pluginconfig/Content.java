@@ -33,9 +33,8 @@ public class Content {
     private String contentImdbId;
     @SerializedName(value="contentIsLive", alternate={"isLive"})
     private Boolean contentIsLive;
-    @SerializedName(value="contentIsLiveNoSeek", alternate={"isDVR"})
     private Boolean contentIsLiveNoSeek;
-
+    private Boolean isDVR; //LEGACY  - the opposite value from contentIsLiveNoSeek
     private String contentLanguage;
 
     //private Bundle contentMetrics;
@@ -230,6 +229,14 @@ public class Content {
 
     public void setContentIsLiveNoSeek(Boolean contentIsLiveNoSeek) {
         this.contentIsLiveNoSeek = contentIsLiveNoSeek;
+    }
+
+    public Boolean getIsDVR() {
+        return isDVR;
+    }
+
+    public void setIsDVR(Boolean isDVR) {
+        this.isDVR = isDVR;
     }
 
     public String getContentLanguage() {
