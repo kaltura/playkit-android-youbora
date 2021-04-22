@@ -225,7 +225,12 @@ public class YouboraConfigJsonBuilder {
             contentEntry.addProperty("contentImdbId", content.getContentImdbId());
         }
         contentEntry.addProperty("contentisLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
-        contentEntry.addProperty("contentIsLiveNoSeek",  content.getContentIsLiveNoSeek() != null ? content.getContentIsLiveNoSeek() : Boolean.FALSE);
+        if (content.getContentIsLiveNoSeek() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
+        } else if (content.getIsDVR() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", !content.getIsDVR());
+        }
+
         if (content.getContentLanguage() != null) {
             contentEntry.addProperty("contentLanguage", content.getContentLanguage());
         }
