@@ -429,7 +429,7 @@ public class YouboraConfig {
             if (content.getContentIsLive() != null) {
                 youboraOptions.setContentIsLive(content.getContentIsLive());
             }
-            if ((content.getContentIsLiveNoSeek() != null)) {
+            if (content.getContentIsLiveNoSeek() != null) {
                 youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
             } else if (content.getIsDVR() != null) {
                 youboraOptions.setContentIsLiveNoSeek(!content.getIsDVR());
