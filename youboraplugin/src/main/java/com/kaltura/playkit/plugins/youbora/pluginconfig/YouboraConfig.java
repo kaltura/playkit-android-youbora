@@ -426,7 +426,9 @@ public class YouboraConfig {
             if (content.getContentImdbId() != null) {
                 youboraOptions.setContentImdbId(content.getContentImdbId());
             }
-            youboraOptions.setContentIsLive(content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
+            if (content.getContentIsLive() != null) {
+                youboraOptions.setContentIsLive(content.getContentIsLive());
+            }
             if ((content.getContentIsLiveNoSeek() != null)) {
                 youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
             } else if (content.getIsDVR() != null) {
