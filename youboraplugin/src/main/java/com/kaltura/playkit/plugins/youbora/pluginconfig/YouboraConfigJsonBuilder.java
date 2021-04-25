@@ -62,7 +62,7 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("errors", errors);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("customDimentionsEntry", customDimentionsEntry);
+        youboraConfig.add("customDimentions", customDimentionsEntry);
         return youboraConfig;
     }
 
