@@ -56,6 +56,8 @@ public class YouboraConfig {
 
     private String urlToParse ;
 
+    private String linkedViewId;
+
     private boolean isAutoStart = true;
 
     private boolean isAutoDetectBackground = true;
@@ -166,6 +168,14 @@ public class YouboraConfig {
 
     public void setUrlToParse(String urlToParse) {
         this.urlToParse = urlToParse;
+    }
+
+    public String getLinkedViewId() {
+        return linkedViewId;
+    }
+
+    public void setLinkedViewId(String linkedViewId) {
+        this.linkedViewId = linkedViewId;
     }
 
     public String getHouseHoldId() {
@@ -316,6 +326,7 @@ public class YouboraConfig {
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
         youboraOptions.setTransportFormat(transportForamt);
         youboraOptions.setUrlToParse(urlToParse);
+        youboraOptions.setLinkedViewId(linkedViewId);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
@@ -553,6 +564,9 @@ public class YouboraConfig {
 
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
+            }
+            if (ads.getGivenAds() != null) {
+                youboraOptions.setGivenAds(ads.getGivenAds());
             }
             if (ads.getAdGivenBreaks() != null) {
                 youboraOptions.setAdGivenBreaks(ads.getAdGivenBreaks());
@@ -793,7 +807,7 @@ public class YouboraConfig {
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
         JsonPrimitive transportForamt = new JsonPrimitive(getTransportForamt());
         JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
-
+        JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
@@ -821,6 +835,7 @@ public class YouboraConfig {
                 houseHoldId,
                 transportForamt,
                 urlToParse,
+                linkedViewId,
                 isUserObfuscateIp,
                 httpSecure,
                 isAutoStart,
@@ -1069,8 +1084,11 @@ public class YouboraConfig {
                 if (ads.getAdExpectedBreaks() == null) {
                     ads.setAdExpectedBreaks(youboraConfigUiConf.getAds().getAdExpectedBreaks());
                 }
-                if (ads.getAdGivenBreaks() == null) {
+                if (ads.getGivenAds() == null) {
                     ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
+                }
+                if (ads.getAdGivenBreaks() == null) {
+                    ads.setGivenAds(youboraConfigUiConf.getAds().getGivenAds());
                 }
                 if (ads.getAdProvider() == null) {
                     ads.setAdProvider(youboraConfigUiConf.getAds().getAdProvider());

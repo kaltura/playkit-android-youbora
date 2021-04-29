@@ -22,6 +22,7 @@ public class YouboraConfigJsonBuilder {
                                                  JsonPrimitive houseHoldId,
                                                  JsonPrimitive transportForamt,
                                                  JsonPrimitive urlToParse,
+                                                 JsonPrimitive linkedViewId,
                                                  JsonPrimitive isUserObfuscateIp,
                                                  JsonPrimitive httpSecure,
                                                  JsonPrimitive isAutoStart,
@@ -48,6 +49,7 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("appReleaseVersion", appReleaseVersion);
         youboraConfig.add("transportForamt", transportForamt);
         youboraConfig.add("urlToParse", urlToParse);
+        youboraConfig.add("linkedViewId", linkedViewId);
         youboraConfig.add("houseHoldId", houseHoldId);
         youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
