@@ -51,7 +51,7 @@ public class YouboraConfig {
 
     private String transportFormat;
 
-    private String urlToParse ;
+    private String urlToParse;
 
     private String linkedViewId;
 
