@@ -52,6 +52,10 @@ public class YouboraConfig {
 
     private String appReleaseVersion = "";
 
+    private String transportForamt;
+
+    private String urlToParse ;
+
     private boolean isAutoStart = true;
 
     private boolean isAutoDetectBackground = true;
@@ -146,6 +150,22 @@ public class YouboraConfig {
 
     public void setAppReleaseVersion(String appReleaseVersion) {
         this.appReleaseVersion = appReleaseVersion;
+    }
+
+    public String getTransportForamt() {
+        return transportForamt;
+    }
+
+    public void setTransportForamt(String transportForamt) {
+        this.transportForamt = transportForamt;
+    }
+
+    public String getUrlToParse() {
+        return urlToParse;
+    }
+
+    public void setUrlToParse(String urlToParse) {
+        this.urlToParse = urlToParse;
     }
 
     public String getHouseHoldId() {
@@ -294,6 +314,8 @@ public class YouboraConfig {
         youboraOptions.setUserType(userType);
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
+        youboraOptions.setTransportFormat(transportForamt);
+        youboraOptions.setUrlToParse(urlToParse);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
@@ -769,6 +791,9 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
+        JsonPrimitive transportForamt = new JsonPrimitive(getTransportForamt());
+        JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
+
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
@@ -794,6 +819,8 @@ public class YouboraConfig {
                 appName,
                 appReleaseVersion,
                 houseHoldId,
+                transportForamt,
+                urlToParse,
                 isUserObfuscateIp,
                 httpSecure,
                 isAutoStart,

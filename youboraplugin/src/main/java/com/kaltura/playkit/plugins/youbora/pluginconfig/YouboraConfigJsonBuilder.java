@@ -20,6 +20,8 @@ public class YouboraConfigJsonBuilder {
                                                  JsonPrimitive appName,
                                                  JsonPrimitive appReleaseVersion,
                                                  JsonPrimitive houseHoldId,
+                                                 JsonPrimitive transportForamt,
+                                                 JsonPrimitive urlToParse,
                                                  JsonPrimitive isUserObfuscateIp,
                                                  JsonPrimitive httpSecure,
                                                  JsonPrimitive isAutoStart,
@@ -44,6 +46,8 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("userType", userType);
         youboraConfig.add("appName", appName);
         youboraConfig.add("appReleaseVersion", appReleaseVersion);
+        youboraConfig.add("transportForamt", transportForamt);
+        youboraConfig.add("urlToParse", urlToParse);
         youboraConfig.add("houseHoldId", houseHoldId);
         youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
         youboraConfig.add("httpSecure", httpSecure);
@@ -62,7 +66,7 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("errors", errors);
         youboraConfig.add("ads", adsEntry);
         youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("customDimentions", customDimentionsEntry);
+        youboraConfig.add("customDimensions", customDimentionsEntry);
         return youboraConfig;
     }
 
