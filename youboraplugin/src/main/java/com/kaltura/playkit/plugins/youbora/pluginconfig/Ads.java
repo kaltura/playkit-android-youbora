@@ -12,6 +12,7 @@ public class Ads {
     private String adCreativeId;
     private Integer adExpectedBreaks;
     //private Bundle adExpectedPattern;
+    private Integer givenAds;
     private Integer adGivenBreaks;
     //private Bundle adMetadata;
     private String adProvider;
@@ -51,6 +52,14 @@ public class Ads {
 
     public void setAdExpectedBreaks(Integer adExpectedBreaks) {
         this.adExpectedBreaks = adExpectedBreaks;
+    }
+
+    public Integer getGivenAds() {
+        return givenAds;
+    }
+
+    public void setGivenAds(Integer givenAds) {
+        this.givenAds = givenAds;
     }
 
     public Integer getAdGivenBreaks() {
