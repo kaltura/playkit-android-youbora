@@ -1085,10 +1085,10 @@ public class YouboraConfig {
                     ads.setAdExpectedBreaks(youboraConfigUiConf.getAds().getAdExpectedBreaks());
                 }
                 if (ads.getGivenAds() == null) {
-                    ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
+                    ads.setGivenAds(youboraConfigUiConf.getAds().getGivenAds());
                 }
                 if (ads.getAdGivenBreaks() == null) {
-                    ads.setGivenAds(youboraConfigUiConf.getAds().getGivenAds());
+                    ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
                 }
                 if (ads.getAdProvider() == null) {
                     ads.setAdProvider(youboraConfigUiConf.getAds().getAdProvider());
