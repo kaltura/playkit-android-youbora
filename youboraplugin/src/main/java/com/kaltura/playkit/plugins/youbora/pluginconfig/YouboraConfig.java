@@ -3,9 +3,6 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
@@ -51,6 +48,12 @@ public class YouboraConfig {
     private String appName = "";
 
     private String appReleaseVersion = "";
+
+    private String transportFormat;
+
+    private String urlToParse;
+
+    private String linkedViewId;
 
     private boolean isAutoStart = true;
 
@@ -146,6 +149,30 @@ public class YouboraConfig {
 
     public void setAppReleaseVersion(String appReleaseVersion) {
         this.appReleaseVersion = appReleaseVersion;
+    }
+
+    public String getTransportFormat() {
+        return transportFormat;
+    }
+
+    public void setTransportFormat(String transportFormat) {
+        this.transportFormat = transportFormat;
+    }
+
+    public String getUrlToParse() {
+        return urlToParse;
+    }
+
+    public void setUrlToParse(String urlToParse) {
+        this.urlToParse = urlToParse;
+    }
+
+    public String getLinkedViewId() {
+        return linkedViewId;
+    }
+
+    public void setLinkedViewId(String linkedViewId) {
+        this.linkedViewId = linkedViewId;
     }
 
     public String getHouseHoldId() {
@@ -294,6 +321,9 @@ public class YouboraConfig {
         youboraOptions.setUserType(userType);
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
+        youboraOptions.setTransportFormat(transportFormat);
+        youboraOptions.setUrlToParse(urlToParse);
+        youboraOptions.setLinkedViewId(linkedViewId);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
@@ -532,6 +562,9 @@ public class YouboraConfig {
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
             }
+            if (ads.getGivenAds() != null) {
+                youboraOptions.setGivenAds(ads.getGivenAds());
+            }
             if (ads.getAdGivenBreaks() != null) {
                 youboraOptions.setAdGivenBreaks(ads.getAdGivenBreaks());
             }
@@ -769,6 +802,9 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
+        JsonPrimitive transportFormat = new JsonPrimitive(getTransportFormat());
+        JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
+        JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
@@ -794,6 +830,9 @@ public class YouboraConfig {
                 appName,
                 appReleaseVersion,
                 houseHoldId,
+                transportFormat,
+                urlToParse,
+                linkedViewId,
                 isUserObfuscateIp,
                 httpSecure,
                 isAutoStart,
@@ -1041,6 +1080,9 @@ public class YouboraConfig {
                 }
                 if (ads.getAdExpectedBreaks() == null) {
                     ads.setAdExpectedBreaks(youboraConfigUiConf.getAds().getAdExpectedBreaks());
+                }
+                if (ads.getGivenAds() == null) {
+                    ads.setGivenAds(youboraConfigUiConf.getAds().getGivenAds());
                 }
                 if (ads.getAdGivenBreaks() == null) {
                     ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
