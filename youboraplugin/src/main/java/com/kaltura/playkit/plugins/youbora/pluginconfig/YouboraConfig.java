@@ -3,9 +3,6 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
@@ -52,7 +49,7 @@ public class YouboraConfig {
 
     private String appReleaseVersion = "";
 
-    private String transportForamt;
+    private String transportFormat;
 
     private String urlToParse ;
 
@@ -154,12 +151,12 @@ public class YouboraConfig {
         this.appReleaseVersion = appReleaseVersion;
     }
 
-    public String getTransportForamt() {
-        return transportForamt;
+    public String getTransportFormat() {
+        return transportFormat;
     }
 
-    public void setTransportForamt(String transportForamt) {
-        this.transportForamt = transportForamt;
+    public void setTransportFormat(String transportFormat) {
+        this.transportFormat = transportFormat;
     }
 
     public String getUrlToParse() {
@@ -324,7 +321,7 @@ public class YouboraConfig {
         youboraOptions.setUserType(userType);
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
-        youboraOptions.setTransportFormat(transportForamt);
+        youboraOptions.setTransportFormat(transportFormat);
         youboraOptions.setUrlToParse(urlToParse);
         youboraOptions.setLinkedViewId(linkedViewId);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
@@ -805,7 +802,7 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive transportForamt = new JsonPrimitive(getTransportForamt());
+        JsonPrimitive transportFormat = new JsonPrimitive(getTransportFormat());
         JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
         JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
@@ -833,7 +830,7 @@ public class YouboraConfig {
                 appName,
                 appReleaseVersion,
                 houseHoldId,
-                transportForamt,
+                transportFormat,
                 urlToParse,
                 linkedViewId,
                 isUserObfuscateIp,
