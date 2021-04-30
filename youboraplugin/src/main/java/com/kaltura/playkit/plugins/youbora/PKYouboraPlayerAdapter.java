@@ -134,15 +134,15 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         LinkedHashSet<String> causeMessages = getExceptionMessageChain(playerErrorException);
         StringBuilder exceptionCauseBuilder = new StringBuilder();
         if (playerErrorException != null && causeMessages.isEmpty()) {
-            exceptionCauseBuilder.append(playerErrorException.toString());
+            exceptionCauseBuilder.append(playerErrorException.toString()).append("\n");
         } else {
             for (String cause : causeMessages) {
                 exceptionCauseBuilder.append(cause).append("\n");
             }
         }
 
-        String errorCode = ((PKPlayerErrorType) errorEvent.error.errorType != null) ? "" + ((PKPlayerErrorType) errorEvent.error.errorType).errorCode : "";
-        fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata);
+        String errorCode = (errorEvent.error.errorType != null) ? "" + ((PKPlayerErrorType) errorEvent.error.errorType).errorCode : "";
+        fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
