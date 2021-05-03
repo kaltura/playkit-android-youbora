@@ -140,9 +140,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 exceptionCauseBuilder.append(cause).append("\n");
             }
         }
-
-        String errorCode = (errorEvent.error.errorType != null) ? "" + ((PKPlayerErrorType) errorEvent.error.errorType).errorCode : "";
-        fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+        
+        if ((error.errorType) instanceof PKPlayerErrorType) {
+            PKPlayerErrorType errorType = (PKPlayerErrorType)error.errorType;
+            String errorCode = "" + errorType.errorCode;
+            fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+        } else {
+            fireFatalError(event.eventType().name(), exceptionCauseBuilder.toString() + " - " + exceptionClass , errorMetadata, playerErrorException);
+        }
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
