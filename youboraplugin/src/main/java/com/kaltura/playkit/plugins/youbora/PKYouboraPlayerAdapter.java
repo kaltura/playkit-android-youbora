@@ -27,6 +27,7 @@ import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
+import com.kaltura.playkit.player.PKPlayerErrorType;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.utils.Consts;
@@ -133,15 +134,20 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         LinkedHashSet<String> causeMessages = getExceptionMessageChain(playerErrorException);
         StringBuilder exceptionCauseBuilder = new StringBuilder();
         if (playerErrorException != null && causeMessages.isEmpty()) {
-            exceptionCauseBuilder.append(playerErrorException.toString());
+            exceptionCauseBuilder.append(playerErrorException.toString()).append("\n");
         } else {
             for (String cause : causeMessages) {
                 exceptionCauseBuilder.append(cause).append("\n");
             }
         }
 
-        String errorCode = (errorEvent.error.errorType != null) ? errorEvent.error.errorType + " - " : "";
-        fireFatalError(exceptionCauseBuilder.toString(), errorCode + exceptionClass, errorMetadata);
+        if ((error.errorType) instanceof PKPlayerErrorType) {
+            PKPlayerErrorType errorType = (PKPlayerErrorType)error.errorType;
+            String errorCode = String.valueOf(errorType.errorCode);
+            fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+        } else {
+            fireFatalError(event.eventType().name(), exceptionCauseBuilder.toString() + " - " + exceptionClass , errorMetadata, playerErrorException);
+        }
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
