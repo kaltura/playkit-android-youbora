@@ -140,10 +140,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 exceptionCauseBuilder.append(cause).append("\n");
             }
         }
-        
+
         if ((error.errorType) instanceof PKPlayerErrorType) {
             PKPlayerErrorType errorType = (PKPlayerErrorType)error.errorType;
-            String errorCode = "" + errorType.errorCode;
+            String errorCode = String.valueOf(errorType.errorCode);
             fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
         } else {
             fireFatalError(event.eventType().name(), exceptionCauseBuilder.toString() + " - " + exceptionClass , errorMetadata, playerErrorException);
