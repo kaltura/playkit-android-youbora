@@ -1,92 +1,34 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-
+import java.util.Map;
 
 
 public class YouboraConfigJsonBuilder {
 
     @NonNull
-    static JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode,
-                                                 JsonPrimitive username,
-                                                 JsonPrimitive userEmail,
-                                                 JsonPrimitive userAnonymousId,
-                                                 JsonPrimitive userType,
-                                                 JsonPrimitive appName,
-                                                 JsonPrimitive appReleaseVersion,
-                                                 JsonPrimitive houseHoldId,
-                                                 JsonPrimitive urlToParse,
-                                                 JsonPrimitive linkedViewId,
-                                                 JsonPrimitive isUserObfuscateIp,
-                                                 JsonPrimitive httpSecure,
-                                                 JsonPrimitive isAutoStart,
-                                                 JsonPrimitive isAutoDetectBackground,
-                                                 JsonPrimitive isEnabled,
-                                                 JsonPrimitive isForceInit,
-                                                 JsonPrimitive isOffline,
+    static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
                                                  JsonObject app,
                                                  JsonObject parse,
                                                  JsonObject device,
                                                  JsonObject content,
                                                  JsonObject network,
                                                  JsonObject errors,
-                                                 JsonObject adsEntry,
-                                                 JsonObject propertiesEntry,
-                                                 JsonObject customDimentionsEntry) {
+                                                 JsonObject ads,
+                                                 JsonObject properties,
+                                                 JsonObject customDimentions) {
         JsonObject youboraConfig = new JsonObject();
-        youboraConfig.add("accountCode", accountCode);
-        if (username != null) {
-            youboraConfig.add("username", username);
-        }
-        if (userEmail != null) {
-            youboraConfig.add("userEmail", userEmail);
-        }
-        if (userAnonymousId != null) {
-            youboraConfig.add("userAnonymousId", userAnonymousId);
-        }
-        if (userType != null) {
-            youboraConfig.add("userType", userType);
-        }
-        if (appName != null) {
-            youboraConfig.add("appName", appName);
-        }
-        if (appReleaseVersion != null) {
-            youboraConfig.add("appReleaseVersion", appReleaseVersion);
-        }
-        if (urlToParse != null) {
-            youboraConfig.add("urlToParse", urlToParse);
-        }
-        if (linkedViewId != null) {
-            youboraConfig.add("linkedViewId", linkedViewId);
-        }
-        if (houseHoldId != null) {
-            youboraConfig.add("houseHoldId", houseHoldId);
-        }
-        if (isUserObfuscateIp != null) {
-            youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
-        }
-        if (httpSecure != null) {
-            youboraConfig.add("httpSecure", httpSecure);
-        }
-        if (isAutoStart != null) {
-            youboraConfig.add("isAutoStart", isAutoStart);
-        }
-        if (isAutoDetectBackground != null) {
-            youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
-        }
-        if (isEnabled != null) {
-            youboraConfig.add("isEnabled", isEnabled);
-        }
-        if(isForceInit != null) {
-            youboraConfig.add("isForceInit", isForceInit);
-        }
-        if (isOffline != null) {
-            youboraConfig.add("isOffline", isOffline);
+        for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
+            if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
+                youboraConfig.add(entry.getKey(), entry.getValue());
+            }
         }
 
         youboraConfig.add("app", app);
@@ -95,9 +37,9 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("content", content);
         youboraConfig.add("network", network);
         youboraConfig.add("errors", errors);
-        youboraConfig.add("ads", adsEntry);
-        youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("customDimentions", customDimentionsEntry);
+        youboraConfig.add("ads", ads);
+        youboraConfig.add("properties", properties);
+        youboraConfig.add("customDimentions", customDimentions);
         return youboraConfig;
     }
 
