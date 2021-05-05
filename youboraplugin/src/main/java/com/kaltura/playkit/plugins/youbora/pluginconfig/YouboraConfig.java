@@ -49,8 +49,6 @@ public class YouboraConfig {
 
     private String appReleaseVersion = "";
 
-    private String transportFormat;
-
     private String urlToParse;
 
     private String linkedViewId;
@@ -149,14 +147,6 @@ public class YouboraConfig {
 
     public void setAppReleaseVersion(String appReleaseVersion) {
         this.appReleaseVersion = appReleaseVersion;
-    }
-
-    public String getTransportFormat() {
-        return transportFormat;
-    }
-
-    public void setTransportFormat(String transportFormat) {
-        this.transportFormat = transportFormat;
     }
 
     public String getUrlToParse() {
@@ -321,7 +311,6 @@ public class YouboraConfig {
         youboraOptions.setUserType(userType);
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
-        youboraOptions.setTransportFormat(transportFormat);
         youboraOptions.setUrlToParse(urlToParse);
         youboraOptions.setLinkedViewId(linkedViewId);
         youboraOptions.setUserObfuscateIp(userObfuscateIp);
@@ -507,6 +496,9 @@ public class YouboraConfig {
             if (content.getContentTransactionCode() != null) {
                 youboraOptions.setContentTransactionCode(content.getContentTransactionCode());
             }
+            if (content.getContentTransportFormat() != null) {
+                youboraOptions.setTransportFormat(content.getContentTransportFormat());
+            }
             if (content.getContentTotalBytes() != null) {
                 youboraOptions.setContentTotalBytes(content.getContentTotalBytes());
             }
@@ -562,8 +554,8 @@ public class YouboraConfig {
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
             }
-            if (ads.getGivenAds() != null) {
-                youboraOptions.setGivenAds(ads.getGivenAds());
+            if (ads.getAdGivenAds() != null) {
+                youboraOptions.setGivenAds(ads.getAdGivenAds());
             }
             if (ads.getAdGivenBreaks() != null) {
                 youboraOptions.setAdGivenBreaks(ads.getAdGivenBreaks());
@@ -802,7 +794,6 @@ public class YouboraConfig {
         JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
         JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
         JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive transportFormat = new JsonPrimitive(getTransportFormat());
         JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
         JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
@@ -830,7 +821,6 @@ public class YouboraConfig {
                 appName,
                 appReleaseVersion,
                 houseHoldId,
-                transportFormat,
                 urlToParse,
                 linkedViewId,
                 isUserObfuscateIp,
@@ -985,6 +975,9 @@ public class YouboraConfig {
                 if (content.getContentTotalBytes() == null) {
                     content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
                 }
+                if (content.getContentTransportFormat() == null) {
+                    content.setContentTransportFormat(youboraConfigUiConf.getContent().getContentTransportFormat());
+                }
                 content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
                 if (content.getContentTvShow() == null) {
                     content.setContentTvShow(youboraConfigUiConf.getContent().getContentTvShow());
@@ -1081,8 +1074,8 @@ public class YouboraConfig {
                 if (ads.getAdExpectedBreaks() == null) {
                     ads.setAdExpectedBreaks(youboraConfigUiConf.getAds().getAdExpectedBreaks());
                 }
-                if (ads.getGivenAds() == null) {
-                    ads.setGivenAds(youboraConfigUiConf.getAds().getGivenAds());
+                if (ads.getAdGivenAds() == null) {
+                    ads.setAdGivenAds(youboraConfigUiConf.getAds().getAdGivenAds());
                 }
                 if (ads.getAdGivenBreaks() == null) {
                     ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
