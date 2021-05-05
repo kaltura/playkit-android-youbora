@@ -83,8 +83,8 @@ public class YouboraConfig {
 
     private Properties properties;
 
-    @SerializedName(value="customDimensions", alternate={"extraParams"})
-    private CustomDimensions customDimensions;
+    @SerializedName(value="contentCustomDimensions", alternate={"extraParams"})
+    private ContentCustomDimensions contentCustomDimensions;
 
     private ViewTransform.FastDataConfig fastDataConfig;
 
@@ -288,12 +288,12 @@ public class YouboraConfig {
         this.properties = properties;
     }
 
-    public CustomDimensions getCustomDimensions() {
-        return customDimensions;
+    public ContentCustomDimensions getContentCustomDimensions() {
+        return contentCustomDimensions;
     }
 
-    public void setCustomDimensions(CustomDimensions customDimensions) {
-        this.customDimensions = customDimensions;
+    public void setContentCustomDimensions(ContentCustomDimensions contentCustomDimensions) {
+        this.contentCustomDimensions = contentCustomDimensions;
     }
 
     public ViewTransform.FastDataConfig getFastDataConfig() {
@@ -586,27 +586,27 @@ public class YouboraConfig {
             //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
         }
 
-        if (customDimensions != null) {
-            youboraOptions.setContentCustomDimension1(customDimensions.getCustomDimension1());
-            youboraOptions.setContentCustomDimension2(customDimensions.getCustomDimension2());
-            youboraOptions.setContentCustomDimension3(customDimensions.getCustomDimension3());
-            youboraOptions.setContentCustomDimension4(customDimensions.getCustomDimension4());
-            youboraOptions.setContentCustomDimension5(customDimensions.getCustomDimension5());
-            youboraOptions.setContentCustomDimension6(customDimensions.getCustomDimension6());
-            youboraOptions.setContentCustomDimension7(customDimensions.getCustomDimension7());
-            youboraOptions.setContentCustomDimension8(customDimensions.getCustomDimension8());
-            youboraOptions.setContentCustomDimension9(customDimensions.getCustomDimension9());
-            youboraOptions.setContentCustomDimension10(customDimensions.getCustomDimension10());
-            youboraOptions.setContentCustomDimension11(customDimensions.getCustomDimension11());
-            youboraOptions.setContentCustomDimension12(customDimensions.getCustomDimension12());
-            youboraOptions.setContentCustomDimension13(customDimensions.getCustomDimension13());
-            youboraOptions.setContentCustomDimension14(customDimensions.getCustomDimension14());
-            youboraOptions.setContentCustomDimension15(customDimensions.getCustomDimension15());
-            youboraOptions.setContentCustomDimension16(customDimensions.getCustomDimension16());
-            youboraOptions.setContentCustomDimension17(customDimensions.getCustomDimension17());
-            youboraOptions.setContentCustomDimension18(customDimensions.getCustomDimension18());
-            youboraOptions.setContentCustomDimension19(customDimensions.getCustomDimension19());
-            youboraOptions.setContentCustomDimension20(customDimensions.getCustomDimension20());
+        if (contentCustomDimensions != null) {
+            youboraOptions.setContentCustomDimension1(contentCustomDimensions.getContentCustomDimension1());
+            youboraOptions.setContentCustomDimension2(contentCustomDimensions.getContentCustomDimension2());
+            youboraOptions.setContentCustomDimension3(contentCustomDimensions.getContentCustomDimension3());
+            youboraOptions.setContentCustomDimension4(contentCustomDimensions.getContentCustomDimension4());
+            youboraOptions.setContentCustomDimension5(contentCustomDimensions.getContentCustomDimension5());
+            youboraOptions.setContentCustomDimension6(contentCustomDimensions.getContentCustomDimension6());
+            youboraOptions.setContentCustomDimension7(contentCustomDimensions.getContentCustomDimension7());
+            youboraOptions.setContentCustomDimension8(contentCustomDimensions.getContentCustomDimension8());
+            youboraOptions.setContentCustomDimension9(contentCustomDimensions.getContentCustomDimension9());
+            youboraOptions.setContentCustomDimension10(contentCustomDimensions.getContentCustomDimension10());
+            youboraOptions.setContentCustomDimension11(contentCustomDimensions.getContentCustomDimension11());
+            youboraOptions.setContentCustomDimension12(contentCustomDimensions.getContentCustomDimension12());
+            youboraOptions.setContentCustomDimension13(contentCustomDimensions.getContentCustomDimension13());
+            youboraOptions.setContentCustomDimension14(contentCustomDimensions.getContentCustomDimension14());
+            youboraOptions.setContentCustomDimension15(contentCustomDimensions.getContentCustomDimension15());
+            youboraOptions.setContentCustomDimension16(contentCustomDimensions.getContentCustomDimension16());
+            youboraOptions.setContentCustomDimension17(contentCustomDimensions.getContentCustomDimension17());
+            youboraOptions.setContentCustomDimension18(contentCustomDimensions.getContentCustomDimension18());
+            youboraOptions.setContentCustomDimension19(contentCustomDimensions.getContentCustomDimension19());
+            youboraOptions.setContentCustomDimension20(contentCustomDimensions.getContentCustomDimension20());
         }
         return youboraOptions;
     }
@@ -817,8 +817,8 @@ public class YouboraConfig {
         JsonObject network = YouboraConfigJsonBuilder.getNetworkJsonObject(getNetwork());
         JsonObject errors = YouboraConfigJsonBuilder.getErrorsJsonObject(getErrors());
         JsonObject adsEntry = YouboraConfigJsonBuilder.getAdsJsonObject(getAds());
-        JsonObject propertiesEntry = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
-        JsonObject customDimentionsEntry = YouboraConfigJsonBuilder.getCustomDimentionsJsonObject(getCustomDimensions());
+        JsonObject properties = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
+        JsonObject contentCustomDimentions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
         return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
                 app,
                 parse,
@@ -827,8 +827,8 @@ public class YouboraConfig {
                 network,
                 errors,
                 adsEntry,
-                propertiesEntry,
-                customDimentionsEntry);
+                properties,
+                contentCustomDimentions);
     }
     
     public void merge(YouboraConfig youboraConfigUiConf) {
@@ -1117,72 +1117,72 @@ public class YouboraConfig {
             properties = youboraConfigUiConf.getProperties();
         }
 
-        if (customDimensions != null) {
-            if (youboraConfigUiConf.getCustomDimensions() != null) {
-                CustomDimensions customDimensionsUiConf = youboraConfigUiConf.getCustomDimensions();
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension1()))) {
-                    customDimensions.setCustomDimension1(customDimensionsUiConf.getCustomDimension1());
+        if (contentCustomDimensions != null) {
+            if (youboraConfigUiConf.getContentCustomDimensions() != null) {
+                ContentCustomDimensions contentCustomDimensionsUiConf = youboraConfigUiConf.getContentCustomDimensions();
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension1()))) {
+                    contentCustomDimensions.setContentCustomDimension1(contentCustomDimensionsUiConf.getContentCustomDimension1());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension2()))) {
-                    customDimensions.setCustomDimension2(customDimensionsUiConf.getCustomDimension2());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension2()))) {
+                    contentCustomDimensions.setContentCustomDimension2(contentCustomDimensionsUiConf.getContentCustomDimension2());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension3()))) {
-                    customDimensions.setCustomDimension3(customDimensionsUiConf.getCustomDimension3());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension3()))) {
+                    contentCustomDimensions.setContentCustomDimension3(contentCustomDimensionsUiConf.getContentCustomDimension3());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension4()))) {
-                    customDimensions.setCustomDimension4(customDimensionsUiConf.getCustomDimension4());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension4()))) {
+                    contentCustomDimensions.setContentCustomDimension4(contentCustomDimensionsUiConf.getContentCustomDimension4());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension5()))) {
-                    customDimensions.setCustomDimension5(customDimensionsUiConf.getCustomDimension5());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension5()))) {
+                    contentCustomDimensions.setContentCustomDimension5(contentCustomDimensionsUiConf.getContentCustomDimension5());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension6()))) {
-                    customDimensions.setCustomDimension6(customDimensionsUiConf.getCustomDimension6());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension6()))) {
+                    contentCustomDimensions.setContentCustomDimension6(contentCustomDimensionsUiConf.getContentCustomDimension6());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension7()))) {
-                    customDimensions.setCustomDimension7(customDimensionsUiConf.getCustomDimension7());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension7()))) {
+                    contentCustomDimensions.setContentCustomDimension7(contentCustomDimensionsUiConf.getContentCustomDimension7());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension8()))) {
-                    customDimensions.setCustomDimension8(customDimensionsUiConf.getCustomDimension8());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension8()))) {
+                    contentCustomDimensions.setContentCustomDimension8(contentCustomDimensionsUiConf.getContentCustomDimension8());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension9()))) {
-                    customDimensions.setCustomDimension9(customDimensionsUiConf.getCustomDimension9());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension9()))) {
+                    contentCustomDimensions.setContentCustomDimension9(contentCustomDimensionsUiConf.getContentCustomDimension9());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension10()))) {
-                    customDimensions.setCustomDimension10(customDimensionsUiConf.getCustomDimension10());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension10()))) {
+                    contentCustomDimensions.setContentCustomDimension10(contentCustomDimensionsUiConf.getContentCustomDimension10());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension11()))) {
-                    customDimensions.setCustomDimension11(customDimensionsUiConf.getCustomDimension11());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension11()))) {
+                    contentCustomDimensions.setContentCustomDimension11(contentCustomDimensionsUiConf.getContentCustomDimension11());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension12()))) {
-                    customDimensions.setCustomDimension12(customDimensionsUiConf.getCustomDimension12());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension12()))) {
+                    contentCustomDimensions.setContentCustomDimension12(contentCustomDimensionsUiConf.getContentCustomDimension12());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension13()))) {
-                    customDimensions.setCustomDimension13(customDimensionsUiConf.getCustomDimension13());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension13()))) {
+                    contentCustomDimensions.setContentCustomDimension13(contentCustomDimensionsUiConf.getContentCustomDimension13());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension14()))) {
-                    customDimensions.setCustomDimension14(customDimensionsUiConf.getCustomDimension14());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension14()))) {
+                    contentCustomDimensions.setContentCustomDimension14(contentCustomDimensionsUiConf.getContentCustomDimension14());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension15()))) {
-                    customDimensions.setCustomDimension15(customDimensionsUiConf.getCustomDimension15());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension15()))) {
+                    contentCustomDimensions.setContentCustomDimension15(contentCustomDimensionsUiConf.getContentCustomDimension15());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension16()))) {
-                    customDimensions.setCustomDimension16(customDimensionsUiConf.getCustomDimension16());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension16()))) {
+                    contentCustomDimensions.setContentCustomDimension16(contentCustomDimensionsUiConf.getContentCustomDimension16());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension17()))) {
-                    customDimensions.setCustomDimension17(customDimensionsUiConf.getCustomDimension17());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension17()))) {
+                    contentCustomDimensions.setContentCustomDimension17(contentCustomDimensionsUiConf.getContentCustomDimension17());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension18()))) {
-                    customDimensions.setCustomDimension18(customDimensionsUiConf.getCustomDimension18());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension18()))) {
+                    contentCustomDimensions.setContentCustomDimension18(contentCustomDimensionsUiConf.getContentCustomDimension18());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension19()))) {
-                    customDimensions.setCustomDimension19(customDimensionsUiConf.getCustomDimension19());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension19()))) {
+                    contentCustomDimensions.setContentCustomDimension19(contentCustomDimensionsUiConf.getContentCustomDimension19());
                 }
-                if (TextUtils.isEmpty((customDimensions.getCustomDimension20()))) {
-                    customDimensions.setCustomDimension20(customDimensionsUiConf.getCustomDimension20());
+                if (TextUtils.isEmpty((contentCustomDimensions.getContentCustomDimension20()))) {
+                    contentCustomDimensions.setContentCustomDimension20(contentCustomDimensionsUiConf.getContentCustomDimension20());
                 }
             }
         } else {
-            customDimensions = youboraConfigUiConf.getCustomDimensions();
+            contentCustomDimensions = youboraConfigUiConf.getContentCustomDimensions();
         }
     }
 }
