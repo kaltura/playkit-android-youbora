@@ -40,23 +40,54 @@ public class YouboraConfigJsonBuilder {
                                                  JsonObject customDimentionsEntry) {
         JsonObject youboraConfig = new JsonObject();
         youboraConfig.add("accountCode", accountCode);
-        youboraConfig.add("username", username);
-        youboraConfig.add("userEmail", userEmail);
-        youboraConfig.add("userAnonymousId", userAnonymousId);
-        youboraConfig.add("userType", userType);
-        youboraConfig.add("appName", appName);
-        youboraConfig.add("appReleaseVersion", appReleaseVersion);
-        youboraConfig.add("urlToParse", urlToParse);
-        youboraConfig.add("linkedViewId", linkedViewId);
-        youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
-        youboraConfig.add("httpSecure", httpSecure);
-
-        youboraConfig.add("isAutoStart", isAutoStart);
-        youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
-        youboraConfig.add("isEnabled", isEnabled);
-        youboraConfig.add("isForceInit", isForceInit);
-        youboraConfig.add("isOffline", isOffline);
+        if (username != null) {
+            youboraConfig.add("username", username);
+        }
+        if (userEmail != null) {
+            youboraConfig.add("userEmail", userEmail);
+        }
+        if (userAnonymousId != null) {
+            youboraConfig.add("userAnonymousId", userAnonymousId);
+        }
+        if (userType != null) {
+            youboraConfig.add("userType", userType);
+        }
+        if (appName != null) {
+            youboraConfig.add("appName", appName);
+        }
+        if (appReleaseVersion != null) {
+            youboraConfig.add("appReleaseVersion", appReleaseVersion);
+        }
+        if (urlToParse != null) {
+            youboraConfig.add("urlToParse", urlToParse);
+        }
+        if (linkedViewId != null) {
+            youboraConfig.add("linkedViewId", linkedViewId);
+        }
+        if (houseHoldId != null) {
+            youboraConfig.add("houseHoldId", houseHoldId);
+        }
+        if (isUserObfuscateIp != null) {
+            youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
+        }
+        if (httpSecure != null) {
+            youboraConfig.add("httpSecure", httpSecure);
+        }
+        if (isAutoStart != null) {
+            youboraConfig.add("isAutoStart", isAutoStart);
+        }
+        if (isAutoDetectBackground != null) {
+            youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
+        }
+        if (isEnabled != null) {
+            youboraConfig.add("isEnabled", isEnabled);
+        }
+        if(isForceInit != null) {
+            youboraConfig.add("isForceInit", isForceInit);
+        }
+        if (isOffline != null) {
+            youboraConfig.add("isOffline", isOffline);
+        }
 
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);

@@ -787,15 +787,17 @@ public class YouboraConfig {
 
     public JsonObject toJson() {
         JsonPrimitive accountCode = new JsonPrimitive(getAccountCode() != null ? getAccountCode() : "");
-        JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
-        JsonPrimitive userEmail = new JsonPrimitive(getUserEmail() != null ? getUserEmail() : "");
-        JsonPrimitive userAnonymousId = new JsonPrimitive(getUserAnonymousId() != null ? getUserAnonymousId() : "");
-        JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
-        JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
-        JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
-        JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
-        JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
+
+        JsonPrimitive username = (getUsername() != null) ? new JsonPrimitive(getUsername()) : null;
+        JsonPrimitive userEmail = (getUserEmail() != null) ? new JsonPrimitive(getUserEmail()) : null;
+        JsonPrimitive userAnonymousId = (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null;
+        JsonPrimitive userType = (getUserType() != null) ? new JsonPrimitive(getUserType()) : null;
+        JsonPrimitive appName = (getAppName() != null) ? new JsonPrimitive(getAppName()) : null;
+        JsonPrimitive appReleaseVersion = (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null;
+        JsonPrimitive houseHoldId = (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null;
+        JsonPrimitive urlToParse = (getUrlToParse() != null) ? new JsonPrimitive(getUrlToParse()) : null;
+        JsonPrimitive linkedViewId = (getLinkedViewId() != null) ? new JsonPrimitive(getLinkedViewId()) : null;
+        
         JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
         JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
         JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
