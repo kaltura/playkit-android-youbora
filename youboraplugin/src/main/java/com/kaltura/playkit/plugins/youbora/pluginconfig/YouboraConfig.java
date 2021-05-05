@@ -340,11 +340,11 @@ public class YouboraConfig {
             if (parse.getParseCdnSwitchHeader() != null) {
                 youboraOptions.setParseCdnSwitchHeader(parse.getParseCdnSwitchHeader());
             }
-            if (parse.getCdnNodeList() != null) {
-                youboraOptions.setParseCdnNodeList(parse.getCdnNodeList());
+            if (parse.getParseCdnNodeList() != null) {
+                youboraOptions.setParseCdnNodeList(parse.getParseCdnNodeList());
             }
-            if (parse.getCdnNameHeaders() != null) {
-                youboraOptions.setParseCdnNameHeader(parse.getCdnNameHeaders());
+            if (parse.getParseCdnNameHeader() != null) {
+                youboraOptions.setParseCdnNameHeader(parse.getParseCdnNameHeader());
             }
             if (parse.getParseCdnTTL() != null) {
                 youboraOptions.setParseCdnTTL(parse.getParseCdnTTL());
@@ -1011,14 +1011,14 @@ public class YouboraConfig {
                 if (parse.getParseCdnNode() == null) {
                     parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
                 }
-                if (parse.getCdnNodeList() == null) {
-                    parse.setCdnNodeList(youboraConfigUiConf.getParse().getCdnNodeList());
+                if (parse.getParseCdnNodeList() == null) {
+                    parse.setParseCdnNodeList(youboraConfigUiConf.getParse().getParseCdnNodeList());
                 }
                 if (parse.getParseCdnTTL() == null) {
                     parse.setParseCdnTTL(youboraConfigUiConf.getParse().getParseCdnTTL());
                 }
-                if (parse.getCdnNameHeaders() == null) {
-                    parse.setCdnNameHeaders(youboraConfigUiConf.getParse().getCdnNameHeaders());
+                if (parse.getParseCdnNameHeader() == null) {
+                    parse.setParseCdnNameHeader(youboraConfigUiConf.getParse().getParseCdnNameHeader());
                 }
                 if (parse.getParseCdnSwitchHeader() == null) {
                     parse.setParseCdnSwitchHeader(youboraConfigUiConf.getParse().getParseCdnSwitchHeader());

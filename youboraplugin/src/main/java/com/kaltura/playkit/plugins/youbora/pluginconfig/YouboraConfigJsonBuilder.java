@@ -108,16 +108,16 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
         }
 
-        if (parse.getCdnNodeList() != null) {
-            JsonArray cdnNodeListJsonArray = new JsonArray();
-            for(String cdn : parse.getCdnNodeList()) {
-                cdnNodeListJsonArray.add(cdn);
+        if (parse.getParseCdnNodeList() != null) {
+            JsonArray parseCdnNodeListJsonArray = new JsonArray();
+            for(String cdn : parse.getParseCdnNodeList()) {
+                parseCdnNodeListJsonArray.add(cdn);
             }
-            parseJsonObject.add("cdnNodeList", cdnNodeListJsonArray);
+            parseJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
         }
 
-        if (parse.getCdnNameHeaders() != null) {
-            parseJsonObject.addProperty("cdnNameHeaders", parse.getCdnNameHeaders() );
+        if (parse.getParseCdnNameHeader() != null) {
+            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader() );
         }
 
         if (parse.getParseCdnTTL() != null) {
