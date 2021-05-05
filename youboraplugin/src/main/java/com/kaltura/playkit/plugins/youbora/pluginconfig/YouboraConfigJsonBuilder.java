@@ -1,58 +1,35 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-
+import java.util.Map;
 
 
 public class YouboraConfigJsonBuilder {
 
     @NonNull
-    static JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode,
-                                                 JsonPrimitive username,
-                                                 JsonPrimitive userEmail,
-                                                 JsonPrimitive userAnonymousId,
-                                                 JsonPrimitive userType,
-                                                 JsonPrimitive appName,
-                                                 JsonPrimitive appReleaseVersion,
-                                                 JsonPrimitive houseHoldId,
-                                                 JsonPrimitive isUserObfuscateIp,
-                                                 JsonPrimitive httpSecure,
-                                                 JsonPrimitive isAutoStart,
-                                                 JsonPrimitive isAutoDetectBackground,
-                                                 JsonPrimitive isEnabled,
-                                                 JsonPrimitive isForceInit,
-                                                 JsonPrimitive isOffline,
+    static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
                                                  JsonObject app,
                                                  JsonObject parse,
                                                  JsonObject device,
                                                  JsonObject content,
                                                  JsonObject network,
                                                  JsonObject errors,
-                                                 JsonObject adsEntry,
-                                                 JsonObject propertiesEntry,
-                                                 JsonObject customDimentionsEntry) {
+                                                 JsonObject ads,
+                                                 JsonObject properties,
+                                                 JsonObject contentCustomDimentions) {
         JsonObject youboraConfig = new JsonObject();
-        youboraConfig.add("accountCode", accountCode);
-        youboraConfig.add("username", username);
-        youboraConfig.add("userEmail", userEmail);
-        youboraConfig.add("userAnonymousId", userAnonymousId);
-        youboraConfig.add("userType", userType);
-        youboraConfig.add("appName", appName);
-        youboraConfig.add("appReleaseVersion", appReleaseVersion);
-        youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
-        youboraConfig.add("httpSecure", httpSecure);
-
-        youboraConfig.add("isAutoStart", isAutoStart);
-        youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
-        youboraConfig.add("isEnabled", isEnabled);
-        youboraConfig.add("isForceInit", isForceInit);
-        youboraConfig.add("isOffline", isOffline);
+        for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
+            if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
+                youboraConfig.add(entry.getKey(), entry.getValue());
+            }
+        }
 
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
@@ -60,9 +37,9 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("content", content);
         youboraConfig.add("network", network);
         youboraConfig.add("errors", errors);
-        youboraConfig.add("ads", adsEntry);
-        youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("customDimentionsEntry", customDimentionsEntry);
+        youboraConfig.add("ads", ads);
+        youboraConfig.add("properties", properties);
+        youboraConfig.add("contentCustomDimentions", contentCustomDimentions);
         return youboraConfig;
     }
 
@@ -104,16 +81,16 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
         }
 
-        if (parse.getCdnNodeList() != null) {
-            JsonArray cdnNodeListJsonArray = new JsonArray();
-            for(String cdn : parse.getCdnNodeList()) {
-                cdnNodeListJsonArray.add(cdn);
+        if (parse.getParseCdnNodeList() != null) {
+            JsonArray parseCdnNodeListJsonArray = new JsonArray();
+            for(String cdn : parse.getParseCdnNodeList()) {
+                parseCdnNodeListJsonArray.add(cdn);
             }
-            parseJsonObject.add("cdnNodeList", cdnNodeListJsonArray);
+            parseJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
         }
 
-        if (parse.getCdnNameHeaders() != null) {
-            parseJsonObject.addProperty("cdnNameHeaders", parse.getCdnNameHeaders() );
+        if (parse.getParseCdnNameHeader() != null) {
+            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader() );
         }
 
         if (parse.getParseCdnTTL() != null) {
@@ -225,7 +202,12 @@ public class YouboraConfigJsonBuilder {
             contentEntry.addProperty("contentImdbId", content.getContentImdbId());
         }
         contentEntry.addProperty("contentisLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
-        contentEntry.addProperty("contentIsLiveNoSeek",  content.getContentIsLiveNoSeek() != null ? content.getContentIsLiveNoSeek() : Boolean.FALSE);
+        if (content.getContentIsLiveNoSeek() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
+        } else if (content.getIsDVR() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", !content.getIsDVR());
+        }
+
         if (content.getContentLanguage() != null) {
             contentEntry.addProperty("contentLanguage", content.getContentLanguage());
         }
@@ -270,6 +252,9 @@ public class YouboraConfigJsonBuilder {
         }
         if (content.getContentTotalBytes() != null) {
             contentEntry.addProperty("contentTotalBytes", content.getContentTotalBytes());
+        }
+        if (content.getContentTransportFormat() != null) {
+            contentEntry.addProperty("contentTransportFormat", content.getContentTransportFormat());
         }
         contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
         if (content.getContentTvShow() != null) {
@@ -365,6 +350,9 @@ public class YouboraConfigJsonBuilder {
         }
         if (ads.getAdExpectedBreaks() != null) {
             adsEntry.addProperty("adExpectedBreaks", ads.getAdExpectedBreaks());
+        }
+        if (ads.getAdGivenAds() != null) {
+            adsEntry.addProperty("adGivenAds", ads.getAdGivenAds());
         }
         if (ads.getAdGivenBreaks() != null) {
             adsEntry.addProperty("adGivenBreaks", ads.getAdGivenBreaks());
@@ -492,71 +480,71 @@ public class YouboraConfigJsonBuilder {
     }
 
     @NonNull
-    static JsonObject getCustomDimentionsJsonObject(CustomDimensions customDimensions) {
+    static JsonObject getContnentCustomDimentionsJsonObject(ContentCustomDimensions contentCustomDimensions) {
         JsonObject customDimensionsEntry = new JsonObject();
-        if (customDimensions== null) {
+        if (contentCustomDimensions == null) {
             return customDimensionsEntry;
         }
 
-        if (customDimensions.getCustomDimension1() != null) {
-            customDimensionsEntry.addProperty("customDimension1", customDimensions.getCustomDimension1());
+        if (contentCustomDimensions.getContentCustomDimension1() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension1", contentCustomDimensions.getContentCustomDimension1());
         }
-        if (customDimensions.getCustomDimension2() != null) {
-            customDimensionsEntry.addProperty("customDimension2", customDimensions.getCustomDimension2());
+        if (contentCustomDimensions.getContentCustomDimension2() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension2", contentCustomDimensions.getContentCustomDimension2());
         }
-        if (customDimensions.getCustomDimension3() != null) {
-            customDimensionsEntry.addProperty("customDimension3", customDimensions.getCustomDimension3());
+        if (contentCustomDimensions.getContentCustomDimension3() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension3", contentCustomDimensions.getContentCustomDimension3());
         }
-        if (customDimensions.getCustomDimension4() != null) {
-            customDimensionsEntry.addProperty("customDimension4", customDimensions.getCustomDimension4());
+        if (contentCustomDimensions.getContentCustomDimension4() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension4", contentCustomDimensions.getContentCustomDimension4());
         }
-        if (customDimensions.getCustomDimension5() != null) {
-            customDimensionsEntry.addProperty("customDimension5", customDimensions.getCustomDimension5());
+        if (contentCustomDimensions.getContentCustomDimension5() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension5", contentCustomDimensions.getContentCustomDimension5());
         }
-        if (customDimensions.getCustomDimension6() != null) {
-            customDimensionsEntry.addProperty("customDimension6", customDimensions.getCustomDimension6());
+        if (contentCustomDimensions.getContentCustomDimension6() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension6", contentCustomDimensions.getContentCustomDimension6());
         }
-        if (customDimensions.getCustomDimension7() != null) {
-            customDimensionsEntry.addProperty("customDimension7", customDimensions.getCustomDimension7());
+        if (contentCustomDimensions.getContentCustomDimension7() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension7", contentCustomDimensions.getContentCustomDimension7());
         }
-        if (customDimensions.getCustomDimension8() != null) {
-            customDimensionsEntry.addProperty("customDimension8", customDimensions.getCustomDimension8());
+        if (contentCustomDimensions.getContentCustomDimension8() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension8", contentCustomDimensions.getContentCustomDimension8());
         }
-        if (customDimensions.getCustomDimension9() != null) {
-            customDimensionsEntry.addProperty("customDimension9", customDimensions.getCustomDimension9());
+        if (contentCustomDimensions.getContentCustomDimension9() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension9", contentCustomDimensions.getContentCustomDimension9());
         }
-        if (customDimensions.getCustomDimension10() != null) {
-            customDimensionsEntry.addProperty("customDimension10", customDimensions.getCustomDimension10());
+        if (contentCustomDimensions.getContentCustomDimension10() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension10", contentCustomDimensions.getContentCustomDimension10());
         }
-        if (customDimensions.getCustomDimension11() != null) {
-            customDimensionsEntry.addProperty("customDimension11", customDimensions.getCustomDimension11());
+        if (contentCustomDimensions.getContentCustomDimension11() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension11", contentCustomDimensions.getContentCustomDimension11());
         }
-        if (customDimensions.getCustomDimension12() != null) {
-            customDimensionsEntry.addProperty("customDimension12", customDimensions.getCustomDimension12());
+        if (contentCustomDimensions.getContentCustomDimension12() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension12", contentCustomDimensions.getContentCustomDimension12());
         }
-        if (customDimensions.getCustomDimension13() != null) {
-            customDimensionsEntry.addProperty("customDimension13", customDimensions.getCustomDimension13());
+        if (contentCustomDimensions.getContentCustomDimension13() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension13", contentCustomDimensions.getContentCustomDimension13());
         }
-        if (customDimensions.getCustomDimension14() != null) {
-            customDimensionsEntry.addProperty("customDimension14", customDimensions.getCustomDimension14());
+        if (contentCustomDimensions.getContentCustomDimension14() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension14", contentCustomDimensions.getContentCustomDimension14());
         }
-        if (customDimensions.getCustomDimension15() != null) {
-            customDimensionsEntry.addProperty("customDimension15", customDimensions.getCustomDimension15());
+        if (contentCustomDimensions.getContentCustomDimension15() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension15", contentCustomDimensions.getContentCustomDimension15());
         }
-        if (customDimensions.getCustomDimension16() != null) {
-            customDimensionsEntry.addProperty("customDimension16", customDimensions.getCustomDimension16());
+        if (contentCustomDimensions.getContentCustomDimension16() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension16", contentCustomDimensions.getContentCustomDimension16());
         }
-        if (customDimensions.getCustomDimension17() != null) {
-            customDimensionsEntry.addProperty("customDimension17", customDimensions.getCustomDimension17());
+        if (contentCustomDimensions.getContentCustomDimension17() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension17", contentCustomDimensions.getContentCustomDimension17());
         }
-        if (customDimensions.getCustomDimension18() != null) {
-            customDimensionsEntry.addProperty("customDimension18", customDimensions.getCustomDimension18());
+        if (contentCustomDimensions.getContentCustomDimension18() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension18", contentCustomDimensions.getContentCustomDimension18());
         }
-        if (customDimensions.getCustomDimension19() != null) {
-            customDimensionsEntry.addProperty("customDimension19", customDimensions.getCustomDimension19());
+        if (contentCustomDimensions.getContentCustomDimension19() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension19", contentCustomDimensions.getContentCustomDimension19());
         }
-        if (customDimensions.getCustomDimension20() != null) {
-            customDimensionsEntry.addProperty("customDimension20", customDimensions.getCustomDimension20());
+        if (contentCustomDimensions.getContentCustomDimension20() != null) {
+            customDimensionsEntry.addProperty("contentCustomDimension20", contentCustomDimensions.getContentCustomDimension20());
         }
         return customDimensionsEntry;
     }
