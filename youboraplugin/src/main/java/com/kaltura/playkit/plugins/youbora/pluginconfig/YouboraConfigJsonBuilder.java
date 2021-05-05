@@ -20,7 +20,6 @@ public class YouboraConfigJsonBuilder {
                                                  JsonPrimitive appName,
                                                  JsonPrimitive appReleaseVersion,
                                                  JsonPrimitive houseHoldId,
-                                                 JsonPrimitive transportFormat,
                                                  JsonPrimitive urlToParse,
                                                  JsonPrimitive linkedViewId,
                                                  JsonPrimitive isUserObfuscateIp,
@@ -47,7 +46,6 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("userType", userType);
         youboraConfig.add("appName", appName);
         youboraConfig.add("appReleaseVersion", appReleaseVersion);
-        youboraConfig.add("transportFormat", transportFormat);
         youboraConfig.add("urlToParse", urlToParse);
         youboraConfig.add("linkedViewId", linkedViewId);
         youboraConfig.add("houseHoldId", houseHoldId);
@@ -110,16 +108,16 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
         }
 
-        if (parse.getCdnNodeList() != null) {
-            JsonArray cdnNodeListJsonArray = new JsonArray();
-            for(String cdn : parse.getCdnNodeList()) {
-                cdnNodeListJsonArray.add(cdn);
+        if (parse.getParseCdnNodeList() != null) {
+            JsonArray parseCdnNodeListJsonArray = new JsonArray();
+            for(String cdn : parse.getParseCdnNodeList()) {
+                parseCdnNodeListJsonArray.add(cdn);
             }
-            parseJsonObject.add("cdnNodeList", cdnNodeListJsonArray);
+            parseJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
         }
 
-        if (parse.getCdnNameHeaders() != null) {
-            parseJsonObject.addProperty("cdnNameHeaders", parse.getCdnNameHeaders() );
+        if (parse.getParseCdnNameHeader() != null) {
+            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader() );
         }
 
         if (parse.getParseCdnTTL() != null) {
@@ -282,6 +280,9 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentTotalBytes() != null) {
             contentEntry.addProperty("contentTotalBytes", content.getContentTotalBytes());
         }
+        if (content.getContentTransportFormat() != null) {
+            contentEntry.addProperty("contentTransportFormat", content.getContentTransportFormat());
+        }
         contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
         if (content.getContentTvShow() != null) {
             contentEntry.addProperty("contentTvShow", content.getContentTvShow());
@@ -376,6 +377,9 @@ public class YouboraConfigJsonBuilder {
         }
         if (ads.getAdExpectedBreaks() != null) {
             adsEntry.addProperty("adExpectedBreaks", ads.getAdExpectedBreaks());
+        }
+        if (ads.getAdGivenAds() != null) {
+            adsEntry.addProperty("adGivenAds", ads.getAdGivenAds());
         }
         if (ads.getAdGivenBreaks() != null) {
             adsEntry.addProperty("adGivenBreaks", ads.getAdGivenBreaks());

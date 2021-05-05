@@ -7,8 +7,8 @@ public class Parse {
     private Boolean parseManifest;
     private Boolean parseCdnNode;
     private Boolean parseCdnSwitchHeader;
-    private ArrayList<String> cdnNodeList;
-    private String cdnNameHeaders;
+    private ArrayList<String> parseCdnNodeList;
+    private String parseCdnNameHeader;
     private Integer parseCdnTTL;
 
     public Boolean getParseManifest() {
@@ -35,20 +35,20 @@ public class Parse {
         this.parseCdnSwitchHeader = parseCdnSwitchHeader;
     }
 
-    public ArrayList<String> getCdnNodeList() {
-        return cdnNodeList;
+    public ArrayList<String> getParseCdnNodeList() {
+        return parseCdnNodeList;
     }
 
-    public void setCdnNodeList(ArrayList<String> cdnNodeList) {
-        this.cdnNodeList = cdnNodeList;
+    public void setParseCdnNodeList(ArrayList<String> parseCdnNodeList) {
+        this.parseCdnNodeList = parseCdnNodeList;
     }
 
-    public String getCdnNameHeaders() {
-        return cdnNameHeaders;
+    public String getParseCdnNameHeader() {
+        return parseCdnNameHeader;
     }
 
-    public void setCdnNameHeaders(String cdnNameHeaders) {
-        this.cdnNameHeaders = cdnNameHeaders;
+    public void setParseCdnNameHeader(String parseCdnNameHeader) {
+        this.parseCdnNameHeader = parseCdnNameHeader;
     }
 
     public Integer getParseCdnTTL() {

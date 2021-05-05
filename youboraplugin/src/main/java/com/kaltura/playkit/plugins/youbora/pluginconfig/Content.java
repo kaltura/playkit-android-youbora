@@ -59,6 +59,8 @@ public class Content {
     @SerializedName(value="contentTransactionCode", alternate={"transactionType"})
     private String contentTransactionCode;
     private Long contentTotalBytes;
+    private String contentTransportFormat;
+
     private boolean contentSendTotalBytes;
     private String contentTvShow;
     private String contentType;
@@ -357,6 +359,14 @@ public class Content {
 
     public void setContentTotalBytes(Long contentTotalBytes) {
         this.contentTotalBytes = contentTotalBytes;
+    }
+
+    public String getContentTransportFormat() {
+        return contentTransportFormat;
+    }
+
+    public void setContentTransportFormat(String contentTransportFormat) {
+        this.contentTransportFormat = contentTransportFormat;
     }
 
     public boolean getContentSendTotalBytes() {
