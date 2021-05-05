@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class YouboraConfig {
 
     // Kaltura Youbora Keys for Bundle
@@ -786,23 +789,26 @@ public class YouboraConfig {
 
 
     public JsonObject toJson() {
-        JsonPrimitive accountCode = new JsonPrimitive(getAccountCode() != null ? getAccountCode() : "");
-        JsonPrimitive username = new JsonPrimitive(getUsername() != null ? getUsername() : "");
-        JsonPrimitive userEmail = new JsonPrimitive(getUserEmail() != null ? getUserEmail() : "");
-        JsonPrimitive userAnonymousId = new JsonPrimitive(getUserAnonymousId() != null ? getUserAnonymousId() : "");
-        JsonPrimitive userType = new JsonPrimitive(getUserType() != null ? getUserType() : "");
-        JsonPrimitive appName = new JsonPrimitive(getAppName() != null ? getAppName() : "");
-        JsonPrimitive appReleaseVersion = new JsonPrimitive(getAppReleaseVersion() != null ? getAppReleaseVersion() : "");
-        JsonPrimitive houseHoldId = new JsonPrimitive(getHouseHoldId() != null ? getHouseHoldId() : "");
-        JsonPrimitive urlToParse = new JsonPrimitive(getUrlToParse());
-        JsonPrimitive linkedViewId = new JsonPrimitive(getLinkedViewId());
-        JsonPrimitive isUserObfuscateIp = new JsonPrimitive(getUserObfuscateIp());
-        JsonPrimitive httpSecure = new JsonPrimitive(getHttpSecure());
-        JsonPrimitive isAutoStart = new JsonPrimitive(getIsAutoStart());
-        JsonPrimitive isAutoDetectBackground = new JsonPrimitive(getIsAutoDetectBackground());
-        JsonPrimitive isEnabled = new JsonPrimitive(getIsEnabled());
-        JsonPrimitive isForceInit = new JsonPrimitive(getIsForceInit());
-        JsonPrimitive isOffline = new JsonPrimitive(getIsOffline());
+
+        Map<String, JsonPrimitive> rootLevelParams = new HashMap<>();
+        rootLevelParams.put("accountCode", new JsonPrimitive(getAccountCode() != null ? getAccountCode() : ""));
+        rootLevelParams.put("username", (getUsername() != null) ? new JsonPrimitive(getUsername()) : null);
+        rootLevelParams.put("userEmail", (getUserEmail() != null) ? new JsonPrimitive(getUserEmail()) : null);
+        rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
+        rootLevelParams.put("userType", (getUserType() != null) ? new JsonPrimitive(getUserType()) : null);
+        rootLevelParams.put("appName", (getAppName() != null) ? new JsonPrimitive(getAppName()) : null);
+        rootLevelParams.put("appReleaseVersion", (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null);
+        rootLevelParams.put("houseHoldId", (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null);
+        rootLevelParams.put("urlToParse", (getUrlToParse() != null) ? new JsonPrimitive(getUrlToParse()) : null);
+        rootLevelParams.put("linkedViewId", (getLinkedViewId() != null) ? new JsonPrimitive(getLinkedViewId()) : null);
+
+        rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
+        rootLevelParams.put("httpSecure", new JsonPrimitive(getHttpSecure()));
+        rootLevelParams.put("isAutoStart", new JsonPrimitive(getIsAutoStart()));
+        rootLevelParams.put("isAutoDetectBackground", new JsonPrimitive(getIsAutoDetectBackground()));
+        rootLevelParams.put("isEnabled", new JsonPrimitive(getIsEnabled()));
+        rootLevelParams.put("isForceInit", new JsonPrimitive(getIsForceInit()));
+        rootLevelParams.put("isOffline", new JsonPrimitive(getIsOffline()));
 
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
@@ -813,23 +819,7 @@ public class YouboraConfig {
         JsonObject adsEntry = YouboraConfigJsonBuilder.getAdsJsonObject(getAds());
         JsonObject propertiesEntry = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
         JsonObject customDimentionsEntry = YouboraConfigJsonBuilder.getCustomDimentionsJsonObject(getCustomDimensions());
-        return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(accountCode,
-                username,
-                userEmail,
-                userAnonymousId,
-                userType,
-                appName,
-                appReleaseVersion,
-                houseHoldId,
-                urlToParse,
-                linkedViewId,
-                isUserObfuscateIp,
-                httpSecure,
-                isAutoStart,
-                isAutoDetectBackground,
-                isEnabled,
-                isForceInit,
-                isOffline,
+        return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
                 app,
                 parse,
                 device,

@@ -1,62 +1,35 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-
+import java.util.Map;
 
 
 public class YouboraConfigJsonBuilder {
 
     @NonNull
-    static JsonObject getYouboraConfigJsonObject(JsonPrimitive accountCode,
-                                                 JsonPrimitive username,
-                                                 JsonPrimitive userEmail,
-                                                 JsonPrimitive userAnonymousId,
-                                                 JsonPrimitive userType,
-                                                 JsonPrimitive appName,
-                                                 JsonPrimitive appReleaseVersion,
-                                                 JsonPrimitive houseHoldId,
-                                                 JsonPrimitive urlToParse,
-                                                 JsonPrimitive linkedViewId,
-                                                 JsonPrimitive isUserObfuscateIp,
-                                                 JsonPrimitive httpSecure,
-                                                 JsonPrimitive isAutoStart,
-                                                 JsonPrimitive isAutoDetectBackground,
-                                                 JsonPrimitive isEnabled,
-                                                 JsonPrimitive isForceInit,
-                                                 JsonPrimitive isOffline,
+    static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
                                                  JsonObject app,
                                                  JsonObject parse,
                                                  JsonObject device,
                                                  JsonObject content,
                                                  JsonObject network,
                                                  JsonObject errors,
-                                                 JsonObject adsEntry,
-                                                 JsonObject propertiesEntry,
-                                                 JsonObject customDimentionsEntry) {
+                                                 JsonObject ads,
+                                                 JsonObject properties,
+                                                 JsonObject customDimentions) {
         JsonObject youboraConfig = new JsonObject();
-        youboraConfig.add("accountCode", accountCode);
-        youboraConfig.add("username", username);
-        youboraConfig.add("userEmail", userEmail);
-        youboraConfig.add("userAnonymousId", userAnonymousId);
-        youboraConfig.add("userType", userType);
-        youboraConfig.add("appName", appName);
-        youboraConfig.add("appReleaseVersion", appReleaseVersion);
-        youboraConfig.add("urlToParse", urlToParse);
-        youboraConfig.add("linkedViewId", linkedViewId);
-        youboraConfig.add("houseHoldId", houseHoldId);
-        youboraConfig.add("userObfuscateIp", isUserObfuscateIp);
-        youboraConfig.add("httpSecure", httpSecure);
-
-        youboraConfig.add("isAutoStart", isAutoStart);
-        youboraConfig.add("isAutoDetectBackground", isAutoDetectBackground);
-        youboraConfig.add("isEnabled", isEnabled);
-        youboraConfig.add("isForceInit", isForceInit);
-        youboraConfig.add("isOffline", isOffline);
+        for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
+            if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
+                youboraConfig.add(entry.getKey(), entry.getValue());
+            }
+        }
 
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
@@ -64,9 +37,9 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("content", content);
         youboraConfig.add("network", network);
         youboraConfig.add("errors", errors);
-        youboraConfig.add("ads", adsEntry);
-        youboraConfig.add("properties", propertiesEntry);
-        youboraConfig.add("customDimentions", customDimentionsEntry);
+        youboraConfig.add("ads", ads);
+        youboraConfig.add("properties", properties);
+        youboraConfig.add("customDimentions", customDimentions);
         return youboraConfig;
     }
 
