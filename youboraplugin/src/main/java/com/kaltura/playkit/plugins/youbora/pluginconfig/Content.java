@@ -33,9 +33,8 @@ public class Content {
     private String contentImdbId;
     @SerializedName(value="contentIsLive", alternate={"isLive"})
     private Boolean contentIsLive;
-    @SerializedName(value="contentIsLiveNoSeek", alternate={"isDVR"})
     private Boolean contentIsLiveNoSeek;
-
+    private Boolean isDVR; //LEGACY  - the opposite value from contentIsLiveNoSeek
     private String contentLanguage;
 
     //private Bundle contentMetrics;
@@ -60,6 +59,8 @@ public class Content {
     @SerializedName(value="contentTransactionCode", alternate={"transactionType"})
     private String contentTransactionCode;
     private Long contentTotalBytes;
+    private String contentTransportFormat;
+
     private boolean contentSendTotalBytes;
     private String contentTvShow;
     private String contentType;
@@ -232,6 +233,14 @@ public class Content {
         this.contentIsLiveNoSeek = contentIsLiveNoSeek;
     }
 
+    public Boolean getIsDVR() {
+        return isDVR;
+    }
+
+    public void setIsDVR(Boolean isDVR) {
+        this.isDVR = isDVR;
+    }
+
     public String getContentLanguage() {
         return contentLanguage;
     }
@@ -350,6 +359,14 @@ public class Content {
 
     public void setContentTotalBytes(Long contentTotalBytes) {
         this.contentTotalBytes = contentTotalBytes;
+    }
+
+    public String getContentTransportFormat() {
+        return contentTransportFormat;
+    }
+
+    public void setContentTransportFormat(String contentTransportFormat) {
+        this.contentTransportFormat = contentTransportFormat;
     }
 
     public boolean getContentSendTotalBytes() {
