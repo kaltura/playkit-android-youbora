@@ -14,6 +14,7 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.text.TextUtils;
 
+import com.kaltura.android.exoplayer2.ExoTimeoutException;
 import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKError;
@@ -144,7 +145,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if ((error.errorType) instanceof PKPlayerErrorType) {
             PKPlayerErrorType errorType = (PKPlayerErrorType)error.errorType;
             String errorCode = String.valueOf(errorType.errorCode);
-            fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+            
+            if (playerErrorException != null && playerErrorException.getCause() instanceof ExoTimeoutException) {
+                fireError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+            } else {
+                fireFatalError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
+            }
         } else {
             fireFatalError(event.eventType().name(), exceptionCauseBuilder.toString() + " - " + exceptionClass , errorMetadata, playerErrorException);
         }
