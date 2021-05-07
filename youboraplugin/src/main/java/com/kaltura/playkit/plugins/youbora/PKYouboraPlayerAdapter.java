@@ -110,7 +110,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     private void sendErrorHandler(PKEvent event) {
-
         PlayerEvent.Error errorEvent = (PlayerEvent.Error) event;
         String errorMetadata = (errorEvent != null && errorEvent.error != null) ? errorEvent.error.message : PLAYER_ERROR_STR;
 
@@ -145,7 +144,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if ((error.errorType) instanceof PKPlayerErrorType) {
             PKPlayerErrorType errorType = (PKPlayerErrorType)error.errorType;
             String errorCode = String.valueOf(errorType.errorCode);
-            
             if (playerErrorException != null && playerErrorException.getCause() instanceof ExoTimeoutException) {
                 fireError(errorCode, exceptionCauseBuilder.toString() + " - " + exceptionClass, errorMetadata, playerErrorException);
             } else {
