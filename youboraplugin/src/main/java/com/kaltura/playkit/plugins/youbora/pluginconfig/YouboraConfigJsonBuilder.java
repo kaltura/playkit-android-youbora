@@ -23,7 +23,7 @@ public class YouboraConfigJsonBuilder {
                                                  JsonObject errors,
                                                  JsonObject ads,
                                                  JsonObject properties,
-                                                 JsonObject contentCustomDimentions) {
+                                                 JsonObject contentCustomDimensions) {
         JsonObject youboraConfig = new JsonObject();
         for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
             if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
@@ -39,7 +39,7 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("errors", errors);
         youboraConfig.add("ads", ads);
         youboraConfig.add("properties", properties);
-        youboraConfig.add("contentCustomDimentions", contentCustomDimentions);
+        youboraConfig.add("contentCustomDimensions", contentCustomDimensions);
         return youboraConfig;
     }
 
