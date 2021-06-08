@@ -818,7 +818,7 @@ public class YouboraConfig {
         JsonObject errors = YouboraConfigJsonBuilder.getErrorsJsonObject(getErrors());
         JsonObject adsEntry = YouboraConfigJsonBuilder.getAdsJsonObject(getAds());
         JsonObject properties = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
-        JsonObject contentCustomDimentions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
+        JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
         return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
                 app,
                 parse,
@@ -828,7 +828,7 @@ public class YouboraConfig {
                 errors,
                 adsEntry,
                 properties,
-                contentCustomDimentions);
+                contentCustomDimensions);
     }
     
     public void merge(YouboraConfig youboraConfigUiConf) {
