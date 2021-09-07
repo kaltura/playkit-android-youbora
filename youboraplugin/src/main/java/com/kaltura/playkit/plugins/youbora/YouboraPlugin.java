@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kaltura.playkit.InterceptorEvent;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
@@ -118,6 +119,13 @@ public class YouboraPlugin extends PKPlugin {
 
         messageBus.addListener(this, PlayerEvent.stopped, event -> {
             log.d("YouboraPlugin STOPPED");
+        });
+
+        messageBus.addListener(this, InterceptorEvent.cdnCode, event -> {
+            if (npawPlugin != null && npawPlugin.getOptions() != null) {
+                log.d("InterceptorEvent.cdnCode " + event.getCdnCode());
+                npawPlugin.getOptions().setContentCdn(event.getCdnCode());
+            }
         });
     }
 
