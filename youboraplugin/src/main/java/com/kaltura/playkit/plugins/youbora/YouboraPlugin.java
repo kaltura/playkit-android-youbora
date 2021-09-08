@@ -2,6 +2,7 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -48,6 +49,7 @@ public class YouboraPlugin extends PKPlugin {
 
     private boolean isMonitoring = false;
     private boolean isAdsMonitoring = false;
+    private String interceptedCdnCode;
 
     public static final Factory factory = new Factory() {
         @Override
@@ -124,7 +126,8 @@ public class YouboraPlugin extends PKPlugin {
         messageBus.addListener(this, InterceptorEvent.cdnCode, event -> {
             if (npawPlugin != null && npawPlugin.getOptions() != null) {
                 log.d("InterceptorEvent.cdnCode " + event.getCdnCode());
-                npawPlugin.getOptions().setContentCdn(event.getCdnCode());
+                interceptedCdnCode = event.getCdnCode();
+                //npawPlugin.getOptions().setContentCdn(event.getCdnCode());
             }
         });
     }
@@ -195,7 +198,12 @@ public class YouboraPlugin extends PKPlugin {
         this.pluginConfig = parseConfig(config);
         // Refresh options with updated media
         if (npawPlugin != null && pluginConfig != null) {
+            if (!TextUtils.isEmpty(interceptedCdnCode)) {
+                // If intercepted cdn code is there from smart switch then update it
+                this.pluginConfig.setContentCdn(interceptedCdnCode);
+            }
             npawPlugin.setOptions(pluginConfig);
+            interceptedCdnCode = null;
         }
 
         if (pluginManager == null) {
