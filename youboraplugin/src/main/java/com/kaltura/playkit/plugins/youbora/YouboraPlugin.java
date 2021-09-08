@@ -203,8 +203,9 @@ public class YouboraPlugin extends PKPlugin {
                 this.pluginConfig.setContentCdn(interceptedCdnCode);
             }
             npawPlugin.setOptions(pluginConfig);
-            interceptedCdnCode = null;
         }
+
+        interceptedCdnCode = null;
 
         if (pluginManager == null) {
             return;
