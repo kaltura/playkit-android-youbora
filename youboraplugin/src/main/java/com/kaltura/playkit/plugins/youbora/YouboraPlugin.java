@@ -127,7 +127,6 @@ public class YouboraPlugin extends PKPlugin {
             if (npawPlugin != null && npawPlugin.getOptions() != null) {
                 log.d("InterceptorEvent.cdnCode " + event.getCdnCode());
                 interceptedCdnCode = event.getCdnCode();
-                //npawPlugin.getOptions().setContentCdn(event.getCdnCode());
             }
         });
     }
