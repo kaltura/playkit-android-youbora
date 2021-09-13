@@ -125,7 +125,7 @@ public class YouboraPlugin extends PKPlugin {
 
         messageBus.addListener(this, InterceptorEvent.cdnSwitched, event -> {
             if (npawPlugin != null && npawPlugin.getOptions() != null) {
-                log.d("InterceptorEvent.cdnCode " + event.getCdnCode());
+                log.d("InterceptorEvent.cdnSwitched " + event.getCdnCode());
                 interceptedCdnCode = event.getCdnCode();
             }
         });
