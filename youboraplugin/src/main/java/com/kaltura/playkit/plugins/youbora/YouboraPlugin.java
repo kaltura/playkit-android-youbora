@@ -123,7 +123,7 @@ public class YouboraPlugin extends PKPlugin {
             log.d("YouboraPlugin STOPPED");
         });
 
-        messageBus.addListener(this, InterceptorEvent.cdnCode, event -> {
+        messageBus.addListener(this, InterceptorEvent.cdnSwitched, event -> {
             if (npawPlugin != null && npawPlugin.getOptions() != null) {
                 log.d("InterceptorEvent.cdnCode " + event.getCdnCode());
                 interceptedCdnCode = event.getCdnCode();
