@@ -1,8 +1,5 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Errors {
 
     private String[] errorsIgnore;
