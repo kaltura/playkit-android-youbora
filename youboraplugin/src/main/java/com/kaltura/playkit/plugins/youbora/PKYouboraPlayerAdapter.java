@@ -174,9 +174,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             PlaybackInfo currentPlaybackInfo = event.playbackInfo;
             lastReportedBitrate = currentPlaybackInfo.getVideoBitrate();
             lastReportedThroughput = currentPlaybackInfo.getVideoThroughput();
-            if (generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight()) != null) {
-                lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
-            }
+            lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
             //log.d("lastReportedRendition = " + lastReportedRendition + " lastReportedBitrate = " + lastReportedBitrate);
             sendReportEvent(event);
         });
