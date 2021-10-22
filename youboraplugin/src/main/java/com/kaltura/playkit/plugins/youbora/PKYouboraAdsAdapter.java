@@ -197,6 +197,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 return;
             }
             if (event.isAutoPlay) {
+                getPlugin().fireInit();
                 getPlugin().getAdapter().fireStart();
             }
             sendReportEvent(event.eventType());
@@ -221,16 +222,16 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isFirstPlay) {
                 isFirstPlay = false;
                 if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                    getPlugin().fireInit();
                     getPlugin().getAdapter().fireStart();
                     getPlugin().getAdapter().fireJoin();
-                    fireStart();
                 }
             }
             currentAdInfo = event.adInfo;
             populateAdValues();
             if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+                getPlugin().fireInit();
                 getPlugin().getAdapter().fireStart();
-                fireStart();
             }
             sendReportEvent(event.eventType());
         });
@@ -244,6 +245,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
             log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            fireStart();
             fireJoin();
             sendReportEvent(event.eventType());
         });

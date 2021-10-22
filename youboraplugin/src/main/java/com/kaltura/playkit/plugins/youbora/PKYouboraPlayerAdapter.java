@@ -175,6 +175,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             lastReportedBitrate = currentPlaybackInfo.getVideoBitrate();
             lastReportedThroughput = currentPlaybackInfo.getVideoThroughput();
             lastReportedRendition = generateRendition(lastReportedBitrate, (int) currentPlaybackInfo.getVideoWidth(), (int) currentPlaybackInfo.getVideoHeight());
+            //log.d("lastReportedRendition = " + lastReportedRendition + " lastReportedBitrate = " + lastReportedBitrate);
             sendReportEvent(event);
         });
 
@@ -247,7 +248,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 fireResume();
             } else {
                 isFirstPlay = false;
-                fireStart();
+                getPlugin().fireInit();
             }
             sendReportEvent(event);
         });
@@ -256,8 +257,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             printReceivedPlayerEvent(event);
             if (isFirstPlay) {
                 isFirstPlay = false;
-                fireStart();
+                getPlugin().fireInit();
             }
+
+            fireStart();
             fireJoin();
             sendReportEvent(event);
         });
@@ -349,7 +352,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public String getRendition() {
-        return lastReportedRendition;
+        return (lastReportedRendition != null) ? lastReportedRendition : super.getRendition();
     }
 
     public String getKalturaPlayerVersion() {
