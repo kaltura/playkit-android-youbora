@@ -133,6 +133,13 @@ public class YouboraPlugin extends PKPlugin {
 
     @Override
     protected void onUpdateMedia(PKMediaConfig mediaConfig) {
+        if (pluginManager != null) {
+            pluginManager.onUpdateConfig();
+            if (adsManager != null) {
+                adsManager.onUpdateConfig();
+            }
+        }
+
         stopMonitoring();
         log.d("youbora - onUpdateMedia");
 
@@ -205,15 +212,6 @@ public class YouboraPlugin extends PKPlugin {
         }
 
         interceptedCdnCode = null;
-
-        if (pluginManager == null) {
-            return;
-        }
-        pluginManager.onUpdateConfig();
-        if (adsManager != null) {
-            adsManager.onUpdateConfig();
-        }
-
     }
 
     @Override
