@@ -181,7 +181,11 @@ public class YouboraPlugin extends PKPlugin {
                 mediaConfig.getMediaEntry().getMetadata() != null
         ) {
             Bundle kalturaInfoBundle = new Bundle();
-            kalturaInfoBundle.putString("entryId", mediaConfig.getMediaEntry().getMetadata().get("entryId"));
+            String entryId = mediaConfig.getMediaEntry().getMetadata().get("entryId");
+            if (TextUtils.isEmpty(entryId)) {
+                entryId = mediaConfig.getMediaEntry().getId();
+            }
+            kalturaInfoBundle.putString("entryId", entryId);
             kalturaInfoBundle.putString("sessionId", player.getSessionId());
             npawPlugin.getOptions().getContentMetadata().putBundle("kalturaInfo", kalturaInfoBundle);
         }
