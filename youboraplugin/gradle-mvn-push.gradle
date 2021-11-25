@@ -45,7 +45,6 @@ afterEvaluate { project ->
                         }
                     }
                 }
-
                 pom {
                     name = POM_NAME
                     packaging = POM_PACKAGING
@@ -59,7 +58,6 @@ afterEvaluate { project ->
                             distribution = POM_LICENCE_DIST
                         }
                     }
-                    
                     developers {
                         developer {
                             id = POM_DEVELOPER_ID
