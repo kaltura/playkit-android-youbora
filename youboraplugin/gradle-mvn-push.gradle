@@ -59,6 +59,7 @@ afterEvaluate { project ->
                             distribution = POM_LICENCE_DIST
                         }
                     }
+                    
                     developers {
                         developer {
                             id = POM_DEVELOPER_ID
