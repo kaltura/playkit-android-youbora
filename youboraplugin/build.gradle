@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply from: 'version.gradle'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -11,8 +11,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionName libVersion
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String","VERSION_NAME","\"${libVersion}\"")
     }
 
     buildTypes {
@@ -33,8 +33,8 @@ dependencies {
     api 'com.nicepeopleatwork:youboralib:6.7.40'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    implementation 'androidx.annotation:annotation:1.3.0'
 
 }
 
