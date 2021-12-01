@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
     //implementation project(":playkit")
 
-    api 'com.nicepeopleatwork:youboralib:6.7.40'
+    api 'com.nicepeopleatwork:youboralib:6.7.53'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.4.0'

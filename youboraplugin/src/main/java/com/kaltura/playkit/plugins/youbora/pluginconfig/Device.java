@@ -24,6 +24,8 @@ public class Device {
     private String deviceCode;
     @SerializedName(value="deviceId", alternate={"id"})
     private String deviceId;
+    @SerializedName(value="deviceEdId", alternate={"edid"})
+    private String deviceEdId;
     @SerializedName(value="deviceModel", alternate={"model"})
     private String deviceModel;
     @SerializedName(value="deviceOsName", alternate={"osName"})
@@ -56,6 +58,14 @@ public class Device {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getDeviceEdId() {
+        return deviceEdId;
+    }
+
+    public void setDeviceEdId(String deviceEdId) {
+        this.deviceEdId = deviceEdId;
     }
 
     public String getDeviceModel() {
