@@ -368,6 +368,10 @@ public class YouboraConfig {
                 youboraOptions.setDeviceId(device.getDeviceId());
             }
 
+            if (device.getDeviceEdId() != null) {
+                youboraOptions.setDeviceEDID(device.getDeviceEdId());
+            }
+
             if (device.getDeviceBrand() != null) {
                 youboraOptions.setDeviceBrand(device.getDeviceBrand());
             }

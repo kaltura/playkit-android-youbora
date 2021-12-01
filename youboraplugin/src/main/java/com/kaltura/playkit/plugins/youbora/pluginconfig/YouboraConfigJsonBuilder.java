@@ -118,6 +118,10 @@ public class YouboraConfigJsonBuilder {
             deviceJsonObject.addProperty("deviceId", device.getDeviceId());
         }
 
+        if (device.getDeviceEdId() != null) {
+            deviceJsonObject.addProperty("deviceEdId", device.getDeviceEdId());
+        }
+
         if (device.getDeviceBrand() != null) {
             deviceJsonObject.addProperty("deviceBrand", device.getDeviceBrand());
         }
