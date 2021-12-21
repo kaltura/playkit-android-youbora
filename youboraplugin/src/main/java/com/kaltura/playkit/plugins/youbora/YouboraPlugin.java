@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kaltura.playkit.InterceptorEvent;
 import com.kaltura.playkit.MessageBus;
+import com.kaltura.playkit.PKDrmParams;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
 import com.kaltura.playkit.PKPlugin;
@@ -93,6 +94,7 @@ public class YouboraPlugin extends PKPlugin {
                 log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
                 if (pluginManager != null) {
                     pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
+                    updateContenDRMScheme(event);
                 }
             }
         });
@@ -129,6 +131,26 @@ public class YouboraPlugin extends PKPlugin {
                 interceptedCdnCode = event.getCdnCode();
             }
         });
+    }
+
+    private void updateContenDRMScheme(PlayerEvent.SourceSelected event) {
+
+        String drmSchema = PKDrmParams.Scheme.Unknown.name();
+        if (event.source.hasDrmParams()) {
+            List<PKDrmParams> drmParams = event.source.getDrmData();
+            for (PKDrmParams params : drmParams) {
+                if (params.isSchemeSupported()) {
+                    drmSchema = params.getScheme().name();
+                    break;
+                }
+            }
+        } else {
+            drmSchema = "Clear";
+        }
+        if (npawPlugin != null && npawPlugin.getOptions() != null && npawPlugin.getOptions().getContentDrm() == null) {
+            log.d("YouboraPlugin ContentDrm = " + drmSchema);
+            npawPlugin.getOptions().setContentDrm(drmSchema);
+        }
     }
 
     @Override
