@@ -94,7 +94,7 @@ public class YouboraPlugin extends PKPlugin {
                 log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
                 if (pluginManager != null) {
                     pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
-                    updateContenDRMScheme(event);
+                    updateContentDRMScheme(event);
                 }
             }
         });
@@ -133,7 +133,7 @@ public class YouboraPlugin extends PKPlugin {
         });
     }
 
-    private void updateContenDRMScheme(PlayerEvent.SourceSelected event) {
+    private void updateContentDRMScheme(PlayerEvent.SourceSelected event) {
 
         String drmSchema = PKDrmParams.Scheme.Unknown.name();
         if (event.source.hasDrmParams()) {
