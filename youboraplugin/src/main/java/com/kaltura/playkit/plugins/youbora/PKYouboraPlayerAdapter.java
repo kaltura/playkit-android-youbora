@@ -169,6 +169,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     private void addListeners() {
+        if (messageBus == null) {
+            log.e("youbora plugin addListeners ignored, messageBus == null");
+            return;
+        }
+
         messageBus.addListener(this, PlayerEvent.playbackInfoUpdated, event -> {
             printReceivedPlayerEvent(event);
             PlaybackInfo currentPlaybackInfo = event.playbackInfo;
@@ -248,7 +253,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 fireResume();
             } else {
                 isFirstPlay = false;
-                getPlugin().fireInit();
+                if (getPlugin() != null) {
+                    log.d("play event fireInit");
+                    getPlugin().fireInit();
+                }
             }
             sendReportEvent(event);
         });
@@ -257,7 +265,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             printReceivedPlayerEvent(event);
             if (isFirstPlay) {
                 isFirstPlay = false;
-                getPlugin().fireInit();
+                if (getPlugin() != null) {
+                    log.d("playing event fireInit");
+                    getPlugin().fireInit();
+                }
             }
 
             fireStart();
@@ -431,7 +442,9 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private void sendReportEvent(PKEvent event) {
         if (event.eventType() != PLAYHEAD_UPDATED) {
             String reportedEventName = event.eventType().name();
-            messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+            if (messageBus != null) {
+                messageBus.post(new YouboraEvent.YouboraReport(reportedEventName));
+            }
         }
     }
 
