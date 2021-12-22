@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.kaltura.playkit.InterceptorEvent;
 import com.kaltura.playkit.MessageBus;
+import com.kaltura.playkit.PKDrmParams;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
 import com.kaltura.playkit.PKPlugin;
@@ -88,11 +89,12 @@ public class YouboraPlugin extends PKPlugin {
     private void loadPlugin() {
 
         messageBus.addListener(this, PlayerEvent.sourceSelected, event -> {
-            PlayerEvent.SourceSelected sourceSelected = event;
-            if (sourceSelected != null && sourceSelected.source != null) {
-                log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
+            PlayerEvent.SourceSelected sourceSelectedEvent = event;
+            if (sourceSelectedEvent != null && sourceSelectedEvent.source != null) {
+                log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelectedEvent.source.getUrl());
                 if (pluginManager != null) {
-                    pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
+                    pluginManager.setLastReportedResource(sourceSelectedEvent.source.getUrl());
+                    updateContentDRMScheme(sourceSelectedEvent);
                 }
             }
         });
@@ -129,6 +131,28 @@ public class YouboraPlugin extends PKPlugin {
                 interceptedCdnCode = event.getCdnCode();
             }
         });
+    }
+
+    private void updateContentDRMScheme(PlayerEvent.SourceSelected sourceSelectedEvent) {
+
+        String drmSchema = PKDrmParams.Scheme.Unknown.name();
+        if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.hasDrmParams()) {
+            List<PKDrmParams> drmParams = sourceSelectedEvent.source.getDrmData();
+            if (drmParams != null) {
+                for (PKDrmParams params : drmParams) {
+                    if (params.isSchemeSupported()) {
+                        drmSchema = params.getScheme().name();
+                        break;
+                    }
+                }
+            }
+        } else {
+            drmSchema = "Clear";
+        }
+        if (npawPlugin != null && npawPlugin.getOptions() != null && npawPlugin.getOptions().getContentDrm() == null) {
+            log.d("YouboraPlugin ContentDrm = " + drmSchema);
+            npawPlugin.getOptions().setContentDrm(drmSchema);
+        }
     }
 
     @Override
