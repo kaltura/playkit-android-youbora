@@ -89,12 +89,12 @@ public class YouboraPlugin extends PKPlugin {
     private void loadPlugin() {
 
         messageBus.addListener(this, PlayerEvent.sourceSelected, event -> {
-            PlayerEvent.SourceSelected sourceSelected = event;
-            if (sourceSelected != null && sourceSelected.source != null) {
-                log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelected.source.getUrl());
+            PlayerEvent.SourceSelected sourceSelectedEvent = event;
+            if (sourceSelectedEvent != null && sourceSelectedEvent.source != null) {
+                log.d("YouboraPlugin SOURCE_SELECTED = " + sourceSelectedEvent.source.getUrl());
                 if (pluginManager != null) {
-                    pluginManager.setLastReportedResource(sourceSelected.source.getUrl());
-                    updateContentDRMScheme(event);
+                    pluginManager.setLastReportedResource(sourceSelectedEvent.source.getUrl());
+                    updateContentDRMScheme(sourceSelectedEvent);
                 }
             }
         });
@@ -133,15 +133,17 @@ public class YouboraPlugin extends PKPlugin {
         });
     }
 
-    private void updateContentDRMScheme(PlayerEvent.SourceSelected event) {
+    private void updateContentDRMScheme(PlayerEvent.SourceSelected sourceSelectedEvent) {
 
         String drmSchema = PKDrmParams.Scheme.Unknown.name();
-        if (event.source.hasDrmParams()) {
-            List<PKDrmParams> drmParams = event.source.getDrmData();
-            for (PKDrmParams params : drmParams) {
-                if (params.isSchemeSupported()) {
-                    drmSchema = params.getScheme().name();
-                    break;
+        if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.hasDrmParams()) {
+            List<PKDrmParams> drmParams = sourceSelectedEvent.source.getDrmData();
+            if (drmParams != null) {
+                for (PKDrmParams params : drmParams) {
+                    if (params.isSchemeSupported()) {
+                        drmSchema = params.getScheme().name();
+                        break;
+                    }
                 }
             }
         } else {
