@@ -414,11 +414,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         //log.d("getDroppedFrames " + droppedFrames.intValue());
         return droppedFrames.intValue();
     }
-
-    //    public Double getPlayrate() {
-//        return lastPlayrate
-//    }
-
+    
     @Override
     public String getTitle() {
         if (mediaConfig == null || mediaConfig.getMediaEntry() == null) {
@@ -492,8 +488,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
         lastReportedAdPluginType = null;
-        mediaConfig = null;
-        houseHoldId = null;
         isFirstPlay = true;
         isFatalErrorSent = false;
     }
