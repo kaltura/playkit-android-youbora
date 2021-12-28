@@ -414,7 +414,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         //log.d("getDroppedFrames " + droppedFrames.intValue());
         return droppedFrames.intValue();
     }
-    
+
+    @Override
+    public double getPlayrate() {
+        double currentPlaybackRate = (getPlayer() != null) ? getPlayer().getPlaybackRate() : 1.0;
+        log.d("getPlayrate currentPlaybackRate = " + currentPlaybackRate);
+        return currentPlaybackRate;
+    }
+
     @Override
     public String getTitle() {
         if (mediaConfig == null || mediaConfig.getMediaEntry() == null) {
