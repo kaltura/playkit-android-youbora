@@ -398,9 +398,8 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
 
     private PKAdPluginType getLastReportedAdPluginType() {
         if (lastReportedAdPluginType != null) {
-            return  lastReportedAdPluginType;
+            return lastReportedAdPluginType;
         }
-
         if (getPlayer() != null) {
             AdController adController = getPlayer().getController(AdController.class);
             if (adController != null && !adController.isAdError()) {

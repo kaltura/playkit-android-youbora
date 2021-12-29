@@ -190,6 +190,7 @@ public class YouboraPlugin extends PKPlugin {
             if (adsManager == null) {
                 adsManager = new PKYouboraAdsAdapter(player, messageBus);
             } else {
+                adsManager.setPlayer(player);
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
