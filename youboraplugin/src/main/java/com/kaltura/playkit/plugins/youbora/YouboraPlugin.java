@@ -174,6 +174,7 @@ public class YouboraPlugin extends PKPlugin {
             if (pluginManager == null) {
                 pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, houseHoldId);
             } else {
+                pluginManager.setPlayer(player);
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
@@ -189,6 +190,7 @@ public class YouboraPlugin extends PKPlugin {
             if (adsManager == null) {
                 adsManager = new PKYouboraAdsAdapter(player, messageBus);
             } else {
+                adsManager.setPlayer(player);
                 adsManager.resetAdValues();
                 adsManager.registerListeners();
             }
