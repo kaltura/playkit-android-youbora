@@ -174,6 +174,9 @@ public class YouboraPlugin extends PKPlugin {
             if (pluginManager == null) {
                 pluginManager = new PKYouboraPlayerAdapter(player, messageBus, mediaConfig, houseHoldId);
             } else {
+                if (player != null) {
+                    pluginManager.setPlayer(player);
+                }
                 pluginManager.resetPlaybackValues();
                 pluginManager.registerListeners();
             }
