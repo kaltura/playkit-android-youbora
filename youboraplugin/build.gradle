@@ -40,7 +40,6 @@ dependencies {
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
     maven { url  "https://npaw.jfrog.io/artifactory/youbora/" }
     maven { url "https://jitpack.io" }
