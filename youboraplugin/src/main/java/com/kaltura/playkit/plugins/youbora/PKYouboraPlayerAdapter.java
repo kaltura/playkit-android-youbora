@@ -16,6 +16,7 @@ import android.text.TextUtils;
 
 import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
+import com.kaltura.playkit.PKAudioCodec;
 import com.kaltura.playkit.PKError;
 import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
@@ -27,7 +28,9 @@ import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.ads.AdController;
 import com.kaltura.playkit.ads.PKAdPluginType;
+import com.kaltura.playkit.player.AudioTrack;
 import com.kaltura.playkit.player.PKPlayerErrorType;
+import com.kaltura.playkit.player.VideoTrack;
 import com.kaltura.playkit.plugins.ads.AdCuePoints;
 import com.kaltura.playkit.plugins.ads.AdEvent;
 import com.kaltura.playkit.utils.Consts;
@@ -35,6 +38,8 @@ import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
 
@@ -61,6 +66,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
     private PKAdPluginType lastReportedAdPluginType;
+    private String lastReportedVidoeCodecs;
+    private String lastReportedAudioCodecs;
     private Long droppedFrames = 0L;
     private String houseHoldId;
     private boolean isAdPlaying;
@@ -228,6 +235,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             sendReportEvent(event);
         });
 
+        messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
+            lastReportedVidoeCodecs = getVideoCodecs(event.tracksInfo.getVideoTracks());
+            lastReportedAudioCodecs = getAudioCodecs(event.tracksInfo.getAudioTracks());
+        });
+
         messageBus.addListener(this, PlayerEvent.error, event -> {
             printReceivedPlayerEvent(event);
             PKError error = event.error;
@@ -334,6 +346,30 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
     }
 
+    private String getVideoCodecs(List<VideoTrack> tracks) {
+        Set<String> codecs = new LinkedHashSet<>();
+        for (VideoTrack track : tracks) {
+            if (track.getCodecType() != null) {
+                codecs.add(track.getCodecType().name());
+
+            }
+        }
+        return codecs.toString();
+    }
+
+    private String getAudioCodecs(List<AudioTrack> tracks) {
+        Set<String> codecs = new LinkedHashSet<>();
+        for (AudioTrack track : tracks) {
+            if (track.getCodecType() != null) {
+                codecs.add(track.getCodecType().name());
+            }
+        }
+        if (codecs.size() == 0) {
+            codecs.add(PKAudioCodec.AAC.name());
+        }
+        return codecs.toString();
+    }
+
     private void printReceivedPlayerEvent(PKEvent event) {
         log.d("Player Event = " + event.eventType().name());
     }
@@ -374,6 +410,16 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     public String getVersion() {
         //getPluginVeriosn
         return com.npaw.youbora.lib6.BuildConfig.VERSION_NAME + "-" + BuildConfig.VERSION_NAME + "-" + getPlayerVersion();
+    }
+
+    @Override
+    public String getVideoCodec() {
+        return (lastReportedVidoeCodecs != null) ? lastReportedVidoeCodecs : super.getVideoCodec();
+    }
+
+    @Override
+    public String getAudioCodec() {
+        return (lastReportedAudioCodecs != null) ? lastReportedAudioCodecs : super.getAudioCodec();
     }
 
     @Override
@@ -494,6 +540,8 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedBitrate = super.getBitrate();
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
+        lastReportedAudioCodecs = super.getAudioCodec();
+        lastReportedVidoeCodecs = super.getVideoCodec();
         lastReportedAdPluginType = null;
         isFirstPlay = true;
         isFatalErrorSent = false;
@@ -511,7 +559,6 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     public void setMediaConfig(PKMediaConfig mediaConfig) {
         this.mediaConfig = mediaConfig;
         updateDurationFromMediaConfig(mediaConfig);
-
     }
 
     public void setHouseHoldId(String houseHoldId) {
