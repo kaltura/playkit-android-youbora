@@ -95,6 +95,7 @@ public class YouboraPlugin extends PKPlugin {
                 if (pluginManager != null) {
                     pluginManager.setLastReportedResource(sourceSelectedEvent.source.getUrl());
                     updateContentDRMScheme(sourceSelectedEvent);
+                    updateStreamingProtocol(sourceSelectedEvent);
                 }
             }
         });
@@ -131,6 +132,12 @@ public class YouboraPlugin extends PKPlugin {
                 interceptedCdnCode = event.getCdnCode();
             }
         });
+    }
+
+    private void updateStreamingProtocol(PlayerEvent.SourceSelected sourceSelectedEvent) {
+        if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.getMediaFormat() != null) {
+            npawPlugin.getOptions().setContentStreamingProtocol(sourceSelectedEvent.source.getMediaFormat().name().toUpperCase());
+        }
     }
 
     private void updateContentDRMScheme(PlayerEvent.SourceSelected sourceSelectedEvent) {
