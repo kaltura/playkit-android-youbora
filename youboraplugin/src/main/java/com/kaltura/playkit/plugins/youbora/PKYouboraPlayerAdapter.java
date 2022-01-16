@@ -37,6 +37,7 @@ import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -240,6 +241,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             lastReportedAudioCodecs = getAudioCodecs(event.tracksInfo.getAudioTracks());
         });
 
+        messageBus.addListener(this, PlayerEvent.audioTrackChanged, event -> {
+            lastReportedAudioCodecs = getAudioCodecs(Collections.singletonList(event.newTrack));
+        });
+
+        messageBus.addListener(this, PlayerEvent.videoTrackChanged, event -> {
+            lastReportedVidoeCodecs = getVideoCodecs(Collections.singletonList(event.newTrack));
+        });
+
         messageBus.addListener(this, PlayerEvent.error, event -> {
             printReceivedPlayerEvent(event);
             PKError error = event.error;
@@ -350,8 +359,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         Set<String> codecs = new LinkedHashSet<>();
         for (VideoTrack track : tracks) {
             if (track.getCodecType() != null) {
-                codecs.add(track.getCodecType().name());
-
+                codecs.add(track.getCodecName());
             }
         }
         return codecs.toString();
@@ -361,7 +369,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         Set<String> codecs = new LinkedHashSet<>();
         for (AudioTrack track : tracks) {
             if (track.getCodecType() != null) {
-                codecs.add(track.getCodecType().name());
+                codecs.add(track.getCodecName());
             }
         }
         if (codecs.size() == 0) {
