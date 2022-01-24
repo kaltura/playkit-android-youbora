@@ -67,7 +67,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private Double lastReportedMediaPosition;
     private Double lastReportedMediaDuration;
     private PKAdPluginType lastReportedAdPluginType;
-    private String lastReportedVidoeCodecs;
+    private String lastReportedVideoCodecs;
     private String lastReportedAudioCodecs;
     private Long droppedFrames = 0L;
     private String houseHoldId;
@@ -237,7 +237,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
 
         messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
-            lastReportedVidoeCodecs = getVideoCodecs(event.tracksInfo.getVideoTracks());
+            lastReportedVideoCodecs = getVideoCodecs(event.tracksInfo.getVideoTracks());
             lastReportedAudioCodecs = getAudioCodecs(event.tracksInfo.getAudioTracks());
         });
 
@@ -246,7 +246,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
 
         messageBus.addListener(this, PlayerEvent.videoTrackChanged, event -> {
-            lastReportedVidoeCodecs = getVideoCodecs(Collections.singletonList(event.newTrack));
+            lastReportedVideoCodecs = getVideoCodecs(Collections.singletonList(event.newTrack));
         });
 
         messageBus.addListener(this, PlayerEvent.error, event -> {
@@ -422,7 +422,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public String getVideoCodec() {
-        return (lastReportedVidoeCodecs != null) ? lastReportedVidoeCodecs : super.getVideoCodec();
+        return (lastReportedVideoCodecs != null) ? lastReportedVideoCodecs : super.getVideoCodec();
     }
 
     @Override
@@ -549,7 +549,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         lastReportedRendition = super.getRendition();
         lastReportedThroughput = super.getThroughput();
         lastReportedAudioCodecs = super.getAudioCodec();
-        lastReportedVidoeCodecs = super.getVideoCodec();
+        lastReportedVideoCodecs = super.getVideoCodec();
         lastReportedAdPluginType = null;
         isFirstPlay = true;
         isFatalErrorSent = false;
