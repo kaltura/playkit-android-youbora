@@ -25,6 +25,8 @@ import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.constants.FastDataConfigFields;
 import com.npaw.youbora.lib6.plugin.Options;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY_HOUSEHOLD_ID;
@@ -136,7 +138,14 @@ public class YouboraPlugin extends PKPlugin {
 
     private void updateStreamingProtocol(PlayerEvent.SourceSelected sourceSelectedEvent) {
         if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.getMediaFormat() != null) {
-            npawPlugin.getOptions().setContentStreamingProtocol(sourceSelectedEvent.source.getMediaFormat().name().toUpperCase());
+            if (npawPlugin.getOptions().getContentStreamingProtocol() == null) {
+                try {
+                    URL url = new URL(sourceSelectedEvent.source.getUrl());
+                    npawPlugin.getOptions().setContentStreamingProtocol(url.getProtocol());
+                } catch (MalformedURLException e) {
+                    npawPlugin.getOptions().setContentStreamingProtocol("Unknown");
+                }
+            }
         }
     }
 
