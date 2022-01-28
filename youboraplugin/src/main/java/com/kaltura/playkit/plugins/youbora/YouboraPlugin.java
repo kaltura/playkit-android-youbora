@@ -26,8 +26,6 @@ import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.constants.FastDataConfigFields;
 import com.npaw.youbora.lib6.plugin.Options;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY_HOUSEHOLD_ID;
