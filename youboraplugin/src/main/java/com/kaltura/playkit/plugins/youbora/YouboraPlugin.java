@@ -16,6 +16,7 @@ import com.kaltura.playkit.Player;
 import com.kaltura.playkit.PlayerEvent;
 import com.kaltura.playkit.player.AudioTrack;
 import com.kaltura.playkit.player.PKTracks;
+import com.kaltura.playkit.player.PlayerSettings;
 import com.kaltura.playkit.player.TextTrack;
 import com.kaltura.playkit.plugin.youbora.BuildConfig;
 import com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraAdAdapterConfig;
@@ -95,6 +96,7 @@ public class YouboraPlugin extends PKPlugin {
                 if (pluginManager != null) {
                     pluginManager.setLastReportedResource(sourceSelectedEvent.source.getUrl());
                     updateContentDRMScheme(sourceSelectedEvent);
+                    updateStreamingProtocol(sourceSelectedEvent);
                 }
             }
         });
@@ -133,6 +135,14 @@ public class YouboraPlugin extends PKPlugin {
         });
     }
 
+    private void updateStreamingProtocol(PlayerEvent.SourceSelected sourceSelectedEvent) {
+        if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.getMediaFormat() != null) {
+            if (npawPlugin.getOptions().getContentStreamingProtocol() == null) {
+                npawPlugin.getOptions().setContentStreamingProtocol(sourceSelectedEvent.source.getMediaFormat().name().toUpperCase());
+            }
+        }
+    }
+
     private void updateContentDRMScheme(PlayerEvent.SourceSelected sourceSelectedEvent) {
 
         String drmSchema = PKDrmParams.Scheme.Unknown.name();
@@ -140,7 +150,7 @@ public class YouboraPlugin extends PKPlugin {
             List<PKDrmParams> drmParams = sourceSelectedEvent.source.getDrmData();
             if (drmParams != null) {
                 for (PKDrmParams params : drmParams) {
-                    if (params.isSchemeSupported()) {
+                    if (params.isSchemeSupported() && player != null && player.getSettings() != null && ((PlayerSettings) player.getSettings()).getDRMSettings().getDrmScheme() == params.getScheme()) {
                         drmSchema = params.getScheme().name();
                         break;
                     }
