@@ -22,6 +22,7 @@ import com.kaltura.playkit.PKEvent;
 import com.kaltura.playkit.PKLog;
 import com.kaltura.playkit.PKMediaConfig;
 import com.kaltura.playkit.PKMediaEntry;
+import com.kaltura.playkit.PKVideoCodec;
 import com.kaltura.playkit.PlayKitManager;
 import com.kaltura.playkit.PlaybackInfo;
 import com.kaltura.playkit.Player;
@@ -358,9 +359,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String getVideoCodecs(List<VideoTrack> tracks) {
         Set<String> codecs = new LinkedHashSet<>();
         for (VideoTrack track : tracks) {
-            if (track.getCodecType() != null) {
+            if (track.getCodecType() != null && !TextUtils.isEmpty(track.getCodecName())) {
                 codecs.add(track.getCodecName());
             }
+        }
+        if (codecs.size() == 0) {
+            codecs.add(PKVideoCodec.AVC.name());
         }
         return codecs.toString();
     }
@@ -368,7 +372,7 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     private String getAudioCodecs(List<AudioTrack> tracks) {
         Set<String> codecs = new LinkedHashSet<>();
         for (AudioTrack track : tracks) {
-            if (track.getCodecType() != null) {
+            if (track.getCodecType() != null && !TextUtils.isEmpty(track.getCodecName())) {
                 codecs.add(track.getCodecName());
             }
         }
