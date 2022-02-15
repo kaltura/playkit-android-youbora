@@ -475,7 +475,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
 
     @Override
     public double getPlayrate() {
-        double currentPlaybackRate = (getPlayer() != null) ? getPlayer().getPlaybackRate() : 1.0;
+        double currentPlaybackRate = 0;
+        if (getPlayer() != null && getPlayer().isPlaying()) {
+            currentPlaybackRate = getPlayer().getPlaybackRate();
+        }
         log.d("getPlayrate currentPlaybackRate = " + currentPlaybackRate + " isNullPlayer = " + (getPlayer() == null));
         return currentPlaybackRate;
     }
