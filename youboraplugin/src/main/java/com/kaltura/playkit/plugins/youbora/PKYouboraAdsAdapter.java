@@ -164,7 +164,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         log.d("lastReportedAdResource: " + lastReportedAdResource);
         log.d("lastReportedAdDuration: " + lastReportedAdDuration);
         log.d("lastReportedAdTitle: " + lastReportedAdTitle);
-        log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+        printLastReportedAdPlayhead();
         log.d("lastReportedAdBitrate: " + lastReportedAdBitrate);
     }
 
@@ -244,7 +244,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            printLastReportedAdPlayhead();
             fireStart();
             fireJoin();
             sendReportEvent(event.eventType());
@@ -259,7 +259,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            printLastReportedAdPlayhead();
             firePause();
             sendReportEvent(event.eventType());
         });
@@ -272,7 +272,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             currentAdInfo = event.adInfo;
             lastReportedAdPlayhead = Long.valueOf(currentAdInfo.getAdPlayHead() / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
-            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            printLastReportedAdPlayhead();
             fireResume();
             sendReportEvent(event.eventType());
         });
@@ -283,7 +283,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 return;
             }
             lastReportedAdPlayhead = lastReportedAdDuration;
-            log.d("lastReportedAdPlayhead: " + lastReportedAdPlayhead);
+            printLastReportedAdPlayhead();
             fireStop();
             sendReportEvent(event.eventType());
         });
@@ -353,12 +353,13 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.playHeadChanged, event -> {
-            lastReportedAdPlayhead = Long.valueOf(event.adPlayHead).doubleValue();
             //We are not sending this event to youbora,
             //so prevent it from dispatching through YouboraEvent.YouboraReport.
         });
 
         messageBus.addListener(this, AdEvent.adProgress, event -> {
+            lastReportedAdPlayhead = Long.valueOf(event.currentAdPosition / Consts.MILLISECONDS_MULTIPLIER).doubleValue();
+            printLastReportedAdPlayhead();
             //We are not sending this event to youbora,
             //so prevent it from dispatching through YouboraEvent.YouboraReport.
         });
