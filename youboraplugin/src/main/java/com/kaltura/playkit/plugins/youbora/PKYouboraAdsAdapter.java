@@ -371,7 +371,6 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             }
             
             getPlugin().getAdapter().fireStart();
-            fireStart();
             printLastReportedAdPlayhead();
             fireBufferBegin();
             sendReportEvent(event.eventType());
