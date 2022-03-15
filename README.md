@@ -10,7 +10,7 @@
 
 
 * Once you have a player instance you may want to be able to track playback behaviour and playback trends.
-* Using Youbora plugin you can achive this easily.
+* Using Youbora plugin you can acheive this easily.
 
 
 
