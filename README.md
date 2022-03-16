@@ -154,6 +154,7 @@ Once the player is configured with IMA Plugin the Youbora Plugin will also repor
 ### Plugin Life Cycle
 
 The youbora plugin is tied to the player life cycle and listens to player onPause/onResume calls and player destruction event.
+
 [Example](https://github.com/kaltura/playkit-android-youbora/blob/4b66ffd4855dcfc887a13678bc20f00c1e1e711e/youboraplugin/src/main/java/com/kaltura/playkit/plugins/youbora/YouboraPlugin.java#L258)
 
 #### Samples:
