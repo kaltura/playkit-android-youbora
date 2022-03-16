@@ -537,11 +537,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
     }
 
     public String generateRendition(double bitrate, int width, int height) {
-
         if ((width <= 0 || height <= 0) && bitrate <= 0) {
             return super.getRendition();
         } else {
-            return YouboraUtil.buildRenditionString(width, height, bitrate);
+            String rendition = YouboraUtil.buildRenditionString(width, height, bitrate);
+            return TextUtils.isEmpty(rendition) ? lastReportedRendition : rendition;
         }
     }
 
