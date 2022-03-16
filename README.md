@@ -6,7 +6,9 @@
 
 # playkit-android-youbora
 
+Youbora provides a business intelligence solution for broadcasters, OTTs, telcos and media to support your business decisions and drive performance. The ability to harness data across various integrated capabilities and services has become increasingly important to support multiple organizations across a video business, including marketing, and to drive consumer engagement and loyalty.
 
+The Youbora player plugin is integrated with the Kaltura player. The plugin listens and reports all the different player states in the current video session to Youbora Analytics. By taking all the data from inside the player, Youbora Analytics is capable of measuring the quality of the video experience from its source, the end user, and in turn analyzing the delivery process end to end. 
 
 
 * Once you have a player instance you may want to be able to track playback behaviour and playback trends.
@@ -52,7 +54,7 @@ player = KalturaOttPlayer.create(this@MainActivity, playerInitOptions)
 ```
 
 #### Build your youbora config Bundle 
-###### Example for some of the properites you can send youbora plugin the only must property is your account code in csae value isnot sent if plufing have it internally plugin will set it automatically i.e media title, media resource and more.
+###### Example for some of the properites you can send youbora plugin the only must property is your account code in case value is not sent, if plugin have it internally plugin will set it automatically i.e media title, media resource and more.
 
 [Youbora Bundle Keys referance](https://bitbucket.org/npaw/lib-plugin-android/src/047a982e74b452ce2e5aeda426830f3a83da5e29/youboralib/src/main/java/com/npaw/youbora/lib6/plugin/Options.kt#lines-628)
 
@@ -146,13 +148,14 @@ youboraPluginConfig?.let {
 
 ### Ads
 
-Once player is loaded also with IMA Plugin the Youbora PLugin will also report Ads playback analytics
+Once the player is configured with IMA Plugin the Youbora Plugin will also report Ads playback analytics
 
 
 ### Plugin Life Cycle
 
-The youbora plugin is tied to the player life cycle and listens to player onAplication pause/resume calls and player destruction.
+The youbora plugin is tied to the player life cycle and listens to player onPause/onResume calls and player destruction event.
+[Example](https://github.com/kaltura/playkit-android-youbora/blob/4b66ffd4855dcfc887a13678bc20f00c1e1e711e/youboraplugin/src/main/java/com/kaltura/playkit/plugins/youbora/YouboraPlugin.java#L258)
 
-Samples:
+#### Samples:
 
 [Kaltura Player Youbora Sample](https://github.com/kaltura/kaltura-player-android-samples/blob/4da67739589a46f49f41c5a94297b363ce00cc37/AdvancedSamples/Youbora/app/src/main/java/com/kaltura/playkit/samples/youbora/MainActivity.kt#L231)
