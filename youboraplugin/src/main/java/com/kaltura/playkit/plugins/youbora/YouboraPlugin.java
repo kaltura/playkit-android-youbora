@@ -137,7 +137,9 @@ public class YouboraPlugin extends PKPlugin {
 
     private void updateStreamingProtocol(PlayerEvent.SourceSelected sourceSelectedEvent) {
         if (sourceSelectedEvent != null && sourceSelectedEvent.source != null && sourceSelectedEvent.source.getMediaFormat() != null) {
-            if (npawPlugin.getOptions().getContentStreamingProtocol() == null) {
+            if (npawPlugin != null &&
+                    npawPlugin.getOptions() != null &&
+                    npawPlugin.getOptions().getContentStreamingProtocol() == null) {
                 npawPlugin.getOptions().setContentStreamingProtocol(sourceSelectedEvent.source.getMediaFormat().name().toUpperCase());
             }
         }
