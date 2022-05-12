@@ -1,6 +1,7 @@
 # Youbora sessions integration
 
 ## To integrate youbora sessions follow this documentation:
+### This Session Feature  will allow Apps to send App events to Youbora BE in same context as the Players one.
 https://documentation.npaw.com/npaw-integration/docs/application-analytics-custom-events-data-collection
 This means: create a plugin instance that can be accessed globally, and call fireEvent() and fireNav() to report what you want.
 with the Plugin Options you want
