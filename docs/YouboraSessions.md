@@ -33,9 +33,8 @@ After init, to communicate youbora plugin for sessions and kaltura player youbor
 ```
 ViewTransform.FastDataConfig fastDataConfig = appNpawPlugin.getFastDataConfig();
 ```
-### When instantiating the player, and before starting any video view set the object obtained previously in youboraconfig object used in player's constructor:
-
-#### YouboraConfig initiliazation of fastDataConfig params using appNpawPlugin fastDataConfig
+### Instantiating the playre youbora plugin
+#### YouboraConfig initiliazation with fastDataConfig params crfeated in appNpawPlugin's fastDataConfig
 
 ```
 if (fastDataConfig != null) {
