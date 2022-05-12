@@ -35,7 +35,6 @@ ViewTransform.FastDataConfig fastDataConfig = appNpawPlugin.getFastDataConfig();
 ```
 ### When instantiating the player, and before starting any video view set the object obtained previously in youboraconfig object used in player's constructor:
 
-```
 #### YouboraConfig initiliazation of fastDataConfig params using appNpawPlugin fastDataConfig
 
 ```
