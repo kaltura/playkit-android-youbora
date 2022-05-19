@@ -39,8 +39,10 @@ import com.npaw.youbora.lib6.YouboraUtil;
 import com.npaw.youbora.lib6.adapter.PlayerAdapter;
 
 import java.util.Collections;
+import java.util.IllegalFormatException;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static com.kaltura.playkit.PlayerEvent.Type.PLAYHEAD_UPDATED;
@@ -479,11 +481,14 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if (getPlayer() != null && getPlayer().isPlaying()) {
             float playbackRate = getPlayer().getPlaybackRate();
             try {
-                currentPlaybackRate = Double.parseDouble(String.valueOf(playbackRate));
-            } catch (NullPointerException exception) {
-                log.e("getPlayrate NullPointerException playbackRate = " + playbackRate);
+                String rate = String.format(Locale.US, "%.1f", playbackRate);
+                currentPlaybackRate = Double.parseDouble(rate);
             } catch (NumberFormatException exception) {
                 log.e("getPlayrate NumberFormatException playbackRate = " + playbackRate);
+            } catch (IllegalFormatException exception) {
+                log.e("getPlayrate IllegalFormatException playbackRate = " + playbackRate);
+            } catch (NullPointerException exception) {
+                log.e("getPlayrate NullPointerException playbackRate = " + playbackRate);
             }
         }
         
