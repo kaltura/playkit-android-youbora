@@ -7,7 +7,7 @@ This means: create a plugin instance that can be accessed globally, and call fir
 with the Plugin Options you want
 
 #### Init Example:
-Init has to be created some timwe before creating the player youbora plugin config,
+Init has to be created some time before creating the player youbora plugin config,
 since it is async call and player should use the fastDataConfig that is creatred internally.
 ```
 Bundle optBundle = new Bundle();
@@ -34,7 +34,7 @@ After init, to communicate youbora plugin for sessions and kaltura player youbor
 ```
 ViewTransform.FastDataConfig fastDataConfig = appNpawPlugin.getFastDataConfig();
 ```
-### Instantiating the playre youbora plugin
+### Instantiating the player youbora plugin
 #### YouboraConfig initiliazation with fastDataConfig params crfeated in appNpawPlugin's fastDataConfig
 
 ```
