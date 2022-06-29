@@ -28,6 +28,10 @@ import com.kaltura.playkit.plugins.ads.AdPositionType;
 import com.kaltura.playkit.utils.Consts;
 import com.npaw.youbora.lib6.adapter.AdAdapter;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 /**
  * @hide
  */
@@ -203,12 +207,14 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             sendReportEvent(event.eventType());
         });
 
+        //DAI
         messageBus.addListener(this, AdEvent.adBreakStarted, event -> {
             if(currentAdInfo != null && currentAdInfo.getAdPositionType() != AdPositionType.PRE_ROLL) {
                 fireAdBreakStart();
             }
         });
 
+        //DAI
         messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
             fireAdBreakStop();
         });
@@ -233,6 +239,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 getPlugin().fireInit();
                 getPlugin().getAdapter().fireStart();
             }
+            Map<String, String> adIdMap = new HashMap<>();
+            adIdMap.put("adId", currentAdInfo.getAdId());
+            fireManifest(adIdMap);
             sendReportEvent(event.eventType());
         });
 
@@ -246,7 +255,9 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
             printLastReportedAdPlayhead();
             fireStart();
-            fireJoin();
+            Map<String, String> adIdMap = new HashMap<>();
+            adIdMap.put("adId", currentAdInfo.getAdId());
+            fireManifest(adIdMap);
             sendReportEvent(event.eventType());
         });
 
@@ -297,12 +308,17 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             sendReportEvent(event.eventType());
         });
 
+        messageBus.addListener(this, AdEvent.contentPauseRequested, event -> {
+            fireAdBreakStart();
+        });
+
         messageBus.addListener(this, AdEvent.contentResumeRequested, event -> {
             printEventName(event);
             if (isNullAdapter()) {
                 return;
             }
             fireStop();
+            fireAdBreakStop();
             sendReportEvent(event.eventType());
         });
 
@@ -353,6 +369,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.playHeadChanged, event -> {
+            fireJoin();
             //We are not sending this event to youbora,
             //so prevent it from dispatching through YouboraEvent.YouboraReport.
         });
