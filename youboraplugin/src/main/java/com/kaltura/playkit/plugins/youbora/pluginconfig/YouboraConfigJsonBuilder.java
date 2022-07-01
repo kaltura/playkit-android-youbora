@@ -3,11 +3,13 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -15,6 +17,7 @@ public class YouboraConfigJsonBuilder {
 
     @NonNull
     static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
+                                                 JsonObject pendingMetadata,
                                                  JsonObject app,
                                                  JsonObject parse,
                                                  JsonObject device,
@@ -31,6 +34,9 @@ public class YouboraConfigJsonBuilder {
             }
         }
 
+        if (pendingMetadata != null) {
+            youboraConfig.add("pendingMetadata", pendingMetadata);
+        }
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
         youboraConfig.add("device", device);
@@ -41,6 +47,15 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("properties", properties);
         youboraConfig.add("contentCustomDimensions", contentCustomDimensions);
         return youboraConfig;
+    }
+
+    @Nullable
+    static JsonObject getPendingMetaDataObject(ArrayList<String> metaData) {
+        if (metaData == null || metaData.isEmpty()) {
+            return null;
+        }
+        JsonObject metaDataJsonObject = new JsonObject();
+        return addJsonArrayToJsonObject(metaDataJsonObject, "pendingMetadata", metaData);
     }
 
     @NonNull
@@ -90,7 +105,11 @@ public class YouboraConfigJsonBuilder {
         }
 
         if (parse.getParseCdnNameHeader() != null) {
-            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader() );
+            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader());
+        }
+
+        if (parse.getParseNodeHeader() != null) {
+            parseJsonObject.addProperty("parseNodeHeader", parse.getParseNodeHeader());
         }
 
         if (parse.getParseCdnTTL() != null) {
@@ -208,8 +227,8 @@ public class YouboraConfigJsonBuilder {
         contentEntry.addProperty("contentisLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
         if (content.getContentIsLiveNoSeek() != null) {
             contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
-        } else if (content.getIsDVR() != null) {
-            contentEntry.addProperty("contentIsLiveNoSeek", !content.getIsDVR());
+        } else if (content.isDVR() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", !content.isDVR());
         }
 
         if (content.getContentLanguage() != null) {
@@ -551,5 +570,20 @@ public class YouboraConfigJsonBuilder {
             customDimensionsEntry.addProperty("contentCustomDimension20", contentCustomDimensions.getContentCustomDimension20());
         }
         return customDimensionsEntry;
+    }
+
+    @Nullable
+    static JsonObject addJsonArrayToJsonObject(JsonObject jsonObject, String key, ArrayList<String> valueArray) {
+        if (jsonObject == null) {
+            return null;
+        }
+        if (valueArray != null && !valueArray.isEmpty()) {
+            JsonArray jsonArray = new JsonArray();
+            for(String value : valueArray) {
+                jsonArray.add(value);
+            }
+            jsonObject.add(key, jsonArray);
+        }
+        return jsonObject;
     }
 }

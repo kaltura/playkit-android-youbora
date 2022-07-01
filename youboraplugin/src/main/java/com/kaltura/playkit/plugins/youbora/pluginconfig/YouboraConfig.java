@@ -3,12 +3,16 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,17 +38,36 @@ public class YouboraConfig {
 
     private String accountCode;
 
+    private String host;
+
+    /**
+     * Optional: auth token to validate all the requests.
+     */
+    private String authToken;
+
+    /**
+     * Optional: auth type. Used if authToken is set.
+     */
+    private String authType;
+
     private String username;
 
-    private String userEmail;
+    private String houseHoldId; // which device is used to play
 
-    private String userAnonymousId;
+    /**
+     * Use user object to pass
+     * userEmail, userAnonymousId, userType, userObfuscateIp
+     * If User object is passed along with that individually the values are also passed
+     * apart from User's object then User object will be prioritized
+     *
+     * Either pass User object or pass individual values (backward compatibility)
+     */
+    private User user;
 
-    private String userType;        // any string - free / paid etc.
-
-    private String houseHoldId;    // which device is used to play
-
-    private boolean userObfuscateIp; // Option to obfuscate the IP.
+    private String userEmail; // backward compatibility
+    private String userAnonymousId; // backward compatibility
+    private String userType; // any string - free / paid etc.   // backward compatibility
+    private boolean userObfuscateIp; // Option to obfuscate the IP. // backward compatibility
 
     private boolean httpSecure = true; // youbora events will be sent via https
 
@@ -58,13 +81,29 @@ public class YouboraConfig {
 
     private boolean isAutoStart = true;
 
-    private boolean isAutoDetectBackground = true;
+    private boolean isAutoDetectBackground = true; // backward compatibility
+    private boolean autoDetectBackground = true;
 
-    private boolean isEnabled = true;
+    private boolean isEnabled = true; // backward compatibility
+    private boolean enabled = true;
 
-    private boolean isForceInit;
+    private boolean isForceInit; // backward compatibility
+    private boolean forceInit;
 
-    private boolean isOffline;
+    private boolean isOffline; // backward compatibility
+    private boolean offline;
+
+    /**
+     * Enabling this option enables the posibility of getting the /start request later on the view,
+     * making the flow go as follows: /init is sent when the player starts to load content,
+     * then when the playback starts /joinTime event will be sent, but with the difference of no
+     * /start request, instead it will be delayed until all the option keys from
+     * {@link #pendingMetadata} are not <b>null</b>, this is very important, since an empty string
+     * is considered a not null and therefore is a valid value.
+     */
+    private boolean waitForMetadata;
+
+    private ArrayList<String> pendingMetadata;
 
     private App app;
 
@@ -79,11 +118,12 @@ public class YouboraConfig {
 
     private Errors errors;
 
-    private Ads ads;
+    private Ad ad; // Priority Ad map contains new params
+    private Ads ads; // backward compatibility // TODO: Check with Serialized name
+    
+    private Properties properties; // Content Properties
 
-    private Properties properties;
-
-    @SerializedName(value="contentCustomDimensions", alternate={"extraParams"})
+    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
     private ContentCustomDimensions contentCustomDimensions;
 
     private ViewTransform.FastDataConfig fastDataConfig;
@@ -96,12 +136,46 @@ public class YouboraConfig {
         this.accountCode = accountCode;
     }
 
+    @Nullable
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    @Nullable
+    public String getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getUserEmail() {
@@ -200,6 +274,14 @@ public class YouboraConfig {
         this.isAutoDetectBackground = isAutoDetectBackground;
     }
 
+    public boolean isAutoDetectBackground() {
+        return autoDetectBackground;
+    }
+
+    public void setAutoDetectBackground(boolean autoDetectBackground) {
+        this.autoDetectBackground = autoDetectBackground;
+    }
+
     public boolean getIsEnabled() {
         return isEnabled;
     }
@@ -208,12 +290,28 @@ public class YouboraConfig {
         this.isEnabled = isEnabled;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public boolean getIsForceInit() {
         return isForceInit;
     }
 
-    public void setForceInit(boolean forceInit) {
+    public void setIsForceInit(boolean forceInit) {
         isForceInit = forceInit;
+    }
+
+    public boolean isForceInit() {
+        return forceInit;
+    }
+
+    public void setForceInit(boolean forceInit) {
+        this.forceInit = forceInit;
     }
 
     public boolean getIsOffline() {
@@ -222,6 +320,30 @@ public class YouboraConfig {
 
     public void setIsOffline(boolean isOffline) {
         this.isOffline = isOffline;
+    }
+
+    public boolean isOffline() {
+        return offline;
+    }
+
+    public void setOffline(boolean offline) {
+        this.offline = offline;
+    }
+
+    public boolean isWaitForMetadata() {
+        return waitForMetadata;
+    }
+
+    public void setWaitForMetadata(boolean waitForMetadata) {
+        this.waitForMetadata = waitForMetadata;
+    }
+
+    public ArrayList<String> getPendingMetadata() {
+        return pendingMetadata;
+    }
+
+    public void setPendingMetadata(ArrayList<String> pendingMetadata) {
+        this.pendingMetadata = pendingMetadata;
     }
 
     public App getApp() {
@@ -280,6 +402,14 @@ public class YouboraConfig {
         this.ads = ads;
     }
 
+    public Ad getAd() {
+        return ad;
+    }
+
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
     public Properties getProperties() {
         return properties;
     }
@@ -308,21 +438,35 @@ public class YouboraConfig {
         Options youboraOptions =  new Options();
 
         youboraOptions.setAccountCode(accountCode);
+        if (!TextUtils.isEmpty(host)) {
+            youboraOptions.setHost(host);
+        }
+        youboraOptions.setAuthToken(authToken);
+        if (!TextUtils.isEmpty(authType)) {
+            youboraOptions.setAuthType(authType);
+        }
         youboraOptions.setUsername(username);
-        youboraOptions.setUserEmail(userEmail);
-        youboraOptions.setUserAnonymousId(userAnonymousId);
-        youboraOptions.setUserType(userType);
+
+        youboraOptions.setUserEmail((user != null && !TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : userEmail);
+        youboraOptions.setUserAnonymousId((user != null && !TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : userAnonymousId);
+        youboraOptions.setUserType((user != null && !TextUtils.isEmpty(user.getType())) ? user.getType() : userType);
+        youboraOptions.setUserObfuscateIp(user != null ? user.getObfuscateIp() : userObfuscateIp);
+
         youboraOptions.setAppName(appName);
         youboraOptions.setAppReleaseVersion(appReleaseVersion);
         youboraOptions.setUrlToParse(urlToParse);
         youboraOptions.setLinkedViewId(linkedViewId);
-        youboraOptions.setUserObfuscateIp(userObfuscateIp);
+
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
-        youboraOptions.setAutoDetectBackground(isAutoDetectBackground);
-        youboraOptions.setEnabled(isEnabled);
-        youboraOptions.setForceInit(isForceInit);
-        youboraOptions.setOffline(isOffline);
+        youboraOptions.setAutoDetectBackground(isAutoDetectBackground && autoDetectBackground);
+        youboraOptions.setEnabled(isEnabled && enabled);
+        youboraOptions.setForceInit(isForceInit || forceInit);
+        youboraOptions.setOffline(isOffline || offline);
+        youboraOptions.setWaitForMetadata(waitForMetadata);
+        if (pendingMetadata != null && !pendingMetadata.isEmpty()) {
+            youboraOptions.setPendingMetadata(pendingMetadata);
+        }
 
         if (app != null) {
             if (app.getAppName() != null) {
@@ -348,6 +492,9 @@ public class YouboraConfig {
             }
             if (parse.getParseCdnNameHeader() != null) {
                 youboraOptions.setParseCdnNameHeader(parse.getParseCdnNameHeader());
+            }
+            if (parse.getParseNodeHeader() != null) {
+                youboraOptions.setParseNodeHeader(parse.getParseNodeHeader());
             }
             if (parse.getParseCdnTTL() != null) {
                 youboraOptions.setParseCdnTTL(parse.getParseCdnTTL());
@@ -457,8 +604,8 @@ public class YouboraConfig {
             }
             if (content.getContentIsLiveNoSeek() != null) {
                 youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
-            } else if (content.getIsDVR() != null) {
-                youboraOptions.setContentIsLiveNoSeek(!content.getIsDVR());
+            } else if (content.isDVR() != null) {
+                youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
             }
 
             if (content.getContentLanguage() != null) {
@@ -523,7 +670,7 @@ public class YouboraConfig {
         youboraOptions.setContentMetadata(getContentMetaDataBundle());
 
         //youboraOptions.setContentMetrics(getContentMetricsBundle());
-        //youboraOptions.setContentEncodingCodecSettings(getContentEncodingCodecSettingsBundle());
+        //youboraOptions.setContentEncodingCodecSettings(getContentEncodingCodecSettingsBundle()); //TODO:
 
 
         if (network != null) {
@@ -550,13 +697,14 @@ public class YouboraConfig {
             }
         }
 
-        if (ads != null) {
+        // In case 'Ad' is not given and 'Ads' which is backward compatible is given then use it.
+        // If 'Ad' is given don't use the 'Ads' in any case
+        if (ad == null && ads != null) {
             if (ads.getAdBreaksTime() != null) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
             }
             youboraOptions.setAdCampaign(ads.getAdCampaign());
             youboraOptions.setAdCreativeId(ads.getAdCreativeId());
-
 
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
@@ -585,9 +733,45 @@ public class YouboraConfig {
                 youboraOptions.setAdCustomDimension10(ads.getAdCustomDimensions().getAdCustomDimension10());
             }
 
-            //UNSUPPORTED YET
-            //youboraOptions.setAdMetadata(getAdMetaDataBundle());
-            //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
+        }
+
+        if (ad != null) {
+            if (ad.getBreaksTime() != null) {
+                youboraOptions.setAdBreaksTime(ad.getBreaksTime());
+            }
+            youboraOptions.setAdCampaign(ad.getCampaign());
+            youboraOptions.setAdCreativeId(ad.getCreativeId());
+
+            if (ad.getExpectedBreaks() != null) {
+                youboraOptions.setAdExpectedBreaks(ad.getExpectedBreaks());
+            }
+            if (ad.getGivenAds() != null) {
+                youboraOptions.setGivenAds(ad.getGivenAds());
+            }
+            if (ad.getGivenBreaks() != null) {
+                youboraOptions.setAdGivenBreaks(ad.getGivenBreaks());
+            }
+
+            youboraOptions.setAdProvider(ad.getProvider());
+            youboraOptions.setAdResource(ad.getResource());
+            youboraOptions.setAdTitle(ad.getTitle());
+
+            if (ad.getCustomDimension() != null) {
+                youboraOptions.setAdCustomDimension1(ad.getCustomDimension().getAdCustomDimension1());
+                youboraOptions.setAdCustomDimension2(ad.getCustomDimension().getAdCustomDimension2());
+                youboraOptions.setAdCustomDimension3(ad.getCustomDimension().getAdCustomDimension3());
+                youboraOptions.setAdCustomDimension4(ad.getCustomDimension().getAdCustomDimension4());
+                youboraOptions.setAdCustomDimension5(ad.getCustomDimension().getAdCustomDimension5());
+                youboraOptions.setAdCustomDimension6(ad.getCustomDimension().getAdCustomDimension6());
+                youboraOptions.setAdCustomDimension7(ad.getCustomDimension().getAdCustomDimension7());
+                youboraOptions.setAdCustomDimension8(ad.getCustomDimension().getAdCustomDimension8());
+                youboraOptions.setAdCustomDimension9(ad.getCustomDimension().getAdCustomDimension9());
+                youboraOptions.setAdCustomDimension10(ad.getCustomDimension().getAdCustomDimension10());
+            }
+
+            youboraOptions.setAdMetadata(getAdMetaDataBundle(ad.getMetadata()));
+            youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle(ad.getExpectedPattern()));
+            youboraOptions.setAdBlockerDetected(ad.getBlockerDetected());
         }
 
         if (contentCustomDimensions != null) {
@@ -701,13 +885,14 @@ public class YouboraConfig {
      * parental rating, device info or the audio channels.
      * @return bundle having properties
      */
+    @NonNull
     private Bundle getContentMetaDataBundle() {
+        Bundle propertiesBundle = new Bundle();
         Properties prop = getProperties();
         if (prop == null) {
-            return new Bundle();
+            return propertiesBundle;
         }
 
-        Bundle propertiesBundle = new Bundle();
         if (prop.getDirector() != null) {
             propertiesBundle.putString("director", prop.getDirector());
         }
@@ -747,55 +932,81 @@ public class YouboraConfig {
         return new Bundle();
     }
 
-    private Bundle getAdMetaDataBundle() {
-        return new Bundle();
-//        AdProperties prop = getAdProperties();
-//        if (prop == null) {
-//            return new Bundle();
-//        }
-//
-//        Bundle propertiesBundle = new Bundle();
-//        if (prop.getDirector() != null) {
-//            propertiesBundle.putString("director", prop.getDirector());
-//        }
-//        if (prop.getParental() != null) {
-//            propertiesBundle.putString("parental", prop.getParental());
-//        }
-//        if (prop.getParental() != null) {
-//            propertiesBundle.putString("audioType", prop.getAudioType());
-//        }
-//        if (prop.getAudioChannels() != null) {
-//            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
-//        }
-//        if (prop.getDevice() != null) {
-//            propertiesBundle.putString("device", prop.getDevice());
-//        }
-//        if (prop.getRating() != null) {
-//            propertiesBundle.putString("rating", prop.getRating());
-//        }
-//        if (prop.getYear() != null) {
-//            propertiesBundle.putString("year", prop.getYear());
-//        }
-//        if (prop.getCast() != null) {
-//            propertiesBundle.putString("cast", prop.getCast());
-//        }
-//        if (prop.getOwner() != null) {
-//            propertiesBundle.putString("owner", prop.getOwner());
-//        }
-//
-//
-//        return propertiesBundle;
+    /**
+     * Containing mixed extra information about the Ads like: director,
+     * parental rating, device info or the audio channels.
+     * @return bundle having properties
+     */
+    @NonNull
+    private Bundle getAdMetaDataBundle(Properties prop) {
+        Bundle propertiesBundle = new Bundle();
+        if (prop == null) {
+            return propertiesBundle;
+        }
+
+        if (prop.getDirector() != null) {
+            propertiesBundle.putString("director", prop.getDirector());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("parental", prop.getParental());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("audioType", prop.getAudioType());
+        }
+        if (prop.getAudioChannels() != null) {
+            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
+        }
+        if (prop.getDevice() != null) {
+            propertiesBundle.putString("device", prop.getDevice());
+        }
+        if (prop.getRating() != null) {
+            propertiesBundle.putString("rating", prop.getRating());
+        }
+        if (prop.getYear() != null) {
+            propertiesBundle.putString("year", prop.getYear());
+        }
+        if (prop.getCast() != null) {
+            propertiesBundle.putString("cast", prop.getCast());
+        }
+        if (prop.getOwner() != null) {
+            propertiesBundle.putString("owner", prop.getOwner());
+        }
+
+        return propertiesBundle;
     }
 
-    private Bundle getAdExpectedPatternBundle() {
-        return new Bundle();
-    }
+    /**
+     * Set to positive integer array indicating how many ads will be shown for each break,
+     * value expected by the customer (the number of ads requested to the server for each break).
+     *
+     * @return Bundle of expected Ad pattern
+     */
+    @NonNull
+    private Bundle getAdExpectedPatternBundle(AdExpectedPattern adExpectedPattern) {
+        Bundle expectedPatternBundle = new Bundle();
+        if (adExpectedPattern == null) {
+            return expectedPatternBundle;
+        }
+        if (adExpectedPattern.getPre() != null) {
+            expectedPatternBundle.putIntegerArrayList("pre", adExpectedPattern.getPre());
+        }
+        if (adExpectedPattern.getMid() != null) {
+            expectedPatternBundle.putIntegerArrayList("mid", adExpectedPattern.getMid());
+        }
+        if (adExpectedPattern.getPost() != null) {
+            expectedPatternBundle.putIntegerArrayList("post", adExpectedPattern.getPost());
+        }
 
+        return expectedPatternBundle;
+    }
 
     public JsonObject toJson() {
 
         Map<String, JsonPrimitive> rootLevelParams = new HashMap<>();
         rootLevelParams.put("accountCode", new JsonPrimitive(getAccountCode() != null ? getAccountCode() : ""));
+        rootLevelParams.put("host", (getHost() != null) ? new JsonPrimitive(getHost()) : null);
+        rootLevelParams.put("authToken", (getAuthToken() != null) ? new JsonPrimitive(getAuthToken()) : null);
+        rootLevelParams.put("authType", (getAuthType() != null) ? new JsonPrimitive(getAuthType()) : null);
         rootLevelParams.put("username", (getUsername() != null) ? new JsonPrimitive(getUsername()) : null);
         rootLevelParams.put("userEmail", (getUserEmail() != null) ? new JsonPrimitive(getUserEmail()) : null);
         rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
@@ -810,10 +1021,16 @@ public class YouboraConfig {
         rootLevelParams.put("httpSecure", new JsonPrimitive(getHttpSecure()));
         rootLevelParams.put("isAutoStart", new JsonPrimitive(getIsAutoStart()));
         rootLevelParams.put("isAutoDetectBackground", new JsonPrimitive(getIsAutoDetectBackground()));
+        rootLevelParams.put("autoDetectBackground", new JsonPrimitive(isAutoDetectBackground()));
         rootLevelParams.put("isEnabled", new JsonPrimitive(getIsEnabled()));
+        rootLevelParams.put("enabled", new JsonPrimitive(isEnabled()));
         rootLevelParams.put("isForceInit", new JsonPrimitive(getIsForceInit()));
+        rootLevelParams.put("forceInit", new JsonPrimitive(isForceInit()));
         rootLevelParams.put("isOffline", new JsonPrimitive(getIsOffline()));
+        rootLevelParams.put("offline", new JsonPrimitive(isOffline()));
+        rootLevelParams.put("waitForMetadata", new JsonPrimitive(isWaitForMetadata()));
 
+        JsonObject pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataObject(getPendingMetadata());
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
         JsonObject device = YouboraConfigJsonBuilder.getDeviceJsonObject(getDevice());
@@ -824,6 +1041,7 @@ public class YouboraConfig {
         JsonObject properties = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
         JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
         return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
+                pendingMetadata,
                 app,
                 parse,
                 device,
@@ -835,13 +1053,22 @@ public class YouboraConfig {
                 contentCustomDimensions);
     }
     
-    public void merge(YouboraConfig youboraConfigUiConf) {
+  /*  public void merge(YouboraConfig youboraConfigUiConf) {
         if (youboraConfigUiConf == null) {
             return;
         }
 
         if (TextUtils.isEmpty(accountCode)) {
             accountCode = youboraConfigUiConf.getAccountCode();
+        }
+        if (TextUtils.isEmpty(host)) {
+            host = youboraConfigUiConf.getHost();
+        }
+        if (TextUtils.isEmpty(authToken)) {
+            authToken = youboraConfigUiConf.getAuthToken();
+        }
+        if (TextUtils.isEmpty(authType)) {
+            authType = youboraConfigUiConf.getAuthType();
         }
         if (TextUtils.isEmpty(username)) {
             username =  youboraConfigUiConf.getUsername();
@@ -1014,6 +1241,9 @@ public class YouboraConfig {
                 if (parse.getParseCdnNameHeader() == null) {
                     parse.setParseCdnNameHeader(youboraConfigUiConf.getParse().getParseCdnNameHeader());
                 }
+                if (parse.getParseNodeHeader() == null) {
+                    parse.setParseNodeHeader(youboraConfigUiConf.getParse().getParseNodeHeader());
+                }
                 if (parse.getParseCdnSwitchHeader() == null) {
                     parse.setParseCdnSwitchHeader(youboraConfigUiConf.getParse().getParseCdnSwitchHeader());
                 }
@@ -1083,6 +1313,15 @@ public class YouboraConfig {
                 if (ads.getAdTitle() == null) {
                     ads.setAdTitle(youboraConfigUiConf.getAds().getAdTitle());
                 }
+                if (ads.getAdBlockerDetected() != null) {
+                    ads.setAdBlockerDetected(youboraConfigUiConf.getAds().getAdBlockerDetected());
+                }
+                if (ads.getMetaData() != null) {
+                    ads.setMetaData(youboraConfigUiConf.getAds().getMetaData());
+                }
+                if (ads.getExpectedPattern() != null) {
+                    ads.setExpectedPattern(youboraConfigUiConf.getAds().getExpectedPattern());
+                }
             }
         } else {
             ads = youboraConfigUiConf.getAds();
@@ -1119,6 +1358,12 @@ public class YouboraConfig {
             }
         } else {
             properties = youboraConfigUiConf.getProperties();
+        }
+
+        if (smartSwitch != null) {
+            if (youboraConfigUiConf.getSmartSwitch() != null) {
+                setSmartSwitch();
+            }
         }
 
         if (contentCustomDimensions != null) {
@@ -1188,5 +1433,5 @@ public class YouboraConfig {
         } else {
             contentCustomDimensions = youboraConfigUiConf.getContentCustomDimensions();
         }
-    }
+    }*/
 }

@@ -1,113 +1,42 @@
-package com.kaltura.playkit.plugins.youbora.pluginconfig;
+package com.kaltura.playkit.plugins.youbora.pluginconfig
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-public class Device {
-
-//If device info config is not given Youbora will add this info according to their internal logic so actually this is optional configuration
-
-
-// Youbora's device code. If specified it will rewrite info gotten from user agent.
-// See a list of codes in http://mapi.youbora.com:8081/devices
-// youboraOptions.setDeviceCode("xbox360"); // Device will be detected as Xbox 360
-
-//// Or in case you want full customised information of the device:
-//
-//youboraOptions.setDeviceModel("s8");
-//youboraOptions.setDeviceBrand("samsung");
-//youboraOptions.setDeviceType("smartphone");
-//youboraOptions.setDeviceOsName("android");
-//youboraOptions.setDeviceOsVersion("8.1");
-
-    @SerializedName(value="deviceBrand", alternate={"brand"})
-    private String deviceBrand;
-    private String deviceCode;
-    @SerializedName(value="deviceId", alternate={"id"})
-    private String deviceId;
-    @SerializedName(value="deviceEdId", alternate={"edid"})
-    private String deviceEdId;
-    @SerializedName(value="deviceModel", alternate={"model"})
-    private String deviceModel;
-    @SerializedName(value="deviceOsName", alternate={"osName"})
-    private String deviceOsName;
-    @SerializedName(value="deviceOsVersion", alternate={"osVersion"})
-    private String deviceOsVersion;
-    @SerializedName(value="deviceType", alternate={"type"})
-    private String deviceType;
-    private boolean deviceIsAnonymous;
-
-    public String getDeviceBrand() {
-        return deviceBrand;
-    }
-
-    public void setDeviceBrand(String deviceBrand) {
-        this.deviceBrand = deviceBrand;
-    }
-
-    public String getDeviceCode() {
-        return deviceCode;
-    }
-
-    public void setDeviceCode(String deviceCode) {
-        this.deviceCode = deviceCode;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getDeviceEdId() {
-        return deviceEdId;
-    }
-
-    public void setDeviceEdId(String deviceEdId) {
-        this.deviceEdId = deviceEdId;
-    }
-
-    public String getDeviceModel() {
-        return deviceModel;
-    }
-
-    public void setDeviceModel(String deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getDeviceOsName() {
-        return deviceOsName;
-    }
-
-    public void setDeviceOsName(String deviceOsName) {
-        this.deviceOsName = deviceOsName;
-    }
-
-    public String getDeviceOsVersion() {
-        return deviceOsVersion;
-    }
-
-    public void setDeviceOsVersion(String deviceOsVersion) {
-        this.deviceOsVersion = deviceOsVersion;
-    }
-
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public boolean getDeviceIsAnonymous() {
-        return deviceIsAnonymous;
-    }
-
-    public void setDeviceIsAnonymous(boolean deviceIsAnonymous) {
-        this.deviceIsAnonymous = deviceIsAnonymous;
-    }
-}
+/**
+ * If device info config is not given Youbora will add this info according to their internal logic so actually this is optional configuration
+ * Youbora device code. If specified it will rewrite info gotten from user agent.
+ * See a list of codes in http://mapi.youbora.com:8081/devices
+ *
+ *  youboraOptions.setDeviceCode("xbox360");  //Device will be detected as Xbox 360
+ *  Or in case you want full customised information of the device:
+ *  youboraOptions.setDeviceModel("s8");
+ *  youboraOptions.setDeviceBrand("samsung");
+ *  youboraOptions.setDeviceType("smartphone");
+ *  youboraOptions.setDeviceOsName("android");
+ *  youboraOptions.setDeviceOsVersion("8.1");
+ */
+data class Device(
+    @SerializedName(value = "deviceBrand", alternate = ["brand"])
+    var deviceBrand: String?,
+    @SerializedName(value = "deviceCode", alternate = ["code"])
+    var deviceCode: String?,
+    @SerializedName(value = "deviceId", alternate = ["id"])
+    var deviceId: String?,
+    @SerializedName(value = "deviceEdId", alternate = ["edid", "EDID"])
+    var deviceEdId: String?, //TODO: Check it
+    @SerializedName(value = "deviceModel", alternate = ["model"])
+    var deviceModel: String?,
+    @SerializedName(value = "deviceOsName", alternate = ["osName"])
+    var deviceOsName: String?,
+    @SerializedName(value = "deviceOsVersion", alternate = ["osVersion"])
+    var deviceOsVersion: String?,
+    @SerializedName(value = "deviceType", alternate = ["type"])
+    var deviceType: String?,
+    @SerializedName(value = "deviceName", alternate = ["name"])
+    var deviceName: String?,
+    @SerializedName(value = "deviceIsAnonymous", alternate = ["isAnonymous"])
+    var deviceIsAnonymous: Boolean = false
+)
 
 
 

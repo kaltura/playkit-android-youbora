@@ -211,6 +211,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
 
         messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
             fireAdBreakStop();
+            fireManifest();
         });
 
         messageBus.addListener(this, AdEvent.loaded, event -> {

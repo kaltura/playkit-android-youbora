@@ -3,25 +3,25 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import com.google.gson.annotations.SerializedName;
 
 public class AdCustomDimensions {
-    @SerializedName(value="adCustomDimension1", alternate={"param1"})
+    @SerializedName(value="adCustomDimension1", alternate={"1"})
     private String adCustomDimension1;
-    @SerializedName(value="adCustomDimension2", alternate={"param2"})
+    @SerializedName(value="adCustomDimension2", alternate={"2"})
     private String adCustomDimension2;
-    @SerializedName(value="adCustomDimension3", alternate={"param3"})
+    @SerializedName(value="adCustomDimension3", alternate={"3"})
     private String adCustomDimension3;
-    @SerializedName(value="adCustomDimension4", alternate={"param4"})
+    @SerializedName(value="adCustomDimension4", alternate={"4"})
     private String adCustomDimension4;
-    @SerializedName(value="adCustomDimension5", alternate={"param5"})
+    @SerializedName(value="adCustomDimension5", alternate={"5"})
     private String adCustomDimension5;
-    @SerializedName(value="adCustomDimension6", alternate={"param6"})
+    @SerializedName(value="adCustomDimension6", alternate={"6"})
     private String adCustomDimension6;
-    @SerializedName(value="adCustomDimension7", alternate={"param7"})
+    @SerializedName(value="adCustomDimension7", alternate={"7"})
     private String adCustomDimension7;
-    @SerializedName(value="adCustomDimension8", alternate={"param8"})
+    @SerializedName(value="adCustomDimension8", alternate={"8"})
     private String adCustomDimension8;
-    @SerializedName(value="adCustomDimension9", alternate={"param9"})
+    @SerializedName(value="adCustomDimension9", alternate={"9"})
     private String adCustomDimension9;
-    @SerializedName(value="adCustomDimension10", alternate={"param10"})
+    @SerializedName(value="adCustomDimension10", alternate={"10"})
     private String adCustomDimension10;
 
     public String getAdCustomDimension1() {

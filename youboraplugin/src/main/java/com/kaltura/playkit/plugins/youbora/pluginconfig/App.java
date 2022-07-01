@@ -1,7 +1,12 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
+import com.google.gson.annotations.SerializedName;
+
 public class App {
+    @SerializedName(value="appName", alternate={"name"})
     private String appName = "";
+
+    @SerializedName(value="appReleaseVersion", alternate={"releaseVersion"})
     private String appReleaseVersion = "";
 
     public String getAppName() {
