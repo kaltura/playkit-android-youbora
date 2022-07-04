@@ -32,8 +32,6 @@ data class Device(
     var deviceOsVersion: String?,
     @SerializedName(value = "deviceType", alternate = ["type"])
     var deviceType: String?,
-    @SerializedName(value = "deviceName", alternate = ["name"])
-    var deviceName: String?,
     @SerializedName(value = "deviceIsAnonymous", alternate = ["isAnonymous"])
     var deviceIsAnonymous: Boolean = false
 )

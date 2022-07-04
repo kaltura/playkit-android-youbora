@@ -470,17 +470,9 @@ public class YouboraConfig {
         youboraOptions.setForceInit(isForceInit);
         youboraOptions.setOffline(isOffline);
         youboraOptions.setWaitForMetadata(waitForMetadata);
+
         if (pendingMetadata != null && !pendingMetadata.isEmpty()) {
             youboraOptions.setPendingMetadata(pendingMetadata);
-        }
-
-        if (app != null) {
-            if (app.getAppName() != null) {
-                youboraOptions.setAppName(app.getAppName());
-            }
-            if (app.getAppReleaseVersion() != null) {
-                youboraOptions.setAppReleaseVersion(app.getAppReleaseVersion());
-            }
         }
 
         if (parse != null) {
@@ -512,17 +504,13 @@ public class YouboraConfig {
                 //Generic Data by code see in Device class what Codes are available
                 youboraOptions.setDeviceCode(device.getDeviceCode());
             }
-            // Specific Data
-            if (device.getDeviceModel() != null) {
-                youboraOptions.setDeviceModel(device.getDeviceModel());
-            }
-
             if (device.getDeviceId() != null) {
                 youboraOptions.setDeviceId(device.getDeviceId());
             }
 
-            if (device.getDeviceEdId() != null) {
-                youboraOptions.setDeviceEDID(device.getDeviceEdId());
+            // Specific Data
+            if (device.getDeviceModel() != null) {
+                youboraOptions.setDeviceModel(device.getDeviceModel());
             }
 
             if (device.getDeviceBrand() != null) {
@@ -541,9 +529,10 @@ public class YouboraConfig {
                 youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
             }
 
-            if (device.getDeviceType() != null) {
-                youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
+            if (device.getDeviceEdId() != null) {
+                youboraOptions.setDeviceEDID(device.getDeviceEdId());
             }
+
             youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
         }
 
