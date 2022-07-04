@@ -224,7 +224,7 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentImdbId() != null) {
             contentEntry.addProperty("contentImdbId", content.getContentImdbId());
         }
-        contentEntry.addProperty("contentisLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
+        contentEntry.addProperty("contentIsLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
         if (content.getContentIsLiveNoSeek() != null) {
             contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
         } else if (content.isDVR() != null) {
@@ -247,7 +247,7 @@ public class YouboraConfigJsonBuilder {
             contentEntry.addProperty("contentProgram", content.getContentProgram());
         }
         if (content.getContentRendition() != null) {
-            contentEntry.addProperty("conetentRendition", content.getContentRendition());
+            contentEntry.addProperty("contentRendition", content.getContentRendition());
         }
         if (content.getContentResource() != null) {
             contentEntry.addProperty("contentResource", content.getContentResource());
@@ -285,6 +285,9 @@ public class YouboraConfigJsonBuilder {
         }
         if (content.getContentType() != null) {
             contentEntry.addProperty("contentType", content.getContentType());
+        }
+        if (content.getCustomDimensions() != null) {
+            contentEntry.add("customDimensions", getContnentCustomDimentionsJsonObject(content.getCustomDimensions()));
         }
 
         return contentEntry;

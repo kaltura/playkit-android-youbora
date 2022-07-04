@@ -64,15 +64,42 @@ public class YouboraConfig {
      */
     private User user;
 
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
     private String userEmail; // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
     private String userAnonymousId; // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
     private String userType; // any string - free / paid etc.   // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
     private boolean userObfuscateIp; // Option to obfuscate the IP. // backward compatibility
 
     private boolean httpSecure = true; // youbora events will be sent via https
 
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
     private String appName = "";
 
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
     private String appReleaseVersion = "";
 
     private String urlToParse;
@@ -81,17 +108,17 @@ public class YouboraConfig {
 
     private boolean isAutoStart = true;
 
-    private boolean isAutoDetectBackground = true; // backward compatibility
-    private boolean autoDetectBackground = true;
+    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
+    private boolean isAutoDetectBackground = true; // backward compatible
 
-    private boolean isEnabled = true; // backward compatibility
-    private boolean enabled = true;
+    @SerializedName(value="isEnabled", alternate={"enabled"})
+    private boolean isEnabled = true; // backward compatible
 
-    private boolean isForceInit; // backward compatibility
-    private boolean forceInit;
+    @SerializedName(value="isForceInit", alternate={"forceInit"})
+    private boolean isForceInit; // backward compatible
 
-    private boolean isOffline; // backward compatibility
-    private boolean offline;
+    @SerializedName(value="isOffline", alternate={"offline"})
+    private boolean isOffline; // backward compatible
 
     /**
      * Enabling this option enables the posibility of getting the /start request later on the view,
@@ -104,6 +131,9 @@ public class YouboraConfig {
     private boolean waitForMetadata;
 
     private ArrayList<String> pendingMetadata;
+
+    @SerializedName(value="sessionMetrics", alternate={"session"})
+    private HashMap<String, String> sessionMetrics;
 
     private App app;
 
@@ -118,11 +148,18 @@ public class YouboraConfig {
 
     private Errors errors;
 
-    private Ad ad; // Priority Ad map contains new params
-    private Ads ads; // backward compatibility // TODO: Check with Serialized name
-    
-    private Properties properties; // Content Properties
+    private Ads ads; // backward compatible
 
+    /**
+     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
+     */
+    @Deprecated
+    private Properties properties;
+
+    /**
+     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
+     */
+    @Deprecated
     @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
     private ContentCustomDimensions contentCustomDimensions;
 
@@ -274,28 +311,12 @@ public class YouboraConfig {
         this.isAutoDetectBackground = isAutoDetectBackground;
     }
 
-    public boolean isAutoDetectBackground() {
-        return autoDetectBackground;
-    }
-
-    public void setAutoDetectBackground(boolean autoDetectBackground) {
-        this.autoDetectBackground = autoDetectBackground;
-    }
-
     public boolean getIsEnabled() {
         return isEnabled;
     }
 
     public void setIsEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public boolean getIsForceInit() {
@@ -306,28 +327,12 @@ public class YouboraConfig {
         isForceInit = forceInit;
     }
 
-    public boolean isForceInit() {
-        return forceInit;
-    }
-
-    public void setForceInit(boolean forceInit) {
-        this.forceInit = forceInit;
-    }
-
     public boolean getIsOffline() {
         return isOffline;
     }
 
     public void setIsOffline(boolean isOffline) {
         this.isOffline = isOffline;
-    }
-
-    public boolean isOffline() {
-        return offline;
-    }
-
-    public void setOffline(boolean offline) {
-        this.offline = offline;
     }
 
     public boolean isWaitForMetadata() {
@@ -344,6 +349,14 @@ public class YouboraConfig {
 
     public void setPendingMetadata(ArrayList<String> pendingMetadata) {
         this.pendingMetadata = pendingMetadata;
+    }
+
+    public HashMap<String, String> getSessionMetrics() {
+        return sessionMetrics;
+    }
+
+    public void setSessionMetrics(HashMap<String, String> sessionMetrics) {
+        this.sessionMetrics = sessionMetrics;
     }
 
     public App getApp() {
@@ -402,14 +415,6 @@ public class YouboraConfig {
         this.ads = ads;
     }
 
-    public Ad getAd() {
-        return ad;
-    }
-
-    public void setAd(Ad ad) {
-        this.ad = ad;
-    }
-
     public Properties getProperties() {
         return properties;
     }
@@ -452,17 +457,18 @@ public class YouboraConfig {
         youboraOptions.setUserType((user != null && !TextUtils.isEmpty(user.getType())) ? user.getType() : userType);
         youboraOptions.setUserObfuscateIp(user != null ? user.getObfuscateIp() : userObfuscateIp);
 
-        youboraOptions.setAppName(appName);
-        youboraOptions.setAppReleaseVersion(appReleaseVersion);
+        youboraOptions.setAppName((app != null && !TextUtils.isEmpty(app.getAppName())) ? app.getAppName() : appName);
+        youboraOptions.setAppReleaseVersion((app != null && !TextUtils.isEmpty(app.getAppReleaseVersion())) ? app.getAppReleaseVersion() : appReleaseVersion);
+
         youboraOptions.setUrlToParse(urlToParse);
         youboraOptions.setLinkedViewId(linkedViewId);
 
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
-        youboraOptions.setAutoDetectBackground(isAutoDetectBackground && autoDetectBackground);
-        youboraOptions.setEnabled(isEnabled && enabled);
-        youboraOptions.setForceInit(isForceInit || forceInit);
-        youboraOptions.setOffline(isOffline || offline);
+        youboraOptions.setAutoDetectBackground(isAutoDetectBackground);
+        youboraOptions.setEnabled(isEnabled);
+        youboraOptions.setForceInit(isForceInit);
+        youboraOptions.setOffline(isOffline);
         youboraOptions.setWaitForMetadata(waitForMetadata);
         if (pendingMetadata != null && !pendingMetadata.isEmpty()) {
             youboraOptions.setPendingMetadata(pendingMetadata);
@@ -663,15 +669,31 @@ public class YouboraConfig {
             if (content.getContentType() != null) {
                 youboraOptions.setContentType(content.getContentType());
             }
+            if (content.getContentMetaData() != null) {
+                youboraOptions.setContentMetadata(getContentMetaDataBundle(content.getContentMetaData()));
+            }
+            if (content.getContentMetrics() != null) {
+                youboraOptions.setContentMetrics(getBundleFromMap(content.getContentMetrics()));
+            }
+            if (content.getContentEncodingCodecSettings() != null) {
+                youboraOptions.setContentEncodingCodecSettings(getBundleFromMap(content.getContentEncodingCodecSettings()));
+            }
+            if (content.getCustomDimensions() != null) {
+                populateContentCustomDimensions(youboraOptions, content.getCustomDimensions());
+            }
+        }
+
+        // Backward compatibility if app passes the custom dimension on top level instead of content
+        if ((content == null || content.getCustomDimensions() == null) &&  getContentCustomDimensions() != null) {
+            populateContentCustomDimensions(youboraOptions, getContentCustomDimensions());
         }
 
         setLegacyContentPropertiesBundle(youboraOptions);
 
-        youboraOptions.setContentMetadata(getContentMetaDataBundle());
-
-        //youboraOptions.setContentMetrics(getContentMetricsBundle());
-        //youboraOptions.setContentEncodingCodecSettings(getContentEncodingCodecSettingsBundle()); //TODO:
-
+        // Backward compatibility if app passes the metadata Properties on top level instead of content and Ads
+        if ((content == null || content.getContentMetaData() == null) && getProperties() != null) {
+            youboraOptions.setContentMetadata(getContentMetaDataBundle(getProperties()));
+        }
 
         if (network != null) {
             if (network.getNetworkConnectionType() != null) {
@@ -697,9 +719,7 @@ public class YouboraConfig {
             }
         }
 
-        // In case 'Ad' is not given and 'Ads' which is backward compatible is given then use it.
-        // If 'Ad' is given don't use the 'Ads' in any case
-        if (ad == null && ads != null) {
+        if (ads != null) {
             if (ads.getAdBreaksTime() != null) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
             }
@@ -733,70 +753,41 @@ public class YouboraConfig {
                 youboraOptions.setAdCustomDimension10(ads.getAdCustomDimensions().getAdCustomDimension10());
             }
 
+            youboraOptions.setAdMetadata(getAdMetaDataBundle(ads.getMetadata()));
+            youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle(ads.getExpectedPattern()));
+            youboraOptions.setAdBlockerDetected(ads.getBlockerDetected());
         }
 
-        if (ad != null) {
-            if (ad.getBreaksTime() != null) {
-                youboraOptions.setAdBreaksTime(ad.getBreaksTime());
-            }
-            youboraOptions.setAdCampaign(ad.getCampaign());
-            youboraOptions.setAdCreativeId(ad.getCreativeId());
-
-            if (ad.getExpectedBreaks() != null) {
-                youboraOptions.setAdExpectedBreaks(ad.getExpectedBreaks());
-            }
-            if (ad.getGivenAds() != null) {
-                youboraOptions.setGivenAds(ad.getGivenAds());
-            }
-            if (ad.getGivenBreaks() != null) {
-                youboraOptions.setAdGivenBreaks(ad.getGivenBreaks());
-            }
-
-            youboraOptions.setAdProvider(ad.getProvider());
-            youboraOptions.setAdResource(ad.getResource());
-            youboraOptions.setAdTitle(ad.getTitle());
-
-            if (ad.getCustomDimension() != null) {
-                youboraOptions.setAdCustomDimension1(ad.getCustomDimension().getAdCustomDimension1());
-                youboraOptions.setAdCustomDimension2(ad.getCustomDimension().getAdCustomDimension2());
-                youboraOptions.setAdCustomDimension3(ad.getCustomDimension().getAdCustomDimension3());
-                youboraOptions.setAdCustomDimension4(ad.getCustomDimension().getAdCustomDimension4());
-                youboraOptions.setAdCustomDimension5(ad.getCustomDimension().getAdCustomDimension5());
-                youboraOptions.setAdCustomDimension6(ad.getCustomDimension().getAdCustomDimension6());
-                youboraOptions.setAdCustomDimension7(ad.getCustomDimension().getAdCustomDimension7());
-                youboraOptions.setAdCustomDimension8(ad.getCustomDimension().getAdCustomDimension8());
-                youboraOptions.setAdCustomDimension9(ad.getCustomDimension().getAdCustomDimension9());
-                youboraOptions.setAdCustomDimension10(ad.getCustomDimension().getAdCustomDimension10());
-            }
-
-            youboraOptions.setAdMetadata(getAdMetaDataBundle(ad.getMetadata()));
-            youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle(ad.getExpectedPattern()));
-            youboraOptions.setAdBlockerDetected(ad.getBlockerDetected());
+        if (sessionMetrics != null) {
+            youboraOptions.setSessionMetrics(getBundleFromMap(sessionMetrics));
         }
 
-        if (contentCustomDimensions != null) {
-            youboraOptions.setContentCustomDimension1(contentCustomDimensions.getContentCustomDimension1());
-            youboraOptions.setContentCustomDimension2(contentCustomDimensions.getContentCustomDimension2());
-            youboraOptions.setContentCustomDimension3(contentCustomDimensions.getContentCustomDimension3());
-            youboraOptions.setContentCustomDimension4(contentCustomDimensions.getContentCustomDimension4());
-            youboraOptions.setContentCustomDimension5(contentCustomDimensions.getContentCustomDimension5());
-            youboraOptions.setContentCustomDimension6(contentCustomDimensions.getContentCustomDimension6());
-            youboraOptions.setContentCustomDimension7(contentCustomDimensions.getContentCustomDimension7());
-            youboraOptions.setContentCustomDimension8(contentCustomDimensions.getContentCustomDimension8());
-            youboraOptions.setContentCustomDimension9(contentCustomDimensions.getContentCustomDimension9());
-            youboraOptions.setContentCustomDimension10(contentCustomDimensions.getContentCustomDimension10());
-            youboraOptions.setContentCustomDimension11(contentCustomDimensions.getContentCustomDimension11());
-            youboraOptions.setContentCustomDimension12(contentCustomDimensions.getContentCustomDimension12());
-            youboraOptions.setContentCustomDimension13(contentCustomDimensions.getContentCustomDimension13());
-            youboraOptions.setContentCustomDimension14(contentCustomDimensions.getContentCustomDimension14());
-            youboraOptions.setContentCustomDimension15(contentCustomDimensions.getContentCustomDimension15());
-            youboraOptions.setContentCustomDimension16(contentCustomDimensions.getContentCustomDimension16());
-            youboraOptions.setContentCustomDimension17(contentCustomDimensions.getContentCustomDimension17());
-            youboraOptions.setContentCustomDimension18(contentCustomDimensions.getContentCustomDimension18());
-            youboraOptions.setContentCustomDimension19(contentCustomDimensions.getContentCustomDimension19());
-            youboraOptions.setContentCustomDimension20(contentCustomDimensions.getContentCustomDimension20());
-        }
         return youboraOptions;
+    }
+
+    private void populateContentCustomDimensions(Options youboraOptions, ContentCustomDimensions customDimensions) {
+        if (customDimensions != null) {
+            youboraOptions.setContentCustomDimension1(customDimensions.getContentCustomDimension1());
+            youboraOptions.setContentCustomDimension2(customDimensions.getContentCustomDimension2());
+            youboraOptions.setContentCustomDimension3(customDimensions.getContentCustomDimension3());
+            youboraOptions.setContentCustomDimension4(customDimensions.getContentCustomDimension4());
+            youboraOptions.setContentCustomDimension5(customDimensions.getContentCustomDimension5());
+            youboraOptions.setContentCustomDimension6(customDimensions.getContentCustomDimension6());
+            youboraOptions.setContentCustomDimension7(customDimensions.getContentCustomDimension7());
+            youboraOptions.setContentCustomDimension8(customDimensions.getContentCustomDimension8());
+            youboraOptions.setContentCustomDimension9(customDimensions.getContentCustomDimension9());
+            youboraOptions.setContentCustomDimension10(customDimensions.getContentCustomDimension10());
+            youboraOptions.setContentCustomDimension11(customDimensions.getContentCustomDimension11());
+            youboraOptions.setContentCustomDimension12(customDimensions.getContentCustomDimension12());
+            youboraOptions.setContentCustomDimension13(customDimensions.getContentCustomDimension13());
+            youboraOptions.setContentCustomDimension14(customDimensions.getContentCustomDimension14());
+            youboraOptions.setContentCustomDimension15(customDimensions.getContentCustomDimension15());
+            youboraOptions.setContentCustomDimension16(customDimensions.getContentCustomDimension16());
+            youboraOptions.setContentCustomDimension17(customDimensions.getContentCustomDimension17());
+            youboraOptions.setContentCustomDimension18(customDimensions.getContentCustomDimension18());
+            youboraOptions.setContentCustomDimension19(customDimensions.getContentCustomDimension19());
+            youboraOptions.setContentCustomDimension20(customDimensions.getContentCustomDimension20());
+        }
     }
 
     private void setLegacyContentPropertiesBundle(Options youboraOptions) {
@@ -881,14 +872,32 @@ public class YouboraConfig {
     }
 
     /**
+     * Returns a bundle from a HashMap
+     * @param map incoming HashMap
+     * @return Bundle
+     */
+    @NonNull
+    private Bundle getBundleFromMap(HashMap<String, String> map) {
+        Bundle bundle = new Bundle();
+        if (map == null || map.isEmpty()) {
+            return bundle;
+        }
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+
+        return bundle;
+    }
+
+    /**
      * Containing mixed extra information about the content like: director,
      * parental rating, device info or the audio channels.
      * @return bundle having properties
      */
     @NonNull
-    private Bundle getContentMetaDataBundle() {
+    private Bundle getContentMetaDataBundle(Properties prop) {
         Bundle propertiesBundle = new Bundle();
-        Properties prop = getProperties();
         if (prop == null) {
             return propertiesBundle;
         }
@@ -922,14 +931,6 @@ public class YouboraConfig {
         }
 
         return propertiesBundle;
-    }
-
-    private Bundle getContentMetricsBundle() {
-        return new Bundle();
-    }
-
-    private Bundle getContentEncodingCodecSettingsBundle() {
-        return new Bundle();
     }
 
     /**
@@ -1021,13 +1022,9 @@ public class YouboraConfig {
         rootLevelParams.put("httpSecure", new JsonPrimitive(getHttpSecure()));
         rootLevelParams.put("isAutoStart", new JsonPrimitive(getIsAutoStart()));
         rootLevelParams.put("isAutoDetectBackground", new JsonPrimitive(getIsAutoDetectBackground()));
-        rootLevelParams.put("autoDetectBackground", new JsonPrimitive(isAutoDetectBackground()));
         rootLevelParams.put("isEnabled", new JsonPrimitive(getIsEnabled()));
-        rootLevelParams.put("enabled", new JsonPrimitive(isEnabled()));
         rootLevelParams.put("isForceInit", new JsonPrimitive(getIsForceInit()));
-        rootLevelParams.put("forceInit", new JsonPrimitive(isForceInit()));
         rootLevelParams.put("isOffline", new JsonPrimitive(getIsOffline()));
-        rootLevelParams.put("offline", new JsonPrimitive(isOffline()));
         rootLevelParams.put("waitForMetadata", new JsonPrimitive(isWaitForMetadata()));
 
         JsonObject pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataObject(getPendingMetadata());

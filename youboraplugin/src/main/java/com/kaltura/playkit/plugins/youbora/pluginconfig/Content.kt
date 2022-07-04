@@ -36,7 +36,9 @@ data class Content (
     var contentEncodingAudioCodec: String?,
     var contentEncodingCodecProfile: String?,
 
-    //private Bundle contentEncodingCodecSettings
+    @SerializedName(value = "contentEncodingCodecSettings", alternate = ["encoding"])
+    var contentEncodingCodecSettings: HashMap<String, String>?,
+
     var contentEncodingContainerFormat: String?,
     var contentEncodingVideoCodec: String?,
 
@@ -66,7 +68,12 @@ data class Content (
     @SerializedName(value = "contentLanguage", alternate = ["language"])
     var contentLanguage: String?,
 
-    //private Bundle contentMetrics;
+    @SerializedName(value = "contentMetaData", alternate = ["metadata"])
+    var contentMetaData: Properties?,
+
+    @SerializedName(value = "contentMetrics", alternate = ["metrics"])
+    var contentMetrics: HashMap<String, String>?,
+
     @SerializedName(value = "contentPackage", alternate = ["package"])
     var contentPackage: String?,
 
