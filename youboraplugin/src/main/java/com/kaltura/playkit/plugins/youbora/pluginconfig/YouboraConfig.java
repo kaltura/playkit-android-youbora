@@ -55,16 +55,6 @@ public class YouboraConfig {
     private String houseHoldId; // which device is used to play
 
     /**
-     * Use user object to pass
-     * userEmail, userAnonymousId, userType, userObfuscateIp
-     * If User object is passed along with that individually the values are also passed
-     * apart from User's object then User object will be prioritized
-     *
-     * Either pass User object or pass individual values (backward compatibility)
-     */
-    private User user;
-
-    /**
      * @deprecated This value is part of {@link User}
      */
     @Deprecated
@@ -134,6 +124,16 @@ public class YouboraConfig {
 
     @SerializedName(value="sessionMetrics", alternate={"session"})
     private HashMap<String, String> sessionMetrics;
+
+    /**
+     * Use user object to pass
+     * userEmail, userAnonymousId, userType, userObfuscateIp
+     * If User object is passed along with that individually the values are also passed
+     * apart from User's object then User object will be prioritized
+     *
+     * Either pass User object or pass individual values (backward compatibility)
+     */
+    private User user;
 
     private App app;
 
@@ -533,7 +533,9 @@ public class YouboraConfig {
                 youboraOptions.setDeviceEDID(device.getDeviceEdId());
             }
 
-            youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
+            if (device.getDeviceIsAnonymous() != null) {
+                youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
+            }
         }
 
         if (content != null) {
@@ -998,16 +1000,18 @@ public class YouboraConfig {
         rootLevelParams.put("authToken", (getAuthToken() != null) ? new JsonPrimitive(getAuthToken()) : null);
         rootLevelParams.put("authType", (getAuthType() != null) ? new JsonPrimitive(getAuthType()) : null);
         rootLevelParams.put("username", (getUsername() != null) ? new JsonPrimitive(getUsername()) : null);
+        rootLevelParams.put("houseHoldId", (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null);
+
         rootLevelParams.put("userEmail", (getUserEmail() != null) ? new JsonPrimitive(getUserEmail()) : null);
         rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
         rootLevelParams.put("userType", (getUserType() != null) ? new JsonPrimitive(getUserType()) : null);
+        rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
+
         rootLevelParams.put("appName", (getAppName() != null) ? new JsonPrimitive(getAppName()) : null);
         rootLevelParams.put("appReleaseVersion", (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null);
-        rootLevelParams.put("houseHoldId", (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null);
+
         rootLevelParams.put("urlToParse", (getUrlToParse() != null) ? new JsonPrimitive(getUrlToParse()) : null);
         rootLevelParams.put("linkedViewId", (getLinkedViewId() != null) ? new JsonPrimitive(getLinkedViewId()) : null);
-
-        rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
         rootLevelParams.put("httpSecure", new JsonPrimitive(getHttpSecure()));
         rootLevelParams.put("isAutoStart", new JsonPrimitive(getIsAutoStart()));
         rootLevelParams.put("isAutoDetectBackground", new JsonPrimitive(getIsAutoDetectBackground()));
@@ -1016,7 +1020,9 @@ public class YouboraConfig {
         rootLevelParams.put("isOffline", new JsonPrimitive(getIsOffline()));
         rootLevelParams.put("waitForMetadata", new JsonPrimitive(isWaitForMetadata()));
 
-        JsonObject pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataObject(getPendingMetadata());
+        JsonObject user = YouboraConfigJsonBuilder.getUserJsonObject(getUser());
+        JsonObject pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataJsonObject(getPendingMetadata());
+        JsonObject sessionMetrics = YouboraConfigJsonBuilder.getSessionMetricsJsonObject(getSessionMetrics());
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
         JsonObject device = YouboraConfigJsonBuilder.getDeviceJsonObject(getDevice());
@@ -1025,9 +1031,11 @@ public class YouboraConfig {
         JsonObject errors = YouboraConfigJsonBuilder.getErrorsJsonObject(getErrors());
         JsonObject adsEntry = YouboraConfigJsonBuilder.getAdsJsonObject(getAds());
         JsonObject properties = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
-        JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
+        JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContentCustomDimensionsJsonObject(getContentCustomDimensions());
         return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
+                user,
                 pendingMetadata,
+                sessionMetrics,
                 app,
                 parse,
                 device,

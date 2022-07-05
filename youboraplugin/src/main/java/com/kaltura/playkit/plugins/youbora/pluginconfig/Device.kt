@@ -33,7 +33,7 @@ data class Device(
     @SerializedName(value = "deviceType", alternate = ["type"])
     var deviceType: String?,
     @SerializedName(value = "deviceIsAnonymous", alternate = ["isAnonymous"])
-    var deviceIsAnonymous: Boolean = false
+    var deviceIsAnonymous: Boolean? = false
 )
 
 
