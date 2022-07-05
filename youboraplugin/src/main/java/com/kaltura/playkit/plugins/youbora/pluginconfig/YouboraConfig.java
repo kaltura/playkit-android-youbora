@@ -215,26 +215,32 @@ public class YouboraConfig {
         this.user = user;
     }
 
+    @Deprecated
     public String getUserEmail() {
         return userEmail;
     }
 
+    @Deprecated
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
+    @Deprecated
     public String getUserAnonymousId() {
         return userAnonymousId;
     }
 
+    @Deprecated
     public void setUserAnonymousId(String userAnonymousId) {
         this.userAnonymousId = userAnonymousId;
     }
 
+    @Deprecated
     public String getUserType() {
         return userType;
     }
 
+    @Deprecated
     public void setUserType(String userType) {
         this.userType = userType;
     }
@@ -247,18 +253,22 @@ public class YouboraConfig {
         this.httpSecure = httpSecure;
     }
 
+    @Deprecated
     public String getAppName() {
         return appName;
     }
 
+    @Deprecated
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    @Deprecated
     public String getAppReleaseVersion() {
         return appReleaseVersion;
     }
 
+    @Deprecated
     public void setAppReleaseVersion(String appReleaseVersion) {
         this.appReleaseVersion = appReleaseVersion;
     }
@@ -287,10 +297,12 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
+    @Deprecated
     public boolean getUserObfuscateIp() {
         return userObfuscateIp;
     }
 
+    @Deprecated
     public void setUserObfuscateIp(boolean userObfuscateIp) {
         this.userObfuscateIp = userObfuscateIp;
     }
@@ -415,18 +427,22 @@ public class YouboraConfig {
         this.ads = ads;
     }
 
+    @Deprecated
     public Properties getProperties() {
         return properties;
     }
 
+    @Deprecated
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
 
+    @Deprecated
     public ContentCustomDimensions getContentCustomDimensions() {
         return contentCustomDimensions;
     }
 
+    @Deprecated
     public void setContentCustomDimensions(ContentCustomDimensions contentCustomDimensions) {
         this.contentCustomDimensions = contentCustomDimensions;
     }
@@ -440,7 +456,7 @@ public class YouboraConfig {
     }
 
     public Options getYouboraOptions() {
-        Options youboraOptions =  new Options();
+        Options youboraOptions = new Options();
 
         youboraOptions.setAccountCode(accountCode);
         if (!TextUtils.isEmpty(host)) {

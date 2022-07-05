@@ -4,16 +4,16 @@ import com.google.gson.annotations.SerializedName
 
 data class Parse(
     @SerializedName(value = "parseManifest", alternate = ["manifest"])
-    var parseManifest: Boolean?,
-    var parseCdnNode: Boolean?, // This is different in iOS
+    var parseManifest: Boolean? = false,
+    var parseCdnNode: Boolean? = false, // This is different in iOS
 
     @SerializedName(value = "parseCdnSwitchHeader", alternate = ["cdnSwitchHeader"])
-    var parseCdnSwitchHeader: Boolean?,
-    var parseCdnNodeList: ArrayList<String>?,
+    var parseCdnSwitchHeader: Boolean? = false,
+    var parseCdnNodeList: ArrayList<String>? = null,
 
     @SerializedName(value = "parseCdnNameHeader", alternate = ["cdnNameHeader"])
-    var parseCdnNameHeader: String?,
-    var parseNodeHeader: String?,
+    var parseCdnNameHeader: String? = null,
+    var parseNodeHeader: String? = null,
 
     @SerializedName(value = "parseCdnTTL", alternate = ["cdnTTL"])
-    var parseCdnTTL: Int?)
+    var parseCdnTTL: Int? = null)

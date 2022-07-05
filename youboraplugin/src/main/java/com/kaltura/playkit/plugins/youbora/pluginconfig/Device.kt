@@ -17,21 +17,21 @@ import com.google.gson.annotations.SerializedName
  */
 data class Device(
     @SerializedName(value = "deviceBrand", alternate = ["brand"])
-    var deviceBrand: String?,
+    var deviceBrand: String? = null,
     @SerializedName(value = "deviceCode", alternate = ["code"])
-    var deviceCode: String?,
+    var deviceCode: String? = null,
     @SerializedName(value = "deviceId", alternate = ["id"])
-    var deviceId: String?,
+    var deviceId: String? = null,
     @SerializedName(value = "deviceEdId", alternate = ["edid", "EDID"])
-    var deviceEdId: String?, //TODO: Check it
+    var deviceEdId: String? = null,
     @SerializedName(value = "deviceModel", alternate = ["model"])
-    var deviceModel: String?,
+    var deviceModel: String? = null,
     @SerializedName(value = "deviceOsName", alternate = ["osName"])
-    var deviceOsName: String?,
+    var deviceOsName: String? = null,
     @SerializedName(value = "deviceOsVersion", alternate = ["osVersion"])
-    var deviceOsVersion: String?,
+    var deviceOsVersion: String? = null,
     @SerializedName(value = "deviceType", alternate = ["type"])
-    var deviceType: String?,
+    var deviceType: String? = null,
     @SerializedName(value = "deviceIsAnonymous", alternate = ["isAnonymous"])
     var deviceIsAnonymous: Boolean? = false
 )

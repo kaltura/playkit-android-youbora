@@ -7,15 +7,15 @@ data class Network(/**
                     * http://mapi.youbora.com:8081/connectionTypes</a>.
                     */
                    @SerializedName(value = "networkConnectionType", alternate = ["connectionType"])
-                   var networkConnectionType: String?,
+                   var networkConnectionType: String? = null,
                    /**
                     * IP of the viewer/user, e.g. "48.15.16.23".
                     */
                    @SerializedName(value = "networkIP", alternate = ["ip"])
-                   var networkIP: String?,
+                   var networkIP: String? = null,
                    /**
                     * Name of the internet service provider of the viewer/user.
                     */
                    @SerializedName(value = "networkIsp", alternate = ["isp"])
-                   var networkIsp: String?
+                   var networkIsp: String? = null
 )
