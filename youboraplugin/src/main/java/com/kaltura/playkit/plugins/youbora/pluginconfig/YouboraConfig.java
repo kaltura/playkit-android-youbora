@@ -148,6 +148,7 @@ public class YouboraConfig {
 
     private Errors errors;
 
+    @SerializedName(value="ads", alternate={"ad"})
     private Ads ads; // backward compatible
 
     /**
