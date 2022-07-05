@@ -1,13 +1,11 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -20,18 +18,18 @@ public class YouboraConfigJsonBuilder {
 
     @NonNull
     static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
-                                                 JsonObject user,
-                                                 JsonObject pendingMetadata,
-                                                 JsonObject sessionMetrics,
-                                                 JsonObject app,
-                                                 JsonObject parse,
-                                                 JsonObject device,
-                                                 JsonObject content,
-                                                 JsonObject network,
-                                                 JsonObject errors,
-                                                 JsonObject ads,
-                                                 JsonObject properties,
-                                                 JsonObject contentCustomDimensions) {
+                                                  JsonObject user,
+                                                  JsonObject pendingMetadata,
+                                                  JsonObject sessionMetrics,
+                                                  JsonObject app,
+                                                  JsonObject parse,
+                                                  JsonObject device,
+                                                  JsonObject content,
+                                                  JsonObject network,
+                                                  JsonObject errors,
+                                                  JsonObject ads,
+                                                  JsonObject properties,
+                                                  JsonObject contentCustomDimensions) {
         JsonObject youboraConfig = new JsonObject();
         for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
             if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
@@ -69,16 +67,13 @@ public class YouboraConfigJsonBuilder {
         return addJsonArrayToJsonObject(metaDataJsonObject, "pendingMetadata", metaData);
     }
 
+    @Nullable
     static JsonObject getSessionMetricsJsonObject(HashMap<String, String> sessionMetrics) {
-        if (sessionMetrics == null && sessionMetrics.isEmpty()) {
+        if (sessionMetrics == null || sessionMetrics.isEmpty()) {
             return null;
         }
         JsonObject sessionMetricsJsonObject = new JsonObject();
-        for (Map.Entry<String, String> entry : sessionMetrics.entrySet()) {
-            sessionMetricsJsonObject.addProperty(entry.getKey(), entry.getValue());
-        }
-
-        return sessionMetricsJsonObject;
+        return addHashMapValuesToJsonObject(sessionMetricsJsonObject, sessionMetrics);
     }
 
     static JsonObject getUserJsonObject(User user) {
@@ -241,6 +236,10 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentEncodingCodecProfile() != null) {
             contentEntry.addProperty("contentEncodingCodecProfile", content.getContentEncodingCodecProfile());
         }
+        if (content.getContentEncodingCodecSettings() != null && !content.getContentEncodingCodecSettings().isEmpty()) {
+            JsonObject encodingJson = new JsonObject();
+            contentEntry.add("contentEncodingCodecSettings", addHashMapValuesToJsonObject(encodingJson, content.getContentEncodingCodecSettings()));
+        }
         if (content.getContentEncodingContainerFormat() != null) {
             contentEntry.addProperty("contentEncodingContainerFormat", content.getContentEncodingContainerFormat());
         }
@@ -320,12 +319,21 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentTransportFormat() != null) {
             contentEntry.addProperty("contentTransportFormat", content.getContentTransportFormat());
         }
+
         contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
+
         if (content.getContentTvShow() != null) {
             contentEntry.addProperty("contentTvShow", content.getContentTvShow());
         }
         if (content.getContentType() != null) {
             contentEntry.addProperty("contentType", content.getContentType());
+        }
+        if (content.getContentMetaData() != null) {
+            contentEntry.add("contentMetaData", getPropertiesJsonObject(content.getContentMetaData()));
+        }
+        if (content.getContentMetrics() != null && !content.getContentMetrics().isEmpty()) {
+            JsonObject metricsJson = new JsonObject();
+            contentEntry.add("contentMetrics", addHashMapValuesToJsonObject(metricsJson, content.getContentMetrics()));
         }
         if (content.getCustomDimensions() != null) {
             contentEntry.add("customDimensions", getContentCustomDimensionsJsonObject(content.getCustomDimensions()));
@@ -688,16 +696,30 @@ public class YouboraConfigJsonBuilder {
 
     @Nullable
     static JsonObject addJsonArrayToJsonObject(JsonObject jsonObject, String key, ArrayList<?> valueArray) {
-        if (jsonObject == null) {
+        if (valueArray == null || valueArray.isEmpty()) {
             return null;
         }
-        if (valueArray != null && !valueArray.isEmpty()) {
-            JsonArray jsonArray = new JsonArray();
-            for(Object value : valueArray) {
-                jsonArray.add(String.valueOf(value));
-            }
-            jsonObject.add(key, jsonArray);
+
+        JsonArray jsonArray = new JsonArray();
+        for(Object value : valueArray) {
+            jsonArray.add(String.valueOf(value));
         }
+
+        jsonObject.add(key, jsonArray);
+
+        return jsonObject;
+    }
+
+    @Nullable
+    static JsonObject addHashMapValuesToJsonObject(JsonObject jsonObject, HashMap<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            jsonObject.addProperty(entry.getKey(), entry.getValue());
+        }
+
         return jsonObject;
     }
 }
