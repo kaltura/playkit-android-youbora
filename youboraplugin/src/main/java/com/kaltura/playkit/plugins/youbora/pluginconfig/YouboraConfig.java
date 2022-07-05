@@ -472,7 +472,7 @@ public class YouboraConfig {
         youboraOptions.setUserEmail((user != null && !TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : userEmail);
         youboraOptions.setUserAnonymousId((user != null && !TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : userAnonymousId);
         youboraOptions.setUserType((user != null && !TextUtils.isEmpty(user.getType())) ? user.getType() : userType);
-        youboraOptions.setUserObfuscateIp(user != null ? user.getObfuscateIp() : userObfuscateIp);
+        youboraOptions.setUserObfuscateIp((user != null && user.getObfuscateIp() != null) ? user.getObfuscateIp() : userObfuscateIp);
 
         youboraOptions.setAppName((app != null && !TextUtils.isEmpty(app.getAppName())) ? app.getAppName() : appName);
         youboraOptions.setAppReleaseVersion((app != null && !TextUtils.isEmpty(app.getAppReleaseVersion())) ? app.getAppReleaseVersion() : appReleaseVersion);

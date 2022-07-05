@@ -82,10 +82,10 @@ public class YouboraConfigJsonBuilder {
         }
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("anonymousId", user.getAnonymousId());
-        jsonObject.addProperty("type", user.getType());
-        jsonObject.addProperty("email", user.getEmail());
-        jsonObject.addProperty("obfuscateIp", user.getObfuscateIp());
+        jsonObject.addProperty("anonymousId", (!TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : "");
+        jsonObject.addProperty("type", (!TextUtils.isEmpty(user.getType())) ? user.getType() : "");
+        jsonObject.addProperty("email", (!TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : "");
+        jsonObject.addProperty("obfuscateIp", (user.getObfuscateIp() != null) ? user.getObfuscateIp() : false);
         return jsonObject;
     }
 
