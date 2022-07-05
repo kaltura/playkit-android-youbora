@@ -12,6 +12,10 @@
 
 package com.kaltura.playkit.plugins.youbora;
 
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+
 import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKError;
@@ -239,9 +243,11 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
                 getPlugin().fireInit();
                 getPlugin().getAdapter().fireStart();
             }
-            Map<String, String> adIdMap = new HashMap<>();
-            adIdMap.put("adId", currentAdInfo.getAdId());
-            fireManifest(adIdMap);
+
+            Map<String, String> adIdMap = getAdIdMap(currentAdInfo);
+            if (adIdMap != null) {
+                fireManifest(adIdMap);
+            }
             sendReportEvent(event.eventType());
         });
 
@@ -255,9 +261,10 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             lastReportedAdBitrate = currentAdInfo.getMediaBitrate();
             printLastReportedAdPlayhead();
             fireStart();
-            Map<String, String> adIdMap = new HashMap<>();
-            adIdMap.put("adId", currentAdInfo.getAdId());
-            fireManifest(adIdMap);
+            Map<String, String> adIdMap = getAdIdMap(currentAdInfo);
+            if (adIdMap != null) {
+                fireManifest(adIdMap);
+            }
             sendReportEvent(event.eventType());
         });
 
@@ -387,7 +394,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             if (isNullAdapter()) {
                 return;
             }
-            
+
             getPlugin().getAdapter().fireStart();
             printLastReportedAdPlayhead();
             fireBufferBegin();
@@ -412,6 +419,17 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
             printLastReportedAdPlayhead();
             sendReportEvent(event.eventType());
         });
+    }
+
+    @Nullable
+    private Map<String, String> getAdIdMap(AdInfo adInfo) {
+        if (adInfo == null || TextUtils.isEmpty(adInfo.getAdId())) {
+            return null;
+        }
+
+        Map<String, String> adIdMap = new HashMap<>();
+        adIdMap.put("adId", adInfo.getAdId());
+        return adIdMap;
     }
 
     private PKAdPluginType getLastReportedAdPluginType() {
