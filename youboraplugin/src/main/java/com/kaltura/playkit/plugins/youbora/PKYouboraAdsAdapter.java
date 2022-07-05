@@ -217,7 +217,6 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         //DAI
         messageBus.addListener(this, AdEvent.adBreakEnded, event -> {
             fireAdBreakStop();
-            fireManifest();
         });
 
         messageBus.addListener(this, AdEvent.loaded, event -> {
@@ -370,6 +369,7 @@ class PKYouboraAdsAdapter extends AdAdapter<Player> {
         });
 
         messageBus.addListener(this, AdEvent.playHeadChanged, event -> {
+            // This fireJoin() call will not add another join in the call stack. It will be discarded if already done.
             fireJoin();
             //We are not sending this event to youbora,
             //so prevent it from dispatching through YouboraEvent.YouboraReport.
