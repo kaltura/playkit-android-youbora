@@ -1047,7 +1047,7 @@ public class YouboraConfig {
                 contentCustomDimensions);
     }
     
-  /*  public void merge(YouboraConfig youboraConfigUiConf) {
+    public void merge(YouboraConfig youboraConfigUiConf) {
         if (youboraConfigUiConf == null) {
             return;
         }
@@ -1079,6 +1079,7 @@ public class YouboraConfig {
 
         if (content != null) {
             if (youboraConfigUiConf.getContent() != null) {
+
                 if (content.getContentBitrate() == null) {
                     content.setContentBitrate(youboraConfigUiConf.getContent().getContentBitrate());
                 }
@@ -1139,12 +1140,12 @@ public class YouboraConfig {
                 if (content.getContentIsLive() == null) {
                     content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
                 }
-                if (content.getContentIsLiveNoSeek() == null && youboraConfigUiConf.getContent().getContentIsLiveNoSeek() != null) {
-                        content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                if (content.getContentIsLiveNoSeek() == null) {
+                    content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                } else if (content.isDVR() == null && youboraConfigUiConf.getContent().isDVR() != null) {
+                    content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().isDVR());
                 }
-                if (content.getIsDVR() == null && youboraConfigUiConf.getContent().getIsDVR() != null) {
-                        content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().getIsDVR());
-                }
+
                 if (content.getContentLanguage() == null) {
                     content.setContentLanguage(youboraConfigUiConf.getContent().getContentLanguage());
                 }
@@ -1187,11 +1188,11 @@ public class YouboraConfig {
                 if (content.getContentTransactionCode() == null) {
                     content.setContentTransactionCode(youboraConfigUiConf.getContent().getContentTransactionCode());
                 }
-                if (content.getContentTotalBytes() == null) {
-                    content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
-                }
                 if (content.getContentTransportFormat() == null) {
                     content.setContentTransportFormat(youboraConfigUiConf.getContent().getContentTransportFormat());
+                }
+                if (content.getContentTotalBytes() == null) {
+                    content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
                 }
                 content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
                 if (content.getContentTvShow() == null) {
@@ -1199,6 +1200,18 @@ public class YouboraConfig {
                 }
                 if (content.getContentType() == null) {
                     content.setContentType(youboraConfigUiConf.getContent().getContentType());
+                }
+                if (content.getContentMetaData() == null) {
+                    content.setContentMetaData(youboraConfigUiConf.getContent().getContentMetaData());
+                }
+                if (content.getContentMetrics() == null) {
+                    content.setContentMetrics(youboraConfigUiConf.getContent().getContentMetrics());
+                }
+                if (content.getContentEncodingCodecSettings() == null) {
+                    content.setContentEncodingCodecSettings(youboraConfigUiConf.getContent().getContentEncodingCodecSettings());
+                }
+                if (content.getCustomDimensions() == null) {
+                    content.setCustomDimensions(youboraConfigUiConf.getContent().getCustomDimensions());
                 }
             }
         } else {
@@ -1213,9 +1226,9 @@ public class YouboraConfig {
                 if (app.getAppReleaseVersion() == null) {
                     app.setAppReleaseVersion(youboraConfigUiConf.getAppReleaseVersion());
                 }
-            }  else {
-                app = youboraConfigUiConf.getApp();
             }
+        } else {
+            app = youboraConfigUiConf.getApp();
         }
 
         if (parse != null) {
@@ -1307,11 +1320,11 @@ public class YouboraConfig {
                 if (ads.getAdTitle() == null) {
                     ads.setAdTitle(youboraConfigUiConf.getAds().getAdTitle());
                 }
-                if (ads.getAdBlockerDetected() != null) {
-                    ads.setAdBlockerDetected(youboraConfigUiConf.getAds().getAdBlockerDetected());
+                if (ads.getBlockerDetected() != null) {
+                    ads.setBlockerDetected(youboraConfigUiConf.getAds().getBlockerDetected());
                 }
-                if (ads.getMetaData() != null) {
-                    ads.setMetaData(youboraConfigUiConf.getAds().getMetaData());
+                if (ads.getMetadata() != null) {
+                    ads.setMetadata(youboraConfigUiConf.getAds().getMetadata());
                 }
                 if (ads.getExpectedPattern() != null) {
                     ads.setExpectedPattern(youboraConfigUiConf.getAds().getExpectedPattern());
@@ -1352,12 +1365,6 @@ public class YouboraConfig {
             }
         } else {
             properties = youboraConfigUiConf.getProperties();
-        }
-
-        if (smartSwitch != null) {
-            if (youboraConfigUiConf.getSmartSwitch() != null) {
-                setSmartSwitch();
-            }
         }
 
         if (contentCustomDimensions != null) {
@@ -1427,5 +1434,5 @@ public class YouboraConfig {
         } else {
             contentCustomDimensions = youboraConfigUiConf.getContentCustomDimensions();
         }
-    }*/
+    }
 }
