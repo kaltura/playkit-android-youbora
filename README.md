@@ -54,7 +54,7 @@ player = KalturaOttPlayer.create(this@MainActivity, playerInitOptions)
 
 ```
 
-#### Build your Youbora config Bundle 
+#### Build your Youbora config using Bundle 
 ##### Example for some of the properties the App can send to Youbora plugin. The only must property to send is _your account code_. 
 In case if properties are not sent and if plugin have it internally plugin will set it automatically i.e media title, media resource and more.
 
@@ -145,6 +145,204 @@ youboraPluginConfig?.let {
      player?.updatePluginConfig(YouboraPlugin.factory.name, youboraPluginBundle)
   }
 }
+```
+
+#### Build YouboraConfig using JSON object (Legacy approach)
+
+Application can create a JSON object to the Plugin config. It is not recommended approach but if you App's legacy code has in this way then you can use it,
+```kotlin
+
+private fun getYouboraConfig(): JsonObject {
+
+        // Youbora config json. Main config goes here.
+        val youboraConfigJson = JsonObject()
+        youboraConfigJson.addProperty("accountCode", ACCOUNT_CODE)
+        youboraConfigJson.addProperty("username", UNIQUE_USER_NAME)
+        youboraConfigJson.addProperty("userObfuscateIp", true)
+        youboraConfigJson.addProperty("httpSecure", true)
+
+//        // Backward compatibility, Use user Json instead
+//        youboraConfigJson.addProperty("userEmail", USER_EMAIL)
+//        youboraConfigJson.addProperty("userAnonymousId", "my anonymousId")
+//        youboraConfigJson.addProperty("userType", "my user type")
+//        youboraConfigJson.addProperty("userObfuscateIp", false)
+
+        val userJson = JsonObject()
+        userJson.addProperty("email", USER_EMAIL)
+        userJson.addProperty("anonymousId", "my anonymousId")
+        userJson.addProperty("type", "my user type")
+        userJson.addProperty("obfuscateIp", "My ObfuscateIp")
+
+        // Youbora ads configuration json.
+        val adsJson = JsonObject()
+        adsJson.addProperty("blockerDetected", false)
+        adsJson.addProperty("campaign", "zzz")
+        // Create AdMetaData
+        val adMetaData = JsonObject()
+        adMetaData.addProperty("year", "2022")
+        adMetaData.addProperty("cast", "cast 2022")
+        adMetaData.addProperty("director", "director 2022")
+        adMetaData.addProperty("owner", "owner 2022")
+        adMetaData.addProperty("parental", "parental 2022")
+        adMetaData.addProperty("rating", "rating 2022")
+        adMetaData.addProperty("device", "device 2022")
+        adMetaData.addProperty("audioChannels", "audioChannels 2022")
+        adsJson.add("metadata", adMetaData)
+        adsJson.addProperty("campaign", CAMPAIGN)
+        adsJson.addProperty("title", "ad title 2022")
+        adsJson.addProperty("resource", "resource 2022")
+        adsJson.addProperty("givenBreaks", 5)
+        adsJson.addProperty("expectedBreaks", 4)
+        // Create expectedPattern for Ads
+        val expectedPatternJson = JsonObject()
+        val preRoll = JsonArray()
+        preRoll.add(2)
+        val midRoll = JsonArray()
+        midRoll.add(1)
+        midRoll.add(4)
+        val postRoll = JsonArray()
+        postRoll.add(3)
+        expectedPatternJson.add("pre", preRoll)
+        expectedPatternJson.add("mid", midRoll)
+        expectedPatternJson.add("post", postRoll)
+        adsJson.add("expectedPattern", expectedPatternJson)
+        // create adBreaksTime
+        val adBreaksTimeArray = JsonArray()
+        adBreaksTimeArray.add(0)
+        adBreaksTimeArray.add(25)
+        adBreaksTimeArray.add(60)
+        adBreaksTimeArray.add(75)
+        adsJson.add("adBreaksTime", adBreaksTimeArray)
+        adsJson.addProperty("adGivenAds", 7)
+        adsJson.addProperty("adCreativeId", "ad creativeId")
+        adsJson.addProperty("adProvider", "ad provider")
+        // Create Ad Custom Dimensions
+        val adCustomDimensions = JsonObject()
+        adCustomDimensions.addProperty("param1", "my adCustomDimension1")
+        adCustomDimensions.addProperty("10", "my adCustomDimension10")
+        adsJson.add("customDimension", adCustomDimensions)
+
+        // Media entry json. [Content JSON]
+        val mediaEntryJson = JsonObject()
+        mediaEntryJson.addProperty("title", MEDIA_TITLE)
+        mediaEntryJson.addProperty("contentIsLiveNoSeek", true)
+        mediaEntryJson.addProperty("contentCdnCode", CONTENT_CDN_CODE)
+        mediaEntryJson.addProperty("contentGenre", GENRE)
+        mediaEntryJson.addProperty("contentEpisodeTitle", "xxxxxxx")
+        mediaEntryJson.addProperty("contentPrice", PRICE)
+        mediaEntryJson.addProperty("contentTransactionCode", TRANSACTION_TYPE)
+        mediaEntryJson.addProperty("contentProgram", PROGRAM)
+        mediaEntryJson.addProperty("isLive", IS_LIVE_MEDIA)
+        mediaEntryJson.addProperty("contentBitrate", 480000)
+        // Encoding JSON
+        val encodingJson = JsonObject()
+        encodingJson.addProperty("videoCodec", "video codec name")
+        mediaEntryJson.add("contentEncodingCodecSettings", encodingJson)
+        // Create Content MetaData
+        val contentMetaData = JsonObject()
+        contentMetaData.addProperty("year", "2022")
+        contentMetaData.addProperty("cast", "cast 2022")
+        contentMetaData.addProperty("director", "director 2022")
+        contentMetaData.addProperty("owner", "owner 2022")
+        contentMetaData.addProperty("parental", "parental 2022")
+        contentMetaData.addProperty("rating", "rating 2022")
+        contentMetaData.addProperty("device", "device 2022")
+        contentMetaData.addProperty("audioChannels", "audioChannels 2022")
+        mediaEntryJson.add("metadata", contentMetaData)
+        // Create Content Custom Dimensions
+        val contentCustomDimensions = JsonObject()
+        contentCustomDimensions.addProperty("param1", "param1")
+        contentCustomDimensions.addProperty("param2", "param2")
+        mediaEntryJson.add("customDimensions", contentCustomDimensions)
+
+        // Optional - Create Parse JSON object
+        val parseJson = JsonObject()
+        parseJson.addProperty("parseManifest", PARSE_MANIFEST)
+        parseJson.addProperty("parseCdnNode", PARSE_CDN_NODE)
+        parseJson.addProperty("parseCdnSwitchHeader", PARSE_CDN_SWITCH_HEADER)
+        val parseCdnNodeListJsonArray = JsonArray()
+        for(cdn in PARSE_CDN_NODE_LIST) {
+            parseCdnNodeListJsonArray.add(cdn)
+        }
+        parseJson.add("cdnNodeList", parseCdnNodeListJsonArray)
+        parseJson.addProperty("cdnNameHeaders", PARSE_CDN_NAME_HEADERS)
+        parseJson.addProperty("parseNodeHeader", PARSE_CDN_NODE_HEADERS)
+        parseJson.addProperty("parseCdnTTL", PARSE_CDN_TTL)
+
+        // Optional - Device json o/w youbora will decide by its own.
+        val deviceJson = JsonObject()
+        deviceJson.addProperty("deviceCode", DEVICE_CODE)
+        deviceJson.addProperty("deviceBrand", "Brand Xiaomi")
+        deviceJson.addProperty("deviceCode", "Code Xiaomi")
+        deviceJson.addProperty("deviceId", "Device ID Xiaomi")
+        deviceJson.addProperty("deviceEdId", "EdId Xiaomi")
+        deviceJson.addProperty("deviceModel", "Model MI3")
+        deviceJson.addProperty("deviceOsName", "Android/Oreo")
+        deviceJson.addProperty("deviceOsVersion", "8.1")
+        deviceJson.addProperty("deviceType", "TvBox TYPE")
+        deviceJson.addProperty("deviceName", "TvBox")
+        deviceJson.addProperty("deviceIsAnonymous", "TvBox")
+
+        // Optional: Create Network JSON object
+        val networkJson = JsonObject()
+        networkJson.addProperty("networkConnectionType", "Wireless")
+        networkJson.addProperty("networkIP", "1.1.1.1")
+        networkJson.addProperty("networkIsp", "Country ISP")
+
+        // App JSON
+        val appJson = JsonObject()
+        appJson.addProperty("appName", "MyTestApp")
+        appJson.addProperty("appReleaseVersion", "1.0.1")
+
+        // Errors JSON
+        val errorsJson = JsonObject()
+        val errorJsonArray = JsonArray()
+        errorJsonArray.add("exception1")
+        errorJsonArray.add("exception2")
+        errorsJson.add("errorsIgnore", errorJsonArray)
+
+        // SessionMetrics JSON
+        val sessionJson = JsonObject()
+        sessionJson.addProperty("metricsKey", "metricsValue")
+
+//        // Configure custom properties here, Backward Compatible
+//        // Properties are actually metadata which are moved to Ad and Content respectively
+//        val propertiesJson = JsonObject()
+//        propertiesJson.addProperty("year", YEAR)
+//        propertiesJson.addProperty("cast", CAST)
+//        propertiesJson.addProperty("director", DIRECTOR)
+//        propertiesJson.addProperty("owner", OWNER)
+//        propertiesJson.addProperty("parental", PARENTAL)
+//
+//        propertiesJson.addProperty("rating", RATING)
+//        propertiesJson.addProperty("audioType", AUDIO_TYPE)
+//        propertiesJson.addProperty("audioChannels", AUDIO_CHANNELS)
+//        propertiesJson.addProperty("device", DEVICE)
+//        propertiesJson.addProperty("quality", QUALITY)
+//
+//
+//        // Backward Compatible.
+//        // These are custom dimensions which are moved to Ads and Content respectively
+//        val extraParamJson = JsonObject()
+//        extraParamJson.addProperty("param1", EXTRA_PARAM_1)
+//        extraParamJson.addProperty("param2", EXTRA_PARAM_2)
+
+        // Add all the json objects created before to the pluginEntry json.
+        youboraConfigJson.add("media", mediaEntryJson)
+        youboraConfigJson.add("app", appJson)
+        youboraConfigJson.add("parse", parseJson)
+        youboraConfigJson.add("network", networkJson)
+        youboraConfigJson.add("device", deviceJson)
+        youboraConfigJson.add("errors", errorsJson)
+        youboraConfigJson.add("ads", adsJson)
+        youboraConfigJson.add("sessionMetrics", sessionJson)
+//        youboraConfigJson.add("properties", propertiesJson)
+//        youboraConfigJson.add("extraParams", extraParamJson)
+
+        return youboraConfigJson
+    }
+
+
 ```
 
 ### Ads
