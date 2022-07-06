@@ -19,7 +19,7 @@ public class YouboraConfigJsonBuilder {
     @NonNull
     static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
                                                   JsonObject user,
-                                                  JsonObject pendingMetadata,
+                                                  JsonArray pendingMetadata,
                                                   JsonObject sessionMetrics,
                                                   JsonObject app,
                                                   JsonObject parse,
@@ -59,12 +59,11 @@ public class YouboraConfigJsonBuilder {
     }
 
     @Nullable
-    static JsonObject getPendingMetaDataJsonObject(ArrayList<String> metaData) {
+    static JsonArray getPendingMetaDataJsonObject(ArrayList<String> metaData) {
         if (metaData == null || metaData.isEmpty()) {
             return null;
         }
-        JsonObject metaDataJsonObject = new JsonObject();
-        return addJsonArrayToJsonObject(metaDataJsonObject, "pendingMetadata", metaData);
+        return getJsonArrayFromList(metaData);
     }
 
     @Nullable
@@ -462,14 +461,14 @@ public class YouboraConfigJsonBuilder {
         if (adExpectedPattern == null) {
             return expectedPatternJsonObject;
         }
-        if (adExpectedPattern.getPre() != null) {
-            addJsonArrayToJsonObject(expectedPatternJsonObject, "pre", adExpectedPattern.getPre());
+        if (adExpectedPattern.getPre() != null && !adExpectedPattern.getPre().isEmpty()) {
+            expectedPatternJsonObject.add("pre", getJsonArrayFromList(adExpectedPattern.getPre()));
         }
-        if (adExpectedPattern.getMid() != null) {
-            addJsonArrayToJsonObject(expectedPatternJsonObject, "mid", adExpectedPattern.getMid());
+        if (adExpectedPattern.getMid() != null && !adExpectedPattern.getMid().isEmpty()) {
+            expectedPatternJsonObject.add("mid", getJsonArrayFromList(adExpectedPattern.getMid()));
         }
-        if (adExpectedPattern.getPost() != null) {
-            addJsonArrayToJsonObject(expectedPatternJsonObject, "post", adExpectedPattern.getPost());
+        if (adExpectedPattern.getPost() != null && !adExpectedPattern.getPost().isEmpty()) {
+            expectedPatternJsonObject.add("post", getJsonArrayFromList(adExpectedPattern.getPost()));
         }
 
         return expectedPatternJsonObject;
@@ -694,24 +693,18 @@ public class YouboraConfigJsonBuilder {
         return customDimensionsEntry;
     }
 
-    @Nullable
-    static JsonObject addJsonArrayToJsonObject(JsonObject jsonObject, String key, ArrayList<?> valueArray) {
-        if (valueArray == null || valueArray.isEmpty()) {
-            return null;
-        }
-
+    @NonNull
+    private static JsonArray getJsonArrayFromList(ArrayList<?> valueArray) {
         JsonArray jsonArray = new JsonArray();
         for(Object value : valueArray) {
             jsonArray.add(String.valueOf(value));
         }
 
-        jsonObject.add(key, jsonArray);
-
-        return jsonObject;
+        return jsonArray;
     }
 
     @Nullable
-    static JsonObject addHashMapValuesToJsonObject(JsonObject jsonObject, HashMap<String, String> map) {
+    private static JsonObject addHashMapValuesToJsonObject(JsonObject jsonObject, HashMap<String, String> map) {
         if (map == null || map.isEmpty()) {
             return null;
         }

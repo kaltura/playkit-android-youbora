@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
@@ -52,6 +53,7 @@ public class YouboraConfig {
 
     private String username;
 
+    @SerializedName(value="houseHoldId", alternate={"householdId"})
     private String houseHoldId; // which device is used to play
 
     /**
@@ -1038,7 +1040,7 @@ public class YouboraConfig {
         rootLevelParams.put("waitForMetadata", new JsonPrimitive(isWaitForMetadata()));
 
         JsonObject user = YouboraConfigJsonBuilder.getUserJsonObject(getUser());
-        JsonObject pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataJsonObject(getPendingMetadata());
+        JsonArray pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataJsonObject(getPendingMetadata());
         JsonObject sessionMetrics = YouboraConfigJsonBuilder.getSessionMetricsJsonObject(getSessionMetrics());
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
