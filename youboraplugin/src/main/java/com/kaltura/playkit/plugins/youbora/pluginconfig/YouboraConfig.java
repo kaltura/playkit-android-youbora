@@ -80,6 +80,13 @@ public class YouboraConfig {
     @Deprecated
     private boolean userObfuscateIp; // Option to obfuscate the IP. // backward compatibility
 
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userPrivacyProtocol; // backward compatibility
+
+
     private boolean httpSecure = true; // youbora events will be sent via https
 
     /**
@@ -475,6 +482,7 @@ public class YouboraConfig {
         youboraOptions.setUserAnonymousId((user != null && !TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : userAnonymousId);
         youboraOptions.setUserType((user != null && !TextUtils.isEmpty(user.getType())) ? user.getType() : userType);
         youboraOptions.setUserObfuscateIp((user != null && user.getObfuscateIp() != null) ? user.getObfuscateIp() : userObfuscateIp);
+        youboraOptions.setUserPrivacyProtocol((user != null && user.getPrivacyProtocol() != null) ? user.getPrivacyProtocol() : userPrivacyProtocol);
 
         youboraOptions.setAppName((app != null && !TextUtils.isEmpty(app.getAppName())) ? app.getAppName() : appName);
         youboraOptions.setAppReleaseVersion((app != null && !TextUtils.isEmpty(app.getAppReleaseVersion())) ? app.getAppReleaseVersion() : appReleaseVersion);
@@ -497,6 +505,9 @@ public class YouboraConfig {
         if (parse != null) {
             if (parse.getParseManifest() != null) {
                 youboraOptions.setParseManifest(parse.getParseManifest());
+            }
+            if (parse.getParseManifestAuth() != null) {
+                youboraOptions.setParseManifestAuth(getBundleFromMap(parse.getParseManifestAuth()));
             }
             if (parse.getParseCdnNode() != null) {
                 youboraOptions.setParseCdnNode(parse.getParseCdnNode());
@@ -1254,6 +1265,9 @@ public class YouboraConfig {
             if (youboraConfigUiConf.getParse() != null) {
                 if (parse.getParseManifest() == null) {
                     parse.setParseManifest(youboraConfigUiConf.getParse().getParseManifest());
+                }
+                if (parse.getParseManifestAuth() != null) {
+                    parse.setParseManifestAuth(youboraConfigUiConf.getParse().getParseManifestAuth());
                 }
                 if (parse.getParseCdnNode() == null) {
                     parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());

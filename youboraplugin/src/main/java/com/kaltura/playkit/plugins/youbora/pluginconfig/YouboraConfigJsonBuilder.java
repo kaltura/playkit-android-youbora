@@ -85,6 +85,7 @@ public class YouboraConfigJsonBuilder {
         jsonObject.addProperty("type", (!TextUtils.isEmpty(user.getType())) ? user.getType() : "");
         jsonObject.addProperty("email", (!TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : "");
         jsonObject.addProperty("obfuscateIp", (user.getObfuscateIp() != null) ? user.getObfuscateIp() : false);
+        jsonObject.addProperty("privacyProtocol", (user.getPrivacyProtocol() != null) ? user.getPrivacyProtocol() : "");
         return jsonObject;
     }
 
@@ -116,6 +117,11 @@ public class YouboraConfigJsonBuilder {
 
         if (parse.getParseManifest() != null) {
             parseJsonObject.addProperty("parseManifest", parse.getParseManifest());
+        }
+
+        if (parse.getParseManifestAuth() != null && !parse.getParseManifestAuth().isEmpty()) {
+            JsonObject parseManifestAuthJson = new JsonObject();
+            parseJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(parseManifestAuthJson, parse.getParseManifestAuth()));
         }
 
         if (parse.getParseCdnNode() != null) {
