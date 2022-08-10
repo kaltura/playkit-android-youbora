@@ -241,9 +241,8 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentEncodingCodecProfile() != null) {
             contentEntry.addProperty("contentEncodingCodecProfile", content.getContentEncodingCodecProfile());
         }
-        if (content.getContentEncodingCodecSettings() != null && !content.getContentEncodingCodecSettings().isEmpty()) {
-            JsonObject encodingJson = new JsonObject();
-            contentEntry.add("contentEncodingCodecSettings", addHashMapValuesToJsonObject(encodingJson, content.getContentEncodingCodecSettings()));
+        if (content.getContentEncoding() != null) {
+            contentEntry.add("contentEncoding", getEncodingJsonObject(content.getContentEncoding()));
         }
         if (content.getContentEncodingContainerFormat() != null) {
             contentEntry.addProperty("contentEncodingContainerFormat", content.getContentEncodingContainerFormat());
@@ -324,9 +323,9 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentTransportFormat() != null) {
             contentEntry.addProperty("contentTransportFormat", content.getContentTransportFormat());
         }
-
-        contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
-
+        if (content.getContentSendTotalBytes() != null) {
+            contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
+        }
         if (content.getContentTvShow() != null) {
             contentEntry.addProperty("contentTvShow", content.getContentTvShow());
         }
@@ -627,6 +626,31 @@ public class YouboraConfigJsonBuilder {
         }
 
         return customDimensionsEntry;
+    }
+
+    @NonNull
+    static JsonObject getEncodingJsonObject(Encoding encoding) {
+        JsonObject encodingJsonObject = new JsonObject();
+        if (encoding == null) {
+            return encodingJsonObject;
+        }
+
+        if (encoding.getAudioCodec() != null) {
+            encodingJsonObject.addProperty("audioCodec", encoding.getAudioCodec());
+        }
+        if (encoding.getCodecProfile() != null) {
+            encodingJsonObject.addProperty("codecProfile", encoding.getCodecProfile());
+        }
+        if (encoding.getCodecSettings() != null) {
+            encodingJsonObject.add("codecSettings", addHashMapValuesToJsonObject(encodingJsonObject, encoding.getCodecSettings()));
+        }
+        if (encoding.getContainerFormat() != null) {
+            encodingJsonObject.addProperty("containerFormat", encoding.getContainerFormat());
+        }
+        if (encoding.getVideoCodec() != null) {
+            encodingJsonObject.addProperty("videoCodec", encoding.getVideoCodec());
+        }
+        return encodingJsonObject;
     }
 
     @NonNull

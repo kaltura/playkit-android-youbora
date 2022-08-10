@@ -1,6 +1,7 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig
 
 import com.google.gson.annotations.SerializedName
+import java.lang.Deprecated
 
 data class Content (
     @SerializedName(value = "contentBitrate", alternate = ["bitrate"])
@@ -33,13 +34,20 @@ data class Content (
 
     @SerializedName(value = "contentDuration", alternate = ["duration"])
     var contentDuration: Double? = null,
+
+    @kotlin.Deprecated("This is moved internally to {@link Encoding}")
     var contentEncodingAudioCodec: String? = null,
+
+    @kotlin.Deprecated("This is moved internally to {@link Encoding}")
     var contentEncodingCodecProfile: String? = null,
 
-    @SerializedName(value = "contentEncodingCodecSettings", alternate = ["encoding"])
-    var contentEncodingCodecSettings: HashMap<String, String>? = null,
+    @SerializedName(value = "contentEncoding", alternate = ["encoding"])
+    var contentEncoding: Encoding? = null,
 
+    @kotlin.Deprecated("This is moved internally to {@link Encoding}")
     var contentEncodingContainerFormat: String? = null,
+
+    @kotlin.Deprecated("This is moved internally to {@link Encoding}")
     var contentEncodingVideoCodec: String? = null,
 
     @SerializedName(value = "contentEpisodeTitle", alternate = ["title2", "episodeTitle"])
@@ -60,10 +68,14 @@ data class Content (
     @SerializedName(value = "contentImdbId", alternate = ["imdbId"])
     var contentImdbId: String? = null,
 
-    @SerializedName(value = "contentIsLive", alternate = ["isLive"])
+    @kotlin.Deprecated("This is moved internally to {@link IsLive}")
     var contentIsLive: Boolean? = null,
+    @kotlin.Deprecated("This is moved internally to {@link IsLive}")
     var contentIsLiveNoSeek: Boolean? = null,
-    var isDVR: Boolean? = false, //LEGACY  - the opposite value from contentIsLiveNoSeek
+    @kotlin.Deprecated("This is moved internally to {@link IsLive}")
+    var isDVR: Boolean? = null, //LEGACY  - the opposite value from contentIsLiveNoSeek
+
+    var isLive: IsLive? = null,
 
     @SerializedName(value = "contentLanguage", alternate = ["language"])
     var contentLanguage: String? = null,
@@ -120,7 +132,7 @@ data class Content (
     var contentTransportFormat: String? = null,
 
     @SerializedName(value = "contentSendTotalBytes", alternate = ["sendTotalBytes"])
-    var contentSendTotalBytes: Boolean = false,
+    var contentSendTotalBytes: Boolean? = null,
 
     @SerializedName(value = "contentTvShow", alternate = ["tvShow"])
     var contentTvShow: String? = null,

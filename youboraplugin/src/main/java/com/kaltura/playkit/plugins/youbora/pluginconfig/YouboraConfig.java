@@ -596,18 +596,6 @@ public class YouboraConfig {
             if (content.getContentDuration() != null) {
                 youboraOptions.setContentDuration(content.getContentDuration());
             }
-            if (content.getContentEncodingAudioCodec() != null) {
-                youboraOptions.setContentEncodingAudioCodec(content.getContentEncodingAudioCodec());
-            }
-            if (content.getContentEncodingCodecProfile() != null) {
-                youboraOptions.setContentEncodingCodecProfile(content.getContentEncodingCodecProfile());
-            }
-            if (content.getContentEncodingContainerFormat() != null) {
-                youboraOptions.setContentEncodingContainerFormat(content.getContentEncodingContainerFormat());
-            }
-            if (content.getContentEncodingVideoCodec() != null) {
-                youboraOptions.setContentEncodingVideoCodec(content.getContentEncodingVideoCodec());
-            }
             if (content.getContentEpisodeTitle() != null) {
                 youboraOptions.setContentEpisodeTitle(content.getContentEpisodeTitle());
             }
@@ -626,13 +614,32 @@ public class YouboraConfig {
             if (content.getContentImdbId() != null) {
                 youboraOptions.setContentImdbId(content.getContentImdbId());
             }
-            if (content.getContentIsLive() != null) {
-                youboraOptions.setContentIsLive(content.getContentIsLive());
-            }
-            if (content.getContentIsLiveNoSeek() != null) {
-                youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
-            } else if (content.isDVR() != null) {
-                youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
+
+            if (content.isLive() != null) {
+                if (content.isLive().isLiveContent() != null) {
+                    youboraOptions.setContentIsLive(content.isLive().isLiveContent());
+                    content.setContentIsLive(content.isLive().isLiveContent());
+                } else {
+                    // Workaround if the value was sent as content.isLive, If we have the object we believe it's true.
+                    content.setContentIsLive(true);
+                }
+                if (content.isLive().getNoSeek() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(content.isLive().getNoSeek());
+                } else if (content.isDVR() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
+                }
+                if (content.isLive().getNoMonitor() != null) {
+                    youboraOptions.setContentIsLiveNoMonitor(content.isLive().getNoMonitor());
+                }
+            } else {
+                if (content.getContentIsLive() != null) {
+                    youboraOptions.setContentIsLive(content.getContentIsLive());
+                }
+                if (content.getContentIsLiveNoSeek() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
+                } else if (content.isDVR() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
+                }
             }
 
             if (content.getContentLanguage() != null) {
@@ -683,7 +690,9 @@ public class YouboraConfig {
             if (content.getContentTotalBytes() != null) {
                 youboraOptions.setContentTotalBytes(content.getContentTotalBytes());
             }
-            youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes());
+            if (content.getContentSendTotalBytes() != null) {
+                youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes());
+            }
             if (content.getContentTvShow() != null) {
                 youboraOptions.setContentTvShow(content.getContentTvShow());
             }
@@ -696,8 +705,35 @@ public class YouboraConfig {
             if (content.getContentMetrics() != null) {
                 youboraOptions.setContentMetrics(getBundleFromMap(content.getContentMetrics()));
             }
-            if (content.getContentEncodingCodecSettings() != null) {
-                youboraOptions.setContentEncodingCodecSettings(getBundleFromMap(content.getContentEncodingCodecSettings()));
+            if (content.getContentEncoding() != null) {
+                if (content.getContentEncoding().getAudioCodec() != null) {
+                    youboraOptions.setContentEncodingAudioCodec(content.getContentEncoding().getAudioCodec());
+                }
+                if (content.getContentEncoding().getCodecProfile() != null) {
+                    youboraOptions.setContentEncodingCodecProfile(content.getContentEncoding().getCodecProfile());
+                }
+                if (content.getContentEncoding().getContainerFormat() != null) {
+                    youboraOptions.setContentEncodingContainerFormat(content.getContentEncoding().getContainerFormat());
+                }
+                if (content.getContentEncoding().getVideoCodec() != null) {
+                    youboraOptions.setContentEncodingVideoCodec(content.getContentEncoding().getVideoCodec());
+                }
+                if (content.getContentEncoding().getCodecSettings() != null) {
+                    youboraOptions.setContentEncodingCodecSettings(getBundleFromMap(content.getContentEncoding().getCodecSettings()));
+                }
+            } else {
+                if (content.getContentEncodingAudioCodec() != null) {
+                    youboraOptions.setContentEncodingAudioCodec(content.getContentEncodingAudioCodec());
+                }
+                if (content.getContentEncodingCodecProfile() != null) {
+                    youboraOptions.setContentEncodingCodecProfile(content.getContentEncodingCodecProfile());
+                }
+                if (content.getContentEncodingContainerFormat() != null) {
+                    youboraOptions.setContentEncodingContainerFormat(content.getContentEncodingContainerFormat());
+                }
+                if (content.getContentEncodingVideoCodec() != null) {
+                    youboraOptions.setContentEncodingVideoCodec(content.getContentEncodingVideoCodec());
+                }
             }
             if (content.getCustomDimensions() != null) {
                 populateContentCustomDimensions(youboraOptions, content.getCustomDimensions());
@@ -1076,7 +1112,7 @@ public class YouboraConfig {
                 properties,
                 contentCustomDimensions);
     }
-    
+
     public void merge(YouboraConfig youboraConfigUiConf) {
         if (youboraConfigUiConf == null) {
             return;
@@ -1113,122 +1149,123 @@ public class YouboraConfig {
                 if (content.getContentBitrate() == null) {
                     content.setContentBitrate(youboraConfigUiConf.getContent().getContentBitrate());
                 }
-                if (content.getContentCdn() == null) {
+                if (TextUtils.isEmpty(content.getContentCdn())) {
                     content.setContentCdn(youboraConfigUiConf.getContent().getContentCdn());
                 }
-                if (content.getContentCdnNode() == null) {
+                if (TextUtils.isEmpty(content.getContentCdnNode())) {
                     content.setContentCdnNode(youboraConfigUiConf.getContent().getContentCdnNode());
                 }
-                if (content.getContentCdnType() == null) {
+                if (TextUtils.isEmpty(content.getContentCdnType())) {
                     content.setContentCdnType(youboraConfigUiConf.getContent().getContentCdnType());
                 }
-                if (content.getContentChannel() == null) {
+                if (TextUtils.isEmpty(content.getContentChannel())) {
                     content.setContentChannel(youboraConfigUiConf.getContent().getContentChannel());
                 }
-                if (content.getContentContractedResolution() == null) {
+                if (TextUtils.isEmpty(content.getContentContractedResolution())) {
                     content.setContentContractedResolution(youboraConfigUiConf.getContent().getContentContractedResolution());
                 }
-                if (content.getContentCost() == null) {
+                if (TextUtils.isEmpty(content.getContentCost())) {
                     content.setContentCost(youboraConfigUiConf.getContent().getContentCost());
                 }
-                if (content.getContentDrm() == null) {
+                if (TextUtils.isEmpty(content.getContentDrm())) {
                     content.setContentDrm(youboraConfigUiConf.getContent().getContentDrm());
                 }
                 if (content.getContentDuration() == null) {
                     content.setContentDuration(youboraConfigUiConf.getContent().getContentDuration());
                 }
-                if (content.getContentEncodingAudioCodec() == null) {
-                    content.setContentEncodingAudioCodec(youboraConfigUiConf.getContent().getContentEncodingAudioCodec());
-                }
-                if (content.getContentEncodingCodecProfile() == null) {
-                    content.setContentEncodingCodecProfile(youboraConfigUiConf.getContent().getContentEncodingCodecProfile());
-                }
-                if (content.getContentEncodingContainerFormat() == null) {
-                    content.setContentEncodingContainerFormat(youboraConfigUiConf.getContent().getContentEncodingContainerFormat());
-                }
-                if (content.getContentEncodingVideoCodec() == null) {
-                    content.setContentEncodingVideoCodec(youboraConfigUiConf.getContent().getContentEncodingVideoCodec());
-                }
-                if (content.getContentEpisodeTitle() == null) {
+                if (TextUtils.isEmpty(content.getContentEpisodeTitle())) {
                     content.setContentEpisodeTitle(youboraConfigUiConf.getContent().getContentEpisodeTitle());
                 }
                 if (content.getContentFps() == null) {
                     content.setContentFps(youboraConfigUiConf.getContent().getContentFps());
                 }
-                if (content.getContentGenre() == null) {
+                if (TextUtils.isEmpty(content.getContentGenre())) {
                     content.setContentGenre(youboraConfigUiConf.getContent().getContentGenre());
                 }
-                if (content.getContentGracenoteId() == null) {
+                if (TextUtils.isEmpty(content.getContentGracenoteId())) {
                     content.setContentGracenoteId(youboraConfigUiConf.getContent().getContentGracenoteId());
                 }
-                if (content.getContentId() == null) {
+                if (TextUtils.isEmpty(content.getContentId())) {
                     content.setContentId(youboraConfigUiConf.getContent().getContentId());
                 }
-                if (content.getContentImdbId() == null) {
+                if (TextUtils.isEmpty(content.getContentImdbId())) {
                     content.setContentImdbId(youboraConfigUiConf.getContent().getContentImdbId());
                 }
-                if (content.getContentIsLive() == null) {
-                    content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
+                if (content.isLive() == null) {
+                    if (content.isLive().isLiveContent() == null) {
+                        content.isLive().setLiveContent(youboraConfigUiConf.getContent().isLive().isLiveContent());
+                    }
+                    if (content.isLive().getNoSeek() == null) {
+                        content.isLive().setNoSeek(youboraConfigUiConf.getContent().isLive().getNoSeek());
+                    }
+                    if (content.isLive().getNoMonitor() == null) {
+                        content.isLive().setNoMonitor(youboraConfigUiConf.getContent().isLive().getNoMonitor());
+                    }
+                } else {
+                    if (content.getContentIsLive() == null) {
+                        content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
+                    }
+                    if (content.getContentIsLiveNoSeek() == null) {
+                        content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                    } else if (content.isDVR() == null && youboraConfigUiConf.getContent().isDVR() != null) {
+                        content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().isDVR());
+                    }
                 }
-                if (content.getContentIsLiveNoSeek() == null) {
-                    content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
-                } else if (content.isDVR() == null && youboraConfigUiConf.getContent().isDVR() != null) {
-                    content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().isDVR());
-                }
-
-                if (content.getContentLanguage() == null) {
+                if (TextUtils.isEmpty(content.getContentLanguage())) {
                     content.setContentLanguage(youboraConfigUiConf.getContent().getContentLanguage());
                 }
-                if (content.getContentPackage() == null) {
+                if (TextUtils.isEmpty(content.getContentPackage())) {
                     content.setContentPackage(youboraConfigUiConf.getContent().getContentPackage());
                 }
-                if (content.getContentPlaybackType() == null) {
+                if (TextUtils.isEmpty(content.getContentPlaybackType())) {
                     content.setContentPlaybackType(youboraConfigUiConf.getContent().getContentPlaybackType());
                 }
-                if (content.getContentPrice() == null) {
+                if (TextUtils.isEmpty(content.getContentPrice())) {
                     content.setContentPrice(youboraConfigUiConf.getContent().getContentPrice());
                 }
-                if (content.getContentProgram() == null) {
+                if (TextUtils.isEmpty(content.getContentProgram())) {
                     content.setContentProgram(youboraConfigUiConf.getContent().getContentProgram());
                 }
-                if (content.getContentRendition() == null) {
+                if (TextUtils.isEmpty(content.getContentRendition())) {
                     content.setContentRendition(youboraConfigUiConf.getContent().getContentRendition());
                 }
-                if (content.getContentResource() == null) {
+                if (TextUtils.isEmpty(content.getContentResource())) {
                     content.setContentResource(youboraConfigUiConf.getContent().getContentResource());
                 }
-                if (content.getContentSaga() == null) {
+                if (TextUtils.isEmpty(content.getContentSaga())) {
                     content.setContentSaga(youboraConfigUiConf.getContent().getContentSaga());
                 }
-                if (content.getContentSeason() == null) {
+                if (TextUtils.isEmpty(content.getContentSeason())) {
                     content.setContentSeason(youboraConfigUiConf.getContent().getContentSeason());
                 }
-                if (content.getContentStreamingProtocol() == null) {
+                if (TextUtils.isEmpty(content.getContentStreamingProtocol())) {
                     content.setContentStreamingProtocol(youboraConfigUiConf.getContent().getContentStreamingProtocol());
                 }
-                if (content.getContentSubtitles() == null) {
+                if (TextUtils.isEmpty(content.getContentSubtitles())) {
                     content.setContentSubtitles(youboraConfigUiConf.getContent().getContentSubtitles());
                 }
                 if (content.getContentThroughput() == null) {
                     content.setContentThroughput(youboraConfigUiConf.getContent().getContentThroughput());
                 }
-                if (content.getContentTitle() == null) {
+                if (TextUtils.isEmpty(content.getContentTitle())) {
                     content.setContentTitle(youboraConfigUiConf.getContent().getContentTitle());
                 }
-                if (content.getContentTransactionCode() == null) {
+                if (TextUtils.isEmpty(content.getContentTransactionCode())) {
                     content.setContentTransactionCode(youboraConfigUiConf.getContent().getContentTransactionCode());
                 }
-                if (content.getContentTransportFormat() == null) {
+                if (TextUtils.isEmpty(content.getContentTransportFormat())) {
                     content.setContentTransportFormat(youboraConfigUiConf.getContent().getContentTransportFormat());
                 }
                 if (content.getContentTotalBytes() == null) {
                     content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
                 }
-                content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
-                if (content.getContentTvShow() == null) {
+                if (content.getContentSendTotalBytes() == null) {
+                    content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
+                }
+                if (TextUtils.isEmpty(content.getContentTvShow())) {
                     content.setContentTvShow(youboraConfigUiConf.getContent().getContentTvShow());
                 }
-                if (content.getContentType() == null) {
+                if (TextUtils.isEmpty(content.getContentType())) {
                     content.setContentType(youboraConfigUiConf.getContent().getContentType());
                 }
                 if (content.getContentMetaData() == null) {
@@ -1237,8 +1274,21 @@ public class YouboraConfig {
                 if (content.getContentMetrics() == null) {
                     content.setContentMetrics(youboraConfigUiConf.getContent().getContentMetrics());
                 }
-                if (content.getContentEncodingCodecSettings() == null) {
-                    content.setContentEncodingCodecSettings(youboraConfigUiConf.getContent().getContentEncodingCodecSettings());
+                if (content.getContentEncoding() == null) {
+                    content.setContentEncoding(youboraConfigUiConf.getContent().getContentEncoding());
+                } else {
+                    if (TextUtils.isEmpty(content.getContentEncodingAudioCodec())) {
+                        content.setContentEncodingAudioCodec(youboraConfigUiConf.getContent().getContentEncodingAudioCodec());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingCodecProfile())) {
+                        content.setContentEncodingCodecProfile(youboraConfigUiConf.getContent().getContentEncodingCodecProfile());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingContainerFormat())) {
+                        content.setContentEncodingContainerFormat(youboraConfigUiConf.getContent().getContentEncodingContainerFormat());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingVideoCodec())) {
+                        content.setContentEncodingVideoCodec(youboraConfigUiConf.getContent().getContentEncodingVideoCodec());
+                    }
                 }
                 if (content.getCustomDimensions() == null) {
                     content.setCustomDimensions(youboraConfigUiConf.getContent().getCustomDimensions());
@@ -1250,10 +1300,10 @@ public class YouboraConfig {
 
         if (app != null) {
             if (youboraConfigUiConf.getApp() != null) {
-                if (app.getAppName() == null) {
+                if (TextUtils.isEmpty(app.getAppName())) {
                     app.setAppName(youboraConfigUiConf.getApp().getAppName());
                 }
-                if (app.getAppReleaseVersion() == null) {
+                if (TextUtils.isEmpty(app.getAppReleaseVersion())) {
                     app.setAppReleaseVersion(youboraConfigUiConf.getAppReleaseVersion());
                 }
             }
@@ -1278,10 +1328,10 @@ public class YouboraConfig {
                 if (parse.getParseCdnTTL() == null) {
                     parse.setParseCdnTTL(youboraConfigUiConf.getParse().getParseCdnTTL());
                 }
-                if (parse.getParseCdnNameHeader() == null) {
+                if (TextUtils.isEmpty(parse.getParseCdnNameHeader())) {
                     parse.setParseCdnNameHeader(youboraConfigUiConf.getParse().getParseCdnNameHeader());
                 }
-                if (parse.getParseNodeHeader() == null) {
+                if (TextUtils.isEmpty(parse.getParseNodeHeader())) {
                     parse.setParseNodeHeader(youboraConfigUiConf.getParse().getParseNodeHeader());
                 }
                 if (parse.getParseCdnSwitchHeader() == null) {
@@ -1297,10 +1347,10 @@ public class YouboraConfig {
                 if (network.getNetworkConnectionType() == null) {
                     network.setNetworkConnectionType(youboraConfigUiConf.getNetwork().getNetworkConnectionType());
                 }
-                if (network.getNetworkIP() == null) {
+                if (TextUtils.isEmpty(network.getNetworkIP())) {
                     network.setNetworkIP(youboraConfigUiConf.getNetwork().getNetworkIP());
                 }
-                if (network.getNetworkIsp() == null) {
+                if (TextUtils.isEmpty(network.getNetworkIsp())) {
                     network.setNetworkIsp(youboraConfigUiConf.getNetwork().getNetworkIsp());
                 }
             }
@@ -1329,10 +1379,10 @@ public class YouboraConfig {
                 if (ads.getAdBreaksTime() == null) {
                     ads.setAdBreaksTime(youboraConfigUiConf.getAds().getAdBreaksTime());
                 }
-                if (ads.getAdCampaign() == null) {
+                if (TextUtils.isEmpty(ads.getAdCampaign())) {
                     ads.setAdCampaign(youboraConfigUiConf.getAds().getAdCampaign());
                 }
-                if (ads.getAdCreativeId() == null) {
+                if (TextUtils.isEmpty(ads.getAdCreativeId())) {
                     ads.setAdCreativeId(youboraConfigUiConf.getAds().getAdCreativeId());
                 }
                 if (ads.getAdExpectedBreaks() == null) {
@@ -1344,22 +1394,22 @@ public class YouboraConfig {
                 if (ads.getAdGivenBreaks() == null) {
                     ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
                 }
-                if (ads.getAdProvider() == null) {
+                if (TextUtils.isEmpty(ads.getAdProvider())) {
                     ads.setAdProvider(youboraConfigUiConf.getAds().getAdProvider());
                 }
-                if (ads.getAdResource() == null) {
+                if (TextUtils.isEmpty(ads.getAdResource())) {
                     ads.setAdResource(youboraConfigUiConf.getAds().getAdResource());
                 }
-                if (ads.getAdTitle() == null) {
+                if (TextUtils.isEmpty(ads.getAdTitle())) {
                     ads.setAdTitle(youboraConfigUiConf.getAds().getAdTitle());
                 }
                 if (ads.getBlockerDetected() != null) {
                     ads.setBlockerDetected(youboraConfigUiConf.getAds().getBlockerDetected());
                 }
-                if (ads.getMetadata() != null) {
+                if (ads.getMetadata() == null) {
                     ads.setMetadata(youboraConfigUiConf.getAds().getMetadata());
                 }
-                if (ads.getExpectedPattern() != null) {
+                if (ads.getExpectedPattern() == null) {
                     ads.setExpectedPattern(youboraConfigUiConf.getAds().getExpectedPattern());
                 }
             }
