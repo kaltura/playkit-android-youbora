@@ -116,20 +116,11 @@ public class YouboraConfigJsonBuilder {
         }
 
         if (parse.getParseManifest() != null) {
-            parseJsonObject.addProperty("parseManifest", parse.getParseManifest());
-        }
-
-        if (parse.getParseManifestAuth() != null && !parse.getParseManifestAuth().isEmpty()) {
-            JsonObject parseManifestAuthJson = new JsonObject();
-            parseJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(parseManifestAuthJson, parse.getParseManifestAuth()));
+            parseJsonObject.add("parseManifest", getParseManifestObject(parse.getParseManifest()));
         }
 
         if (parse.getParseCdnNode() != null) {
-            parseJsonObject.addProperty("parseCdnNode", parse.getParseCdnNode());
-        }
-
-        if (parse.getParseCdnSwitchHeader() != null) {
-            parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
+            parseJsonObject.add("parseCdnNode", getParseCdnNodeObject(parse.getParseCdnNode()));
         }
 
         if (parse.getParseCdnNodeList() != null) {
@@ -138,6 +129,10 @@ public class YouboraConfigJsonBuilder {
                 parseCdnNodeListJsonArray.add(cdn);
             }
             parseJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
+        }
+
+        if (parse.getParseCdnSwitchHeader() != null) {
+            parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
         }
 
         if (parse.getParseCdnNameHeader() != null) {
@@ -152,6 +147,46 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.addProperty("parseCdnTTL", parse.getParseCdnTTL());
         }
         return parseJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getParseManifestObject(Manifest manifest) {
+        JsonObject manifestJsonObject = new JsonObject();
+        if (manifest == null) {
+            return manifestJsonObject;
+        }
+
+        if (manifest.getParseManifest() != null) {
+            manifestJsonObject.addProperty("parseManifest", manifest.getParseManifest());
+        }
+
+        if (manifest.getParseManifestAuth() != null) {
+            manifestJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(manifestJsonObject, manifest.getParseManifestAuth()));
+        }
+
+        return manifestJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getParseCdnNodeObject(CdnNode cdnNode) {
+        JsonObject cdnNodeJsonObject = new JsonObject();
+        if (cdnNode == null) {
+            return cdnNodeJsonObject;
+        }
+
+        if (cdnNode.getParseCdnNode() != null) {
+            cdnNodeJsonObject.addProperty("parseCdnNode", cdnNode.getParseCdnNode());
+        }
+
+        if (cdnNode.getParseCdnNodeList() != null) {
+            JsonArray parseCdnNodeListJsonArray = new JsonArray();
+            for(String cdn : cdnNode.getParseCdnNodeList()) {
+                parseCdnNodeListJsonArray.add(cdn);
+            }
+            cdnNodeJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
+        }
+
+        return cdnNodeJsonObject;
     }
 
     @NonNull
@@ -268,7 +303,9 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentImdbId() != null) {
             contentEntry.addProperty("contentImdbId", content.getContentImdbId());
         }
-        contentEntry.addProperty("contentIsLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
+        if (content.isLive() != null) {
+            contentEntry.add("contentIsLive", getIsLiveJsonObject(content.isLive()));
+        }
         if (content.getContentIsLiveNoSeek() != null) {
             contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
         } else if (content.isDVR() != null) {
@@ -651,6 +688,26 @@ public class YouboraConfigJsonBuilder {
             encodingJsonObject.addProperty("videoCodec", encoding.getVideoCodec());
         }
         return encodingJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getIsLiveJsonObject(IsLive isLive) {
+        JsonObject isLiveJsonObject = new JsonObject();
+        if (isLive == null) {
+            return isLiveJsonObject;
+        }
+
+        if (isLive.isLiveContent() != null) {
+            isLiveJsonObject.addProperty("isLiveContent", isLive.isLiveContent());
+        }
+        if (isLive.getNoSeek() != null) {
+            isLiveJsonObject.addProperty("noSeek", isLive.getNoSeek());
+        }
+        if (isLive.getNoMonitor() != null) {
+            isLiveJsonObject.addProperty("noMonitor", isLive.getNoMonitor());
+        }
+
+        return isLiveJsonObject;
     }
 
     @NonNull

@@ -39,7 +39,22 @@ public class YouboraConfig {
 
     private String accountCode;
 
-    private String host;
+    @SerializedName(value="ads", alternate={"ad"})
+    private Ads ads; // backward compatible
+
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
+    private String appName = "";
+
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
+    private String appReleaseVersion = "";
+
+    private App app; // backward compatible
 
     /**
      * Optional: auth token to validate all the requests.
@@ -53,8 +68,50 @@ public class YouboraConfig {
 
     private String username;
 
-    @SerializedName(value="houseHoldId", alternate={"householdId"})
-    private String houseHoldId; // which device is used to play
+    @SerializedName(value="isAutoStart", alternate={"autoStart"})
+    private boolean isAutoStart = true; // backward compatible
+
+    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
+    private boolean isAutoDetectBackground = true; // backward compatible
+
+    @SerializedName(value="content", alternate={"media"})
+    private Content content;
+
+    /**
+     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
+     */
+    @Deprecated
+    private Properties properties;
+
+    /**
+     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
+     */
+    @Deprecated
+    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
+    private ContentCustomDimensions contentCustomDimensions;
+
+    private Device device;
+
+    @SerializedName(value="isEnabled", alternate={"enabled"})
+    private boolean isEnabled = true;
+
+    private Errors errors;
+
+    @SerializedName(value="isForceInit", alternate={"forceInit"})
+    private boolean isForceInit; // backward compatible
+
+    @SerializedName(value="isOffline", alternate={"offline"})
+    private boolean isOffline; // backward compatible
+
+    private boolean httpSecure = true; // youbora events will be sent via https
+
+    private String linkedViewId;
+
+    private Network network;
+
+    private Parse parse;
+
+    private Session session;
 
     /**
      * @deprecated This value is part of {@link User}
@@ -86,38 +143,17 @@ public class YouboraConfig {
     @Deprecated
     private String userPrivacyProtocol; // backward compatibility
 
-
-    private boolean httpSecure = true; // youbora events will be sent via https
-
     /**
-     * @deprecated This value is part of {@link App}
+     * Use user object to pass
+     * userEmail, userAnonymousId, userType, userObfuscateIp, userPrivacyProtocol
+     * If User object is passed along with that individually the values are also passed
+     * apart from User's object then User object will be prioritized
+     *
+     * Either pass User object or pass individual values (backward compatibility)
      */
-    @Deprecated
-    private String appName = "";
-
-    /**
-     * @deprecated This value is part of {@link App}
-     */
-    @Deprecated
-    private String appReleaseVersion = "";
+    private User user;
 
     private String urlToParse;
-
-    private String linkedViewId;
-
-    private boolean isAutoStart = true;
-
-    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
-    private boolean isAutoDetectBackground = true; // backward compatible
-
-    @SerializedName(value="isEnabled", alternate={"enabled"})
-    private boolean isEnabled = true; // backward compatible
-
-    @SerializedName(value="isForceInit", alternate={"forceInit"})
-    private boolean isForceInit; // backward compatible
-
-    @SerializedName(value="isOffline", alternate={"offline"})
-    private boolean isOffline; // backward compatible
 
     /**
      * Enabling this option enables the posibility of getting the /start request later on the view,
@@ -131,47 +167,10 @@ public class YouboraConfig {
 
     private ArrayList<String> pendingMetadata;
 
-    @SerializedName(value="sessionMetrics", alternate={"session"})
-    private HashMap<String, String> sessionMetrics;
+    @SerializedName(value="houseHoldId", alternate={"householdId"})
+    private String houseHoldId; // which device is used to play
 
-    /**
-     * Use user object to pass
-     * userEmail, userAnonymousId, userType, userObfuscateIp
-     * If User object is passed along with that individually the values are also passed
-     * apart from User's object then User object will be prioritized
-     *
-     * Either pass User object or pass individual values (backward compatibility)
-     */
-    private User user;
-
-    private App app;
-
-    private Parse parse;
-
-    private Device device;
-
-    @SerializedName(value="content", alternate={"media"})
-    private Content content;
-
-    private Network network;
-
-    private Errors errors;
-
-    @SerializedName(value="ads", alternate={"ad"})
-    private Ads ads; // backward compatible
-
-    /**
-     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
-     */
-    @Deprecated
-    private Properties properties;
-
-    /**
-     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
-     */
-    @Deprecated
-    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
-    private ContentCustomDimensions contentCustomDimensions;
+    private String host;
 
     private ViewTransform.FastDataConfig fastDataConfig;
 
@@ -317,6 +316,16 @@ public class YouboraConfig {
         this.userObfuscateIp = userObfuscateIp;
     }
 
+    @Deprecated
+    public String getUserPrivacyProtocol() {
+        return userPrivacyProtocol;
+    }
+
+    @Deprecated
+    public void setUserPrivacyProtocol(String userPrivacyProtocol) {
+        this.userPrivacyProtocol = userPrivacyProtocol;
+    }
+
     public boolean getIsAutoStart() {
         return isAutoStart;
     }
@@ -373,12 +382,12 @@ public class YouboraConfig {
         this.pendingMetadata = pendingMetadata;
     }
 
-    public HashMap<String, String> getSessionMetrics() {
-        return sessionMetrics;
+    public Session getSession() {
+        return session;
     }
 
-    public void setSessionMetrics(HashMap<String, String> sessionMetrics) {
-        this.sessionMetrics = sessionMetrics;
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public App getApp() {
@@ -504,20 +513,26 @@ public class YouboraConfig {
 
         if (parse != null) {
             if (parse.getParseManifest() != null) {
-                youboraOptions.setParseManifest(parse.getParseManifest());
+                if (parse.getParseManifest().getParseManifest() != null) {
+                    youboraOptions.setParseManifest(parse.getParseManifest().getParseManifest());
+                }
+                if (parse.getParseManifest().getParseManifestAuth() != null) {
+                    youboraOptions.setParseManifestAuth(getBundleFromMap(parse.getParseManifest().getParseManifestAuth()));
+                }
             }
-            if (parse.getParseManifestAuth() != null) {
-                youboraOptions.setParseManifestAuth(getBundleFromMap(parse.getParseManifestAuth()));
-            }
+
             if (parse.getParseCdnNode() != null) {
-                youboraOptions.setParseCdnNode(parse.getParseCdnNode());
+                if (parse.getParseCdnNode().getParseCdnNode() != null) {
+                    youboraOptions.setParseCdnNode(parse.getParseCdnNode().getParseCdnNode());
+                }
+                if (parse.getParseCdnNode().getParseCdnNodeList() != null) {
+                    youboraOptions.setParseCdnNodeList(parse.getParseCdnNode().getParseCdnNodeList());
+                }
+                if (parse.getParseCdnNode().getParseCdnNodeList() == null && parse.getParseCdnNodeList() != null) {
+                    youboraOptions.setParseCdnNodeList(parse.getParseCdnNodeList());
+                }
             }
-            if (parse.getParseCdnSwitchHeader() != null) {
-                youboraOptions.setParseCdnSwitchHeader(parse.getParseCdnSwitchHeader());
-            }
-            if (parse.getParseCdnNodeList() != null) {
-                youboraOptions.setParseCdnNodeList(parse.getParseCdnNodeList());
-            }
+
             if (parse.getParseCdnNameHeader() != null) {
                 youboraOptions.setParseCdnNameHeader(parse.getParseCdnNameHeader());
             }
@@ -618,10 +633,6 @@ public class YouboraConfig {
             if (content.isLive() != null) {
                 if (content.isLive().isLiveContent() != null) {
                     youboraOptions.setContentIsLive(content.isLive().isLiveContent());
-                    content.setContentIsLive(content.isLive().isLiveContent());
-                } else {
-                    // Workaround if the value was sent as content.isLive, If we have the object we believe it's true.
-                    content.setContentIsLive(true);
                 }
                 if (content.isLive().getNoSeek() != null) {
                     youboraOptions.setContentIsLiveNoSeek(content.isLive().getNoSeek());
@@ -631,11 +642,8 @@ public class YouboraConfig {
                 if (content.isLive().getNoMonitor() != null) {
                     youboraOptions.setContentIsLiveNoMonitor(content.isLive().getNoMonitor());
                 }
-            } else {
-                if (content.getContentIsLive() != null) {
-                    youboraOptions.setContentIsLive(content.getContentIsLive());
-                }
-                if (content.getContentIsLiveNoSeek() != null) {
+
+                if (content.isLive().getNoSeek() == null && content.getContentIsLiveNoSeek() != null) {
                     youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
                 } else if (content.isDVR() != null) {
                     youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
@@ -780,9 +788,12 @@ public class YouboraConfig {
             if (ads.getAdBreaksTime() != null) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
             }
-            youboraOptions.setAdCampaign(ads.getAdCampaign());
-            youboraOptions.setAdCreativeId(ads.getAdCreativeId());
-
+            if (ads.getAdCampaign() != null) {
+                youboraOptions.setAdCampaign(ads.getAdCampaign());
+            }
+            if (ads.getAdCreativeId() != null) {
+                youboraOptions.setAdCreativeId(ads.getAdCreativeId());
+            }
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
             }
@@ -792,11 +803,15 @@ public class YouboraConfig {
             if (ads.getAdGivenBreaks() != null) {
                 youboraOptions.setAdGivenBreaks(ads.getAdGivenBreaks());
             }
-
-            youboraOptions.setAdProvider(ads.getAdProvider());
-            youboraOptions.setAdResource(ads.getAdResource());
-            youboraOptions.setAdTitle(ads.getAdTitle());
-
+            if (ads.getAdProvider() != null) {
+                youboraOptions.setAdProvider(ads.getAdProvider());
+            }
+            if (ads.getAdResource() != null) {
+                youboraOptions.setAdResource(ads.getAdResource());
+            }
+            if (ads.getAdTitle() != null) {
+                youboraOptions.setAdTitle(ads.getAdTitle());
+            }
             if (ads.getAdCustomDimensions() != null) {
                 youboraOptions.setAdCustomDimension1(ads.getAdCustomDimensions().getAdCustomDimension1());
                 youboraOptions.setAdCustomDimension2(ads.getAdCustomDimensions().getAdCustomDimension2());
@@ -812,11 +827,14 @@ public class YouboraConfig {
 
             youboraOptions.setAdMetadata(getAdMetaDataBundle(ads.getMetadata()));
             youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle(ads.getExpectedPattern()));
-            youboraOptions.setAdBlockerDetected(ads.getBlockerDetected());
+
+            if (ads.getBlockerDetected() != null) {
+                youboraOptions.setAdBlockerDetected(ads.getBlockerDetected());
+            }
         }
 
-        if (sessionMetrics != null) {
-            youboraOptions.setSessionMetrics(getBundleFromMap(sessionMetrics));
+        if (session != null) {
+            youboraOptions.setSessionMetrics(getBundleFromMap(session.getSessionMetrics()));
         }
 
         return youboraOptions;
@@ -1072,6 +1090,7 @@ public class YouboraConfig {
         rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
         rootLevelParams.put("userType", (getUserType() != null) ? new JsonPrimitive(getUserType()) : null);
         rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
+        rootLevelParams.put("userPrivacyProtocol", new JsonPrimitive(getUserPrivacyProtocol()));
 
         rootLevelParams.put("appName", (getAppName() != null) ? new JsonPrimitive(getAppName()) : null);
         rootLevelParams.put("appReleaseVersion", (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null);
@@ -1088,7 +1107,7 @@ public class YouboraConfig {
 
         JsonObject user = YouboraConfigJsonBuilder.getUserJsonObject(getUser());
         JsonArray pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataJsonObject(getPendingMetadata());
-        JsonObject sessionMetrics = YouboraConfigJsonBuilder.getSessionMetricsJsonObject(getSessionMetrics());
+        JsonObject sessionMetrics = YouboraConfigJsonBuilder.getSessionMetricsJsonObject(getSession() != null ? getSession().getSessionMetrics() : null);
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
         JsonObject device = YouboraConfigJsonBuilder.getDeviceJsonObject(getDevice());
@@ -1201,16 +1220,13 @@ public class YouboraConfig {
                     if (content.isLive().getNoMonitor() == null) {
                         content.isLive().setNoMonitor(youboraConfigUiConf.getContent().isLive().getNoMonitor());
                     }
-                } else {
-                    if (content.getContentIsLive() == null) {
-                        content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
-                    }
                     if (content.getContentIsLiveNoSeek() == null) {
                         content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
                     } else if (content.isDVR() == null && youboraConfigUiConf.getContent().isDVR() != null) {
                         content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().isDVR());
                     }
                 }
+
                 if (TextUtils.isEmpty(content.getContentLanguage())) {
                     content.setContentLanguage(youboraConfigUiConf.getContent().getContentLanguage());
                 }
@@ -1316,8 +1332,11 @@ public class YouboraConfig {
                 if (parse.getParseManifest() == null) {
                     parse.setParseManifest(youboraConfigUiConf.getParse().getParseManifest());
                 }
-                if (parse.getParseManifestAuth() != null) {
-                    parse.setParseManifestAuth(youboraConfigUiConf.getParse().getParseManifestAuth());
+                if (parse.getParseCdnNodeList() == null) {
+                    parse.setParseCdnNodeList(youboraConfigUiConf.getParse().getParseCdnNodeList());
+                }
+                if (parse.getParseCdnNode() == null) {
+                    parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
                 }
                 if (parse.getParseCdnNode() == null) {
                     parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
@@ -1403,7 +1422,7 @@ public class YouboraConfig {
                 if (TextUtils.isEmpty(ads.getAdTitle())) {
                     ads.setAdTitle(youboraConfigUiConf.getAds().getAdTitle());
                 }
-                if (ads.getBlockerDetected() != null) {
+                if (ads.getBlockerDetected() == null) {
                     ads.setBlockerDetected(youboraConfigUiConf.getAds().getBlockerDetected());
                 }
                 if (ads.getMetadata() == null) {
@@ -1516,6 +1535,14 @@ public class YouboraConfig {
             }
         } else {
             contentCustomDimensions = youboraConfigUiConf.getContentCustomDimensions();
+        }
+
+        if (session != null) {
+            if (youboraConfigUiConf.getSession() != null) {
+                if (session.getSessionMetrics() == null) {
+                    session.setSessionMetrics(youboraConfigUiConf.getSession().getSessionMetrics());
+                }
+            }
         }
     }
 }

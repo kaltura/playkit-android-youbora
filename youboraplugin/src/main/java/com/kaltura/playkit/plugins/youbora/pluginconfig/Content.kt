@@ -1,9 +1,9 @@
 package com.kaltura.playkit.plugins.youbora.pluginconfig
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import java.lang.Deprecated
 
-data class Content (
+data class Content(
     @SerializedName(value = "contentBitrate", alternate = ["bitrate"])
     var contentBitrate: Long? = null,
 
@@ -68,14 +68,14 @@ data class Content (
     @SerializedName(value = "contentImdbId", alternate = ["imdbId"])
     var contentImdbId: String? = null,
 
-    @kotlin.Deprecated("This is moved internally to {@link IsLive}")
-    var contentIsLive: Boolean? = null,
+    @SerializedName(value="contentIsLive", alternate=["isLive"])
+    @JsonAdapter(IsLiveDeserializer::class)
+    var isLive: IsLive? = null,
+
     @kotlin.Deprecated("This is moved internally to {@link IsLive}")
     var contentIsLiveNoSeek: Boolean? = null,
     @kotlin.Deprecated("This is moved internally to {@link IsLive}")
     var isDVR: Boolean? = null, //LEGACY  - the opposite value from contentIsLiveNoSeek
-
-    var isLive: IsLive? = null,
 
     @SerializedName(value = "contentLanguage", alternate = ["language"])
     var contentLanguage: String? = null,
