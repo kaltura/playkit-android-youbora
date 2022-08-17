@@ -35,4 +35,11 @@ data class Ads(
 
     var metadata: Properties? = null,
     var expectedPattern: AdExpectedPattern? = null,
-    var blockerDetected: Boolean? = null)
+    var blockerDetected: Boolean? = null,
+
+    /**
+     * Set to integer positive value indicating how many ads
+     * will be shown as post-rolls if they do it after content player triggers stop event.
+     */
+    @kotlin.Deprecated("This option will be removed in future releases")
+    var afterStop: Int? = null)

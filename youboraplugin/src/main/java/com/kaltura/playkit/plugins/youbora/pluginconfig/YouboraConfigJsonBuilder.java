@@ -44,7 +44,7 @@ public class YouboraConfigJsonBuilder {
             youboraConfig.add("user", user);
         }
         if (sessionMetrics != null) {
-            youboraConfig.add("sessionMetrics", sessionMetrics);
+            youboraConfig.add("session", sessionMetrics);
         }
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
@@ -71,8 +71,9 @@ public class YouboraConfigJsonBuilder {
         if (sessionMetrics == null || sessionMetrics.isEmpty()) {
             return null;
         }
-        JsonObject sessionMetricsJsonObject = new JsonObject();
-        return addHashMapValuesToJsonObject(sessionMetricsJsonObject, sessionMetrics);
+        JsonObject sessionJsonObject = new JsonObject();
+        sessionJsonObject.add("sessionMetrics", addHashMapValuesToJsonObject(sessionMetrics));
+        return sessionJsonObject;
     }
 
     static JsonObject getUserJsonObject(User user) {
@@ -161,7 +162,7 @@ public class YouboraConfigJsonBuilder {
         }
 
         if (manifest.getParseManifestAuth() != null) {
-            manifestJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(manifestJsonObject, manifest.getParseManifestAuth()));
+            manifestJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(manifest.getParseManifestAuth()));
         }
 
         return manifestJsonObject;
@@ -374,7 +375,7 @@ public class YouboraConfigJsonBuilder {
         }
         if (content.getContentMetrics() != null && !content.getContentMetrics().isEmpty()) {
             JsonObject metricsJson = new JsonObject();
-            contentEntry.add("contentMetrics", addHashMapValuesToJsonObject(metricsJson, content.getContentMetrics()));
+            contentEntry.add("contentMetrics", addHashMapValuesToJsonObject(content.getContentMetrics()));
         }
         if (content.getCustomDimensions() != null) {
             contentEntry.add("customDimensions", getContentCustomDimensionsJsonObject(content.getCustomDimensions()));
@@ -493,6 +494,9 @@ public class YouboraConfigJsonBuilder {
         }
         if (ads.getBlockerDetected() != null) {
             adsEntry.addProperty("blockerDetected", ads.getBlockerDetected());
+        }
+        if (ads.getAfterStop() != null) {
+            adsEntry.addProperty("afterStop", ads.getAfterStop());
         }
         return adsEntry;
     }
@@ -679,7 +683,7 @@ public class YouboraConfigJsonBuilder {
             encodingJsonObject.addProperty("codecProfile", encoding.getCodecProfile());
         }
         if (encoding.getCodecSettings() != null) {
-            encodingJsonObject.add("codecSettings", addHashMapValuesToJsonObject(encodingJsonObject, encoding.getCodecSettings()));
+            encodingJsonObject.add("codecSettings", addHashMapValuesToJsonObject(encoding.getCodecSettings()));
         }
         if (encoding.getContainerFormat() != null) {
             encodingJsonObject.addProperty("containerFormat", encoding.getContainerFormat());
@@ -791,10 +795,12 @@ public class YouboraConfigJsonBuilder {
     }
 
     @Nullable
-    private static JsonObject addHashMapValuesToJsonObject(JsonObject jsonObject, HashMap<String, String> map) {
+    private static JsonObject addHashMapValuesToJsonObject(HashMap<String, String> map) {
         if (map == null || map.isEmpty()) {
             return null;
         }
+
+        JsonObject jsonObject = new JsonObject();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
             jsonObject.addProperty(entry.getKey(), entry.getValue());

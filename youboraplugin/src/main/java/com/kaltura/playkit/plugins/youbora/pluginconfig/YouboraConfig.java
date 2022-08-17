@@ -39,9 +39,6 @@ public class YouboraConfig {
 
     private String accountCode;
 
-    @SerializedName(value="ads", alternate={"ad"})
-    private Ads ads; // backward compatible
-
     /**
      * @deprecated This value is part of {@link App}
      */
@@ -53,8 +50,6 @@ public class YouboraConfig {
      */
     @Deprecated
     private String appReleaseVersion = "";
-
-    private App app; // backward compatible
 
     /**
      * Optional: auth token to validate all the requests.
@@ -68,50 +63,15 @@ public class YouboraConfig {
 
     private String username;
 
-    @SerializedName(value="isAutoStart", alternate={"autoStart"})
-    private boolean isAutoStart = true; // backward compatible
-
-    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
-    private boolean isAutoDetectBackground = true; // backward compatible
-
-    @SerializedName(value="content", alternate={"media"})
-    private Content content;
-
-    /**
-     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
-     */
-    @Deprecated
-    private Properties properties;
-
-    /**
-     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
-     */
-    @Deprecated
-    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
-    private ContentCustomDimensions contentCustomDimensions;
-
-    private Device device;
-
-    @SerializedName(value="isEnabled", alternate={"enabled"})
-    private boolean isEnabled = true;
-
-    private Errors errors;
-
-    @SerializedName(value="isForceInit", alternate={"forceInit"})
-    private boolean isForceInit; // backward compatible
-
-    @SerializedName(value="isOffline", alternate={"offline"})
-    private boolean isOffline; // backward compatible
-
-    private boolean httpSecure = true; // youbora events will be sent via https
-
     private String linkedViewId;
 
-    private Network network;
+    private String urlToParse;
 
-    private Parse parse;
-
-    private Session session;
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userPrivacyProtocol; // backward compatibility
 
     /**
      * @deprecated This value is part of {@link User}
@@ -137,23 +97,27 @@ public class YouboraConfig {
     @Deprecated
     private boolean userObfuscateIp; // Option to obfuscate the IP. // backward compatibility
 
-    /**
-     * @deprecated This value is part of {@link User}
-     */
-    @Deprecated
-    private String userPrivacyProtocol; // backward compatibility
+    @SerializedName(value="houseHoldId", alternate={"householdId"})
+    private String houseHoldId; // which device is used to play
 
-    /**
-     * Use user object to pass
-     * userEmail, userAnonymousId, userType, userObfuscateIp, userPrivacyProtocol
-     * If User object is passed along with that individually the values are also passed
-     * apart from User's object then User object will be prioritized
-     *
-     * Either pass User object or pass individual values (backward compatibility)
-     */
-    private User user;
+    private String host;
 
-    private String urlToParse;
+    @SerializedName(value="isAutoStart", alternate={"autoStart"})
+    private boolean isAutoStart = true; // backward compatible
+
+    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
+    private boolean isAutoDetectBackground = true; // backward compatible
+
+    @SerializedName(value="isEnabled", alternate={"enabled"})
+    private boolean isEnabled = true;
+
+    @SerializedName(value="isForceInit", alternate={"forceInit"})
+    private boolean isForceInit; // backward compatible
+
+    @SerializedName(value="isOffline", alternate={"offline"})
+    private boolean isOffline; // backward compatible
+
+    private boolean httpSecure = true; // youbora events will be sent via https
 
     /**
      * Enabling this option enables the posibility of getting the /start request later on the view,
@@ -167,12 +131,48 @@ public class YouboraConfig {
 
     private ArrayList<String> pendingMetadata;
 
-    @SerializedName(value="houseHoldId", alternate={"householdId"})
-    private String houseHoldId; // which device is used to play
-
-    private String host;
-
     private ViewTransform.FastDataConfig fastDataConfig;
+
+    @SerializedName(value="ads", alternate={"ad"})
+    private Ads ads; // backward compatible
+
+    private App app; // backward compatible
+
+    private Errors errors;
+
+    /**
+     * Use user object to pass
+     * userEmail, userAnonymousId, userType, userObfuscateIp, userPrivacyProtocol
+     * If User object is passed along with that individually the values are also passed
+     * apart from User's object then User object will be prioritized
+     *
+     * Either pass User object or pass individual values (backward compatibility)
+     */
+    private User user;
+
+    private Network network;
+
+    private Parse parse;
+
+    private Session session;
+
+    @SerializedName(value="content", alternate={"media"})
+    private Content content;
+
+    private Device device;
+
+    /**
+     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
+     */
+    @Deprecated
+    private Properties properties;
+
+    /**
+     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
+     */
+    @Deprecated
+    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
+    private ContentCustomDimensions contentCustomDimensions;
 
     public String getAccountCode() {
         return accountCode;
@@ -831,6 +831,9 @@ public class YouboraConfig {
             if (ads.getBlockerDetected() != null) {
                 youboraOptions.setAdBlockerDetected(ads.getBlockerDetected());
             }
+            if (ads.getAfterStop() != null) {
+                youboraOptions.setAdsAfterStop(ads.getAfterStop());
+            }
         }
 
         if (session != null) {
@@ -1090,7 +1093,7 @@ public class YouboraConfig {
         rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
         rootLevelParams.put("userType", (getUserType() != null) ? new JsonPrimitive(getUserType()) : null);
         rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
-        rootLevelParams.put("userPrivacyProtocol", new JsonPrimitive(getUserPrivacyProtocol()));
+        rootLevelParams.put("userPrivacyProtocol", (getUserPrivacyProtocol() != null) ? new JsonPrimitive(getUserPrivacyProtocol()) : null);
 
         rootLevelParams.put("appName", (getAppName() != null) ? new JsonPrimitive(getAppName()) : null);
         rootLevelParams.put("appReleaseVersion", (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null);
@@ -1430,6 +1433,9 @@ public class YouboraConfig {
                 }
                 if (ads.getExpectedPattern() == null) {
                     ads.setExpectedPattern(youboraConfigUiConf.getAds().getExpectedPattern());
+                }
+                if (ads.getAfterStop() == null) {
+                    ads.setAfterStop(youboraConfigUiConf.getAds().getAfterStop());
                 }
             }
         } else {

@@ -11,7 +11,8 @@ data class Manifest(
      * If parsing HLS the plugin will parse files to use the first .ts file found as resource.
      * If parsing DASH parseManifestAuth the plugin will parse files as a resource.
      * Default: false.
-     */@SerializedName(value = "parseManifest", alternate = ["manifest"])
+     */
+    @SerializedName(value = "parseManifest", alternate = ["manifest"])
     var parseManifest: Boolean? = null,
 
     /**
