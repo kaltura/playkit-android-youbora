@@ -18,14 +18,7 @@ class IsLiveDeserializer: JsonDeserializer<IsLive> {
                     val isLive = it.asBoolean
                     IsLive(isLive, null, null)
                 } catch (exception: Exception) {
-                    when (exception) {
-                        is UnsupportedOperationException, is ClassCastException, is IllegalStateException -> {
-                            null
-                        }
-                        else -> {
-                            null
-                        }
-                    }
+                    null
                 }
             }
 
@@ -51,14 +44,7 @@ class CdnNodeDeserializer: JsonDeserializer<CdnNode> {
                     val parseCdnNode = it.asBoolean
                     CdnNode(parseCdnNode, null)
                 } catch (exception: Exception) {
-                    when (exception) {
-                        is UnsupportedOperationException, is ClassCastException, is IllegalStateException -> {
-                            null
-                        }
-                        else -> {
-                            null
-                        }
-                    }
+                    null
                 }
             }
 
@@ -84,14 +70,7 @@ class ParseManifestDeserializer: JsonDeserializer<Manifest> {
                     val parseManifest = it.asBoolean
                     Manifest(parseManifest, null)
                 } catch (exception: Exception) {
-                    when (exception) {
-                        is UnsupportedOperationException, is ClassCastException, is IllegalStateException -> {
-                            null
-                        }
-                        else -> {
-                            null
-                        }
-                    }
+                    null
                 }
             }
 

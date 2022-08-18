@@ -477,15 +477,25 @@ public class YouboraConfig {
     public Options getYouboraOptions() {
         Options youboraOptions = new Options();
 
-        youboraOptions.setAccountCode(accountCode);
+        if (!TextUtils.isEmpty(accountCode)) {
+            youboraOptions.setAccountCode(accountCode);
+        }
+
         if (!TextUtils.isEmpty(host)) {
             youboraOptions.setHost(host);
         }
-        youboraOptions.setAuthToken(authToken);
+
+        if (!TextUtils.isEmpty(authToken)) {
+            youboraOptions.setAuthToken(authToken);
+        }
+
         if (!TextUtils.isEmpty(authType)) {
             youboraOptions.setAuthType(authType);
         }
-        youboraOptions.setUsername(username);
+
+        if (!TextUtils.isEmpty(username)) {
+            youboraOptions.setUsername(username);
+        }
 
         youboraOptions.setUserEmail((user != null && !TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : userEmail);
         youboraOptions.setUserAnonymousId((user != null && !TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : userAnonymousId);
@@ -496,8 +506,13 @@ public class YouboraConfig {
         youboraOptions.setAppName((app != null && !TextUtils.isEmpty(app.getAppName())) ? app.getAppName() : appName);
         youboraOptions.setAppReleaseVersion((app != null && !TextUtils.isEmpty(app.getAppReleaseVersion())) ? app.getAppReleaseVersion() : appReleaseVersion);
 
-        youboraOptions.setUrlToParse(urlToParse);
-        youboraOptions.setLinkedViewId(linkedViewId);
+        if (!TextUtils.isEmpty(urlToParse)) {
+            youboraOptions.setUrlToParse(urlToParse);
+        }
+
+        if (!TextUtils.isEmpty(linkedViewId)) {
+            youboraOptions.setLinkedViewId(linkedViewId);
+        }
 
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
