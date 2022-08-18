@@ -8,3 +8,4 @@ class CdnNode(
 
     @SerializedName(value = "parseCdnNodeList", alternate = ["list"])
     var parseCdnNodeList: ArrayList<String>? = null)
+    
