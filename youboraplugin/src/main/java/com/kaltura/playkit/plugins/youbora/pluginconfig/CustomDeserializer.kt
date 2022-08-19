@@ -26,7 +26,6 @@ class IsLiveDeserializer: JsonDeserializer<IsLive> {
                 return context?.deserialize(it, IsLive::class.java) as IsLive
             }
         }
-
         return null
     }
 }
@@ -52,7 +51,6 @@ class CdnNodeDeserializer: JsonDeserializer<CdnNode> {
                 return context?.deserialize(it, CdnNode::class.java) as CdnNode
             }
         }
-
         return null
     }
 }
@@ -78,7 +76,6 @@ class ParseManifestDeserializer: JsonDeserializer<Manifest> {
                 return context?.deserialize(it, Manifest::class.java) as Manifest
             }
         }
-
         return null
     }
 }

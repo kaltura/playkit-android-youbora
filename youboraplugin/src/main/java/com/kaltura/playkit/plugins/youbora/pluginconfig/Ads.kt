@@ -3,6 +3,10 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig
 import com.google.gson.annotations.SerializedName
 
 data class Ads(
+    /**
+     * Set to positive integer array indicating the position (playhead in seconds) of the ad breaks,
+     * provided by the ad server.
+     */
     @SerializedName(value = "adBreaksTime", alternate = ["breaksTime"])
     var adBreaksTime: ArrayList<Int>? = null,
 
