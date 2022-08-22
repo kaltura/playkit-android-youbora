@@ -3,11 +3,14 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -15,15 +18,18 @@ public class YouboraConfigJsonBuilder {
 
     @NonNull
     static JsonObject getYouboraConfigJsonObject( Map<String, JsonPrimitive> rootLevelParams,
-                                                 JsonObject app,
-                                                 JsonObject parse,
-                                                 JsonObject device,
-                                                 JsonObject content,
-                                                 JsonObject network,
-                                                 JsonObject errors,
-                                                 JsonObject ads,
-                                                 JsonObject properties,
-                                                 JsonObject contentCustomDimensions) {
+                                                  JsonObject user,
+                                                  JsonArray pendingMetadata,
+                                                  JsonObject sessionMetrics,
+                                                  JsonObject app,
+                                                  JsonObject parse,
+                                                  JsonObject device,
+                                                  JsonObject content,
+                                                  JsonObject network,
+                                                  JsonObject errors,
+                                                  JsonObject ads,
+                                                  JsonObject properties,
+                                                  JsonObject contentCustomDimensions) {
         JsonObject youboraConfig = new JsonObject();
         for (Map.Entry<String, JsonPrimitive> entry :rootLevelParams.entrySet()) {
             if (!TextUtils.isEmpty(entry.getKey()) && entry.getValue() != null) {
@@ -31,6 +37,15 @@ public class YouboraConfigJsonBuilder {
             }
         }
 
+        if (pendingMetadata != null) {
+            youboraConfig.add("pendingMetadata", pendingMetadata);
+        }
+        if (user != null) {
+            youboraConfig.add("user", user);
+        }
+        if (sessionMetrics != null) {
+            youboraConfig.add("session", sessionMetrics);
+        }
         youboraConfig.add("app", app);
         youboraConfig.add("parse", parse);
         youboraConfig.add("device", device);
@@ -41,6 +56,38 @@ public class YouboraConfigJsonBuilder {
         youboraConfig.add("properties", properties);
         youboraConfig.add("contentCustomDimensions", contentCustomDimensions);
         return youboraConfig;
+    }
+
+    @Nullable
+    static JsonArray getPendingMetaDataJsonObject(ArrayList<String> metaData) {
+        if (metaData == null || metaData.isEmpty()) {
+            return null;
+        }
+        return getJsonArrayFromList(metaData);
+    }
+
+    @Nullable
+    static JsonObject getSessionMetricsJsonObject(HashMap<String, String> sessionMetrics) {
+        if (sessionMetrics == null || sessionMetrics.isEmpty()) {
+            return null;
+        }
+        JsonObject sessionJsonObject = new JsonObject();
+        sessionJsonObject.add("sessionMetrics", addHashMapValuesToJsonObject(sessionMetrics));
+        return sessionJsonObject;
+    }
+
+    static JsonObject getUserJsonObject(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("anonymousId", (!TextUtils.isEmpty(user.getAnonymousId())) ? user.getAnonymousId() : "");
+        jsonObject.addProperty("type", (!TextUtils.isEmpty(user.getType())) ? user.getType() : "");
+        jsonObject.addProperty("email", (!TextUtils.isEmpty(user.getEmail())) ? user.getEmail() : "");
+        jsonObject.addProperty("obfuscateIp", (user.getObfuscateIp() != null) ? user.getObfuscateIp() : false);
+        jsonObject.addProperty("privacyProtocol", (user.getPrivacyProtocol() != null) ? user.getPrivacyProtocol() : "");
+        return jsonObject;
     }
 
     @NonNull
@@ -55,7 +102,7 @@ public class YouboraConfigJsonBuilder {
         }
 
         if (app.getAppReleaseVersion() != null) {
-            appJsonObject.addProperty("appName", app.getAppReleaseVersion());
+            appJsonObject.addProperty("appReleaseVersion", app.getAppReleaseVersion());
         }
 
         return appJsonObject;
@@ -70,15 +117,11 @@ public class YouboraConfigJsonBuilder {
         }
 
         if (parse.getParseManifest() != null) {
-            parseJsonObject.addProperty("parseManifest", parse.getParseManifest());
+            parseJsonObject.add("parseManifest", getParseManifestObject(parse.getParseManifest()));
         }
 
         if (parse.getParseCdnNode() != null) {
-            parseJsonObject.addProperty("parseCdnNode", parse.getParseCdnNode());
-        }
-
-        if (parse.getParseCdnSwitchHeader() != null) {
-            parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
+            parseJsonObject.add("parseCdnNode", getParseCdnNodeObject(parse.getParseCdnNode()));
         }
 
         if (parse.getParseCdnNodeList() != null) {
@@ -89,14 +132,62 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
         }
 
+        if (parse.getParseCdnSwitchHeader() != null) {
+            parseJsonObject.addProperty("parseCdnSwitchHeader", parse.getParseCdnSwitchHeader());
+        }
+
         if (parse.getParseCdnNameHeader() != null) {
-            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader() );
+            parseJsonObject.addProperty("parseCdnNameHeader", parse.getParseCdnNameHeader());
+        }
+
+        if (parse.getParseNodeHeader() != null) {
+            parseJsonObject.addProperty("parseNodeHeader", parse.getParseNodeHeader());
         }
 
         if (parse.getParseCdnTTL() != null) {
             parseJsonObject.addProperty("parseCdnTTL", parse.getParseCdnTTL());
         }
         return parseJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getParseManifestObject(Manifest manifest) {
+        JsonObject manifestJsonObject = new JsonObject();
+        if (manifest == null) {
+            return manifestJsonObject;
+        }
+
+        if (manifest.getParseManifest() != null) {
+            manifestJsonObject.addProperty("parseManifest", manifest.getParseManifest());
+        }
+
+        if (manifest.getParseManifestAuth() != null) {
+            manifestJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(manifest.getParseManifestAuth()));
+        }
+
+        return manifestJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getParseCdnNodeObject(CdnNode cdnNode) {
+        JsonObject cdnNodeJsonObject = new JsonObject();
+        if (cdnNode == null) {
+            return cdnNodeJsonObject;
+        }
+
+        if (cdnNode.getParseCdnNode() != null) {
+            cdnNodeJsonObject.addProperty("parseCdnNode", cdnNode.getParseCdnNode());
+        }
+
+        if (cdnNode.getParseCdnNodeList() != null) {
+            JsonArray parseCdnNodeListJsonArray = new JsonArray();
+            for(String cdn : cdnNode.getParseCdnNodeList()) {
+                parseCdnNodeListJsonArray.add(cdn);
+            }
+            cdnNodeJsonObject.add("parseCdnNodeList", parseCdnNodeListJsonArray);
+        }
+
+        return cdnNodeJsonObject;
     }
 
     @NonNull
@@ -137,6 +228,11 @@ public class YouboraConfigJsonBuilder {
         if (device.getDeviceOsVersion() != null) {
             deviceJsonObject.addProperty("deviceOsVersion", device.getDeviceOsVersion());
         }
+
+        if (device.getDeviceIsAnonymous() != null) {
+            deviceJsonObject.addProperty("deviceIsAnonymous", device.getDeviceIsAnonymous());
+        }
+
         return deviceJsonObject;
     }
 
@@ -181,6 +277,9 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentEncodingCodecProfile() != null) {
             contentEntry.addProperty("contentEncodingCodecProfile", content.getContentEncodingCodecProfile());
         }
+        if (content.getContentEncoding() != null) {
+            contentEntry.add("contentEncoding", getEncodingJsonObject(content.getContentEncoding()));
+        }
         if (content.getContentEncodingContainerFormat() != null) {
             contentEntry.addProperty("contentEncodingContainerFormat", content.getContentEncodingContainerFormat());
         }
@@ -205,11 +304,13 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentImdbId() != null) {
             contentEntry.addProperty("contentImdbId", content.getContentImdbId());
         }
-        contentEntry.addProperty("contentisLive", content.getContentIsLive() != null ? content.getContentIsLive() : Boolean.FALSE);
+        if (content.isLive() != null) {
+            contentEntry.add("contentIsLive", getIsLiveJsonObject(content.isLive()));
+        }
         if (content.getContentIsLiveNoSeek() != null) {
             contentEntry.addProperty("contentIsLiveNoSeek", content.getContentIsLiveNoSeek());
-        } else if (content.getIsDVR() != null) {
-            contentEntry.addProperty("contentIsLiveNoSeek", !content.getIsDVR());
+        } else if (content.isDVR() != null) {
+            contentEntry.addProperty("contentIsLiveNoSeek", !content.isDVR());
         }
 
         if (content.getContentLanguage() != null) {
@@ -228,7 +329,7 @@ public class YouboraConfigJsonBuilder {
             contentEntry.addProperty("contentProgram", content.getContentProgram());
         }
         if (content.getContentRendition() != null) {
-            contentEntry.addProperty("conetentRendition", content.getContentRendition());
+            contentEntry.addProperty("contentRendition", content.getContentRendition());
         }
         if (content.getContentResource() != null) {
             contentEntry.addProperty("contentResource", content.getContentResource());
@@ -260,12 +361,24 @@ public class YouboraConfigJsonBuilder {
         if (content.getContentTransportFormat() != null) {
             contentEntry.addProperty("contentTransportFormat", content.getContentTransportFormat());
         }
-        contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
+        if (content.getContentSendTotalBytes() != null) {
+            contentEntry.addProperty("contentSendTotalBytes", content.getContentSendTotalBytes());
+        }
         if (content.getContentTvShow() != null) {
             contentEntry.addProperty("contentTvShow", content.getContentTvShow());
         }
         if (content.getContentType() != null) {
             contentEntry.addProperty("contentType", content.getContentType());
+        }
+        if (content.getContentMetaData() != null) {
+            contentEntry.add("contentMetaData", getPropertiesJsonObject(content.getContentMetaData()));
+        }
+        if (content.getContentMetrics() != null && !content.getContentMetrics().isEmpty()) {
+            JsonObject metricsJson = new JsonObject();
+            contentEntry.add("contentMetrics", addHashMapValuesToJsonObject(content.getContentMetrics()));
+        }
+        if (content.getCustomDimensions() != null) {
+            contentEntry.add("customDimensions", getContentCustomDimensionsJsonObject(content.getCustomDimensions()));
         }
 
         return contentEntry;
@@ -370,8 +483,41 @@ public class YouboraConfigJsonBuilder {
         if (ads.getAdTitle() != null) {
             adsEntry.addProperty("adTitle", ads.getAdTitle());
         }
-
+        if (ads.getAdCustomDimensions() != null) {
+            adsEntry.add("adCustomDimensions", getAdCustomDimensionsJsonObject(ads.getAdCustomDimensions()));
+        }
+        if (ads.getMetadata() != null) {
+            adsEntry.add("metadata", getPropertiesJsonObject(ads.getMetadata()));
+        }
+        if (ads.getExpectedPattern() != null) {
+            adsEntry.add("expectedPattern", getAdExpectedPatternJsonObject(ads.getExpectedPattern()));
+        }
+        if (ads.getBlockerDetected() != null) {
+            adsEntry.addProperty("blockerDetected", ads.getBlockerDetected());
+        }
+        if (ads.getAfterStop() != null) {
+            adsEntry.addProperty("afterStop", ads.getAfterStop());
+        }
         return adsEntry;
+    }
+
+    @NonNull
+    static JsonObject getAdExpectedPatternJsonObject(AdExpectedPattern adExpectedPattern) {
+        JsonObject expectedPatternJsonObject = new JsonObject();
+        if (adExpectedPattern == null) {
+            return expectedPatternJsonObject;
+        }
+        if (adExpectedPattern.getPre() != null && !adExpectedPattern.getPre().isEmpty()) {
+            expectedPatternJsonObject.add("pre", getJsonArrayFromList(adExpectedPattern.getPre()));
+        }
+        if (adExpectedPattern.getMid() != null && !adExpectedPattern.getMid().isEmpty()) {
+            expectedPatternJsonObject.add("mid", getJsonArrayFromList(adExpectedPattern.getMid()));
+        }
+        if (adExpectedPattern.getPost() != null && !adExpectedPattern.getPost().isEmpty()) {
+            expectedPatternJsonObject.add("post", getJsonArrayFromList(adExpectedPattern.getPost()));
+        }
+
+        return expectedPatternJsonObject;
     }
 
     @NonNull
@@ -483,8 +629,93 @@ public class YouboraConfigJsonBuilder {
         return propertiesEntry;
     }
 
+    static JsonObject getAdCustomDimensionsJsonObject(AdCustomDimensions adCustomDimensions) {
+        JsonObject customDimensionsEntry = new JsonObject();
+        if (adCustomDimensions == null) {
+            return customDimensionsEntry;
+        }
+
+        if (adCustomDimensions.getAdCustomDimension1() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension1", adCustomDimensions.getAdCustomDimension1());
+        }
+        if (adCustomDimensions.getAdCustomDimension2() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension2", adCustomDimensions.getAdCustomDimension2());
+        }
+        if (adCustomDimensions.getAdCustomDimension3() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension3", adCustomDimensions.getAdCustomDimension3());
+        }
+        if (adCustomDimensions.getAdCustomDimension4() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension4", adCustomDimensions.getAdCustomDimension4());
+        }
+        if (adCustomDimensions.getAdCustomDimension5() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension5", adCustomDimensions.getAdCustomDimension5());
+        }
+        if (adCustomDimensions.getAdCustomDimension6() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension6", adCustomDimensions.getAdCustomDimension6());
+        }
+        if (adCustomDimensions.getAdCustomDimension7() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension7", adCustomDimensions.getAdCustomDimension7());
+        }
+        if (adCustomDimensions.getAdCustomDimension8() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension8", adCustomDimensions.getAdCustomDimension8());
+        }
+        if (adCustomDimensions.getAdCustomDimension9() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension9", adCustomDimensions.getAdCustomDimension9());
+        }
+        if (adCustomDimensions.getAdCustomDimension10() != null) {
+            customDimensionsEntry.addProperty("adCustomDimension10", adCustomDimensions.getAdCustomDimension10());
+        }
+
+        return customDimensionsEntry;
+    }
+
     @NonNull
-    static JsonObject getContnentCustomDimentionsJsonObject(ContentCustomDimensions contentCustomDimensions) {
+    static JsonObject getEncodingJsonObject(Encoding encoding) {
+        JsonObject encodingJsonObject = new JsonObject();
+        if (encoding == null) {
+            return encodingJsonObject;
+        }
+
+        if (encoding.getAudioCodec() != null) {
+            encodingJsonObject.addProperty("audioCodec", encoding.getAudioCodec());
+        }
+        if (encoding.getCodecProfile() != null) {
+            encodingJsonObject.addProperty("codecProfile", encoding.getCodecProfile());
+        }
+        if (encoding.getCodecSettings() != null) {
+            encodingJsonObject.add("codecSettings", addHashMapValuesToJsonObject(encoding.getCodecSettings()));
+        }
+        if (encoding.getContainerFormat() != null) {
+            encodingJsonObject.addProperty("containerFormat", encoding.getContainerFormat());
+        }
+        if (encoding.getVideoCodec() != null) {
+            encodingJsonObject.addProperty("videoCodec", encoding.getVideoCodec());
+        }
+        return encodingJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getIsLiveJsonObject(IsLive isLive) {
+        JsonObject isLiveJsonObject = new JsonObject();
+        if (isLive == null) {
+            return isLiveJsonObject;
+        }
+
+        if (isLive.isLiveContent() != null) {
+            isLiveJsonObject.addProperty("isLiveContent", isLive.isLiveContent());
+        }
+        if (isLive.getNoSeek() != null) {
+            isLiveJsonObject.addProperty("noSeek", isLive.getNoSeek());
+        }
+        if (isLive.getNoMonitor() != null) {
+            isLiveJsonObject.addProperty("noMonitor", isLive.getNoMonitor());
+        }
+
+        return isLiveJsonObject;
+    }
+
+    @NonNull
+    static JsonObject getContentCustomDimensionsJsonObject(ContentCustomDimensions contentCustomDimensions) {
         JsonObject customDimensionsEntry = new JsonObject();
         if (contentCustomDimensions == null) {
             return customDimensionsEntry;
@@ -551,5 +782,30 @@ public class YouboraConfigJsonBuilder {
             customDimensionsEntry.addProperty("contentCustomDimension20", contentCustomDimensions.getContentCustomDimension20());
         }
         return customDimensionsEntry;
+    }
+
+    @NonNull
+    private static JsonArray getJsonArrayFromList(ArrayList<?> valueArray) {
+        JsonArray jsonArray = new JsonArray();
+        for(Object value : valueArray) {
+            jsonArray.add(String.valueOf(value));
+        }
+
+        return jsonArray;
+    }
+
+    @Nullable
+    private static JsonObject addHashMapValuesToJsonObject(HashMap<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        JsonObject jsonObject = new JsonObject();
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            jsonObject.addProperty(entry.getKey(), entry.getValue());
+        }
+
+        return jsonObject;
     }
 }

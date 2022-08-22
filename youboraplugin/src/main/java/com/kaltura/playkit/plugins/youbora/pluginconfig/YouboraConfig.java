@@ -3,12 +3,17 @@ package com.kaltura.playkit.plugins.youbora.pluginconfig;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 import com.npaw.youbora.lib6.comm.transform.ViewTransform;
 import com.npaw.youbora.lib6.plugin.Options;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,59 +39,164 @@ public class YouboraConfig {
 
     private String accountCode;
 
-    private String username;
-
-    private String userEmail;
-
-    private String userAnonymousId;
-
-    private String userType;        // any string - free / paid etc.
-
-    private String houseHoldId;    // which device is used to play
-
-    private boolean userObfuscateIp; // Option to obfuscate the IP.
-
-    private boolean httpSecure = true; // youbora events will be sent via https
-
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
     private String appName = "";
 
+    /**
+     * @deprecated This value is part of {@link App}
+     */
+    @Deprecated
     private String appReleaseVersion = "";
 
-    private String urlToParse;
+    /**
+     * Optional: auth token to validate all the requests.
+     */
+    private String authToken;
+
+    /**
+     * Optional: auth type. Used if authToken is set.
+     */
+    private String authType;
+
+    private String username;
 
     private String linkedViewId;
 
-    private boolean isAutoStart = true;
+    private String urlToParse;
 
-    private boolean isAutoDetectBackground = true;
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userPrivacyProtocol; // backward compatibility
 
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userEmail; // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userAnonymousId; // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private String userType; // any string - free / paid etc.   // backward compatibility
+
+    /**
+     * @deprecated This value is part of {@link User}
+     */
+    @Deprecated
+    private boolean userObfuscateIp; // Option to obfuscate the IP. // backward compatibility
+
+    @SerializedName(value="houseHoldId", alternate={"householdId"})
+    private String houseHoldId; // which device is used to play
+
+    /**
+     * Host of the Fastdata service.
+     */
+    private String host;
+
+    @SerializedName(value="isAutoStart", alternate={"autoStart"})
+    private boolean isAutoStart = true; // backward compatible
+
+    @SerializedName(value="isAutoDetectBackground", alternate={"autoDetectBackground"})
+    private boolean isAutoDetectBackground = true; // backward compatible
+
+    @SerializedName(value="isEnabled", alternate={"enabled"})
     private boolean isEnabled = true;
 
-    private boolean isForceInit;
+    @SerializedName(value="isForceInit", alternate={"forceInit"})
+    private boolean isForceInit; // backward compatible
 
-    private boolean isOffline;
+    @SerializedName(value="isOffline", alternate={"offline"})
+    private boolean isOffline; // backward compatible
 
-    private App app;
+    /**
+     * Define the security of NQS calls.
+     * If `true` it will use "https://".
+     * If `false` it will use "http://".
+     * Default: `true`.
+     */
+    private boolean httpSecure = true; // youbora events will be sent via https
+
+    /**
+     * Enabling this option enables the posibility of getting the /start request later on the view,
+     * making the flow go as follows: /init is sent when the player starts to load content,
+     * then when the playback starts /joinTime event will be sent, but with the difference of no
+     * /start request, instead it will be delayed until all the option keys from
+     * {@link #pendingMetadata} are not <b>null</b>, this is very important, since an empty string
+     * is considered a not null and therefore is a valid value.
+     */
+    private boolean waitForMetadata;
+
+    /**
+     * Set option keys you want to wait for metadata, in order to work {@link #waitForMetadata}
+     * must be set to true.
+     * You need to create an {@link @ArrayList} with all the options you want to make the start
+     * be hold on.
+     * You can find all the keys with the following format: Options.KEY_{OPTION_NAME} where option
+     * name is the same one as the option itself.
+     *
+     * Find below an example:
+     *
+     * ArrayList optionsToWait = new ArrayList<String>()
+     * optionsToWait.add(KEY_CONTENT_TITLE)
+     * optionsToWait.add(KEY_CONTENT_CUSTOM_DIMENSION_1)
+     * options.setPendingMetada(optionsToWait)
+     */
+    private ArrayList<String> pendingMetadata;
+
+    private ViewTransform.FastDataConfig fastDataConfig;
+
+    @SerializedName(value="ads", alternate={"ad"})
+    private Ads ads; // backward compatible
+
+    private App app; // backward compatible
+
+    private Errors errors;
+
+    /**
+     * Use user object to pass
+     * userEmail, userAnonymousId, userType, userObfuscateIp, userPrivacyProtocol
+     * If User object is passed along with that individually the values are also passed
+     * apart from User's object then User object will be prioritized
+     *
+     * Either pass User object or pass individual values (backward compatibility)
+     */
+    private User user;
+
+    private Network network;
 
     private Parse parse;
 
-    private Device device;
+    private Session session;
 
     @SerializedName(value="content", alternate={"media"})
     private Content content;
 
-    private Network network;
+    private Device device;
 
-    private Errors errors;
-
-    private Ads ads;
-
+    /**
+     * @deprecated This is moved internally to {@link Content} metadata and {@link Ads} metadata
+     */
+    @Deprecated
     private Properties properties;
 
-    @SerializedName(value="contentCustomDimensions", alternate={"extraParams"})
+    /**
+     * @deprecated This is moved internally to {@link Content} and {@link Ads} custom dimensions
+     */
+    @Deprecated
+    @SerializedName(value="contentCustomDimensions", alternate={"extraParams", "customDimension", "customDimensions"})
     private ContentCustomDimensions contentCustomDimensions;
-
-    private ViewTransform.FastDataConfig fastDataConfig;
 
     public String getAccountCode() {
         return accountCode;
@@ -94,6 +204,32 @@ public class YouboraConfig {
 
     public void setAccountCode(String accountCode) {
         this.accountCode = accountCode;
+    }
+
+    @Nullable
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    @Nullable
+    public String getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(String authType) {
+        this.authType = authType;
     }
 
     public String getUsername() {
@@ -104,26 +240,40 @@ public class YouboraConfig {
         this.username = username;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Deprecated
     public String getUserEmail() {
         return userEmail;
     }
 
+    @Deprecated
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
+    @Deprecated
     public String getUserAnonymousId() {
         return userAnonymousId;
     }
 
+    @Deprecated
     public void setUserAnonymousId(String userAnonymousId) {
         this.userAnonymousId = userAnonymousId;
     }
 
+    @Deprecated
     public String getUserType() {
         return userType;
     }
 
+    @Deprecated
     public void setUserType(String userType) {
         this.userType = userType;
     }
@@ -136,18 +286,22 @@ public class YouboraConfig {
         this.httpSecure = httpSecure;
     }
 
+    @Deprecated
     public String getAppName() {
         return appName;
     }
 
+    @Deprecated
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    @Deprecated
     public String getAppReleaseVersion() {
         return appReleaseVersion;
     }
 
+    @Deprecated
     public void setAppReleaseVersion(String appReleaseVersion) {
         this.appReleaseVersion = appReleaseVersion;
     }
@@ -176,12 +330,24 @@ public class YouboraConfig {
         this.houseHoldId = houseHoldId;
     }
 
+    @Deprecated
     public boolean getUserObfuscateIp() {
         return userObfuscateIp;
     }
 
+    @Deprecated
     public void setUserObfuscateIp(boolean userObfuscateIp) {
         this.userObfuscateIp = userObfuscateIp;
+    }
+
+    @Deprecated
+    public String getUserPrivacyProtocol() {
+        return userPrivacyProtocol;
+    }
+
+    @Deprecated
+    public void setUserPrivacyProtocol(String userPrivacyProtocol) {
+        this.userPrivacyProtocol = userPrivacyProtocol;
     }
 
     public boolean getIsAutoStart() {
@@ -222,6 +388,30 @@ public class YouboraConfig {
 
     public void setIsOffline(boolean isOffline) {
         this.isOffline = isOffline;
+    }
+
+    public boolean isWaitForMetadata() {
+        return waitForMetadata;
+    }
+
+    public void setWaitForMetadata(boolean waitForMetadata) {
+        this.waitForMetadata = waitForMetadata;
+    }
+
+    public ArrayList<String> getPendingMetadata() {
+        return pendingMetadata;
+    }
+
+    public void setPendingMetadata(ArrayList<String> pendingMetadata) {
+        this.pendingMetadata = pendingMetadata;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public App getApp() {
@@ -280,18 +470,22 @@ public class YouboraConfig {
         this.ads = ads;
     }
 
+    @Deprecated
     public Properties getProperties() {
         return properties;
     }
 
+    @Deprecated
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
 
+    @Deprecated
     public ContentCustomDimensions getContentCustomDimensions() {
         return contentCustomDimensions;
     }
 
+    @Deprecated
     public void setContentCustomDimensions(ContentCustomDimensions contentCustomDimensions) {
         this.contentCustomDimensions = contentCustomDimensions;
     }
@@ -305,49 +499,126 @@ public class YouboraConfig {
     }
 
     public Options getYouboraOptions() {
-        Options youboraOptions =  new Options();
+        Options youboraOptions = new Options();
 
-        youboraOptions.setAccountCode(accountCode);
-        youboraOptions.setUsername(username);
-        youboraOptions.setUserEmail(userEmail);
-        youboraOptions.setUserAnonymousId(userAnonymousId);
-        youboraOptions.setUserType(userType);
-        youboraOptions.setAppName(appName);
-        youboraOptions.setAppReleaseVersion(appReleaseVersion);
-        youboraOptions.setUrlToParse(urlToParse);
-        youboraOptions.setLinkedViewId(linkedViewId);
-        youboraOptions.setUserObfuscateIp(userObfuscateIp);
+        if (!TextUtils.isEmpty(accountCode)) {
+            youboraOptions.setAccountCode(accountCode);
+        }
+
+        if (!TextUtils.isEmpty(host)) {
+            youboraOptions.setHost(host);
+        }
+
+        if (!TextUtils.isEmpty(authToken)) {
+            youboraOptions.setAuthToken(authToken);
+        }
+
+        if (!TextUtils.isEmpty(authType)) {
+            youboraOptions.setAuthType(authType);
+        }
+
+        if (!TextUtils.isEmpty(username)) {
+            youboraOptions.setUsername(username);
+        }
+
+        if (user != null) {
+            if (!TextUtils.isEmpty(user.getEmail())) {
+                youboraOptions.setUserEmail(user.getEmail());
+            }
+            if (!TextUtils.isEmpty(user.getAnonymousId())) {
+                youboraOptions.setUserAnonymousId(user.getAnonymousId());
+            }
+            if (!TextUtils.isEmpty(user.getType())) {
+                youboraOptions.setUserEmail(user.getType());
+            }
+
+            youboraOptions.setUserObfuscateIp(user.getObfuscateIp());
+
+            if (!TextUtils.isEmpty(user.getPrivacyProtocol())) {
+                youboraOptions.setUserPrivacyProtocol(user.getPrivacyProtocol());
+            }
+        } else {
+            if (!TextUtils.isEmpty(getUserEmail())) {
+                youboraOptions.setUserEmail(getUserEmail());
+            }
+            if (!TextUtils.isEmpty(getUserAnonymousId())) {
+                youboraOptions.setUserAnonymousId(getUserAnonymousId());
+            }
+            if (!TextUtils.isEmpty(getUserType())) {
+                youboraOptions.setUserEmail(getUserType());
+            }
+
+            youboraOptions.setUserObfuscateIp(getUserObfuscateIp());
+
+            if (!TextUtils.isEmpty(getUserPrivacyProtocol())) {
+                youboraOptions.setUserPrivacyProtocol(getUserPrivacyProtocol());
+            }
+        }
+
+        if (app != null) {
+            if (!TextUtils.isEmpty(app.getAppName())) {
+                youboraOptions.setAppName(app.getAppName());
+            }
+            if (!TextUtils.isEmpty(app.getAppReleaseVersion())) {
+                youboraOptions.setAppReleaseVersion(app.getAppReleaseVersion());
+            }
+        } else {
+            if (!TextUtils.isEmpty(getAppName())) {
+                youboraOptions.setAppName(getAppName());
+            }
+            if (!TextUtils.isEmpty(getAppReleaseVersion())) {
+                youboraOptions.setAppReleaseVersion(getAppReleaseVersion());
+            }
+        }
+
+        if (!TextUtils.isEmpty(urlToParse)) {
+            youboraOptions.setUrlToParse(urlToParse);
+        }
+
+        if (!TextUtils.isEmpty(linkedViewId)) {
+            youboraOptions.setLinkedViewId(linkedViewId);
+        }
+
         youboraOptions.setHttpSecure(httpSecure);
         youboraOptions.setAutoStart(isAutoStart);
         youboraOptions.setAutoDetectBackground(isAutoDetectBackground);
         youboraOptions.setEnabled(isEnabled);
         youboraOptions.setForceInit(isForceInit);
         youboraOptions.setOffline(isOffline);
+        youboraOptions.setWaitForMetadata(waitForMetadata);
 
-        if (app != null) {
-            if (app.getAppName() != null) {
-                youboraOptions.setAppName(app.getAppName());
-            }
-            if (app.getAppReleaseVersion() != null) {
-                youboraOptions.setAppReleaseVersion(app.getAppReleaseVersion());
-            }
+        if (pendingMetadata != null && !pendingMetadata.isEmpty()) {
+            youboraOptions.setPendingMetadata(pendingMetadata);
         }
 
         if (parse != null) {
             if (parse.getParseManifest() != null) {
-                youboraOptions.setParseManifest(parse.getParseManifest());
+                if (parse.getParseManifest().getParseManifest() != null) {
+                    youboraOptions.setParseManifest(parse.getParseManifest().getParseManifest());
+                }
+                if (parse.getParseManifest().getParseManifestAuth() != null) {
+                    youboraOptions.setParseManifestAuth(getBundleFromMap(parse.getParseManifest().getParseManifestAuth()));
+                }
             }
+
             if (parse.getParseCdnNode() != null) {
-                youboraOptions.setParseCdnNode(parse.getParseCdnNode());
+                if (parse.getParseCdnNode().getParseCdnNode() != null) {
+                    youboraOptions.setParseCdnNode(parse.getParseCdnNode().getParseCdnNode());
+                }
+                if (parse.getParseCdnNode().getParseCdnNodeList() != null) {
+                    youboraOptions.setParseCdnNodeList(parse.getParseCdnNode().getParseCdnNodeList());
+                }
             }
-            if (parse.getParseCdnSwitchHeader() != null) {
-                youboraOptions.setParseCdnSwitchHeader(parse.getParseCdnSwitchHeader());
-            }
-            if (parse.getParseCdnNodeList() != null) {
+
+            if (parse.getParseCdnNode() == null && parse.getParseCdnNodeList() != null && !parse.getParseCdnNodeList().isEmpty()) {
                 youboraOptions.setParseCdnNodeList(parse.getParseCdnNodeList());
             }
+
             if (parse.getParseCdnNameHeader() != null) {
                 youboraOptions.setParseCdnNameHeader(parse.getParseCdnNameHeader());
+            }
+            if (parse.getParseNodeHeader() != null) {
+                youboraOptions.setParseNodeHeader(parse.getParseNodeHeader());
             }
             if (parse.getParseCdnTTL() != null) {
                 youboraOptions.setParseCdnTTL(parse.getParseCdnTTL());
@@ -359,17 +630,13 @@ public class YouboraConfig {
                 //Generic Data by code see in Device class what Codes are available
                 youboraOptions.setDeviceCode(device.getDeviceCode());
             }
-            // Specific Data
-            if (device.getDeviceModel() != null) {
-                youboraOptions.setDeviceModel(device.getDeviceModel());
-            }
-
             if (device.getDeviceId() != null) {
                 youboraOptions.setDeviceId(device.getDeviceId());
             }
 
-            if (device.getDeviceEdId() != null) {
-                youboraOptions.setDeviceEDID(device.getDeviceEdId());
+            // Specific Data
+            if (device.getDeviceModel() != null) {
+                youboraOptions.setDeviceModel(device.getDeviceModel());
             }
 
             if (device.getDeviceBrand() != null) {
@@ -388,10 +655,13 @@ public class YouboraConfig {
                 youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
             }
 
-            if (device.getDeviceType() != null) {
-                youboraOptions.setDeviceOsVersion(device.getDeviceOsVersion());
+            if (device.getDeviceEdId() != null) {
+                youboraOptions.setDeviceEDID(device.getDeviceEdId());
             }
-            youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
+
+            if (device.getDeviceIsAnonymous() != null) {
+                youboraOptions.setDeviceIsAnonymous(device.getDeviceIsAnonymous());
+            }
         }
 
         if (content != null) {
@@ -422,18 +692,6 @@ public class YouboraConfig {
             if (content.getContentDuration() != null) {
                 youboraOptions.setContentDuration(content.getContentDuration());
             }
-            if (content.getContentEncodingAudioCodec() != null) {
-                youboraOptions.setContentEncodingAudioCodec(content.getContentEncodingAudioCodec());
-            }
-            if (content.getContentEncodingCodecProfile() != null) {
-                youboraOptions.setContentEncodingCodecProfile(content.getContentEncodingCodecProfile());
-            }
-            if (content.getContentEncodingContainerFormat() != null) {
-                youboraOptions.setContentEncodingContainerFormat(content.getContentEncodingContainerFormat());
-            }
-            if (content.getContentEncodingVideoCodec() != null) {
-                youboraOptions.setContentEncodingVideoCodec(content.getContentEncodingVideoCodec());
-            }
             if (content.getContentEpisodeTitle() != null) {
                 youboraOptions.setContentEpisodeTitle(content.getContentEpisodeTitle());
             }
@@ -452,13 +710,25 @@ public class YouboraConfig {
             if (content.getContentImdbId() != null) {
                 youboraOptions.setContentImdbId(content.getContentImdbId());
             }
-            if (content.getContentIsLive() != null) {
-                youboraOptions.setContentIsLive(content.getContentIsLive());
+
+            if (content.isLive() != null) {
+                if (content.isLive().isLiveContent() != null) {
+                    youboraOptions.setContentIsLive(content.isLive().isLiveContent());
+                }
+                if (content.isLive().getNoSeek() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(content.isLive().getNoSeek());
+                } else if (content.isDVR() != null) {
+                    youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
+                }
+                if (content.isLive().getNoMonitor() != null) {
+                    youboraOptions.setContentIsLiveNoMonitor(content.isLive().getNoMonitor());
+                }
             }
-            if (content.getContentIsLiveNoSeek() != null) {
+
+            if (content.isLive() == null && content.isLive().getNoSeek() == null && content.getContentIsLiveNoSeek() != null) {
                 youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
-            } else if (content.getIsDVR() != null) {
-                youboraOptions.setContentIsLiveNoSeek(!content.getIsDVR());
+            } else if (content.isDVR() != null) {
+                youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
             }
 
             if (content.getContentLanguage() != null) {
@@ -509,22 +779,67 @@ public class YouboraConfig {
             if (content.getContentTotalBytes() != null) {
                 youboraOptions.setContentTotalBytes(content.getContentTotalBytes());
             }
-            youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes());
+            if (content.getContentSendTotalBytes() != null) {
+                youboraOptions.setContentSendTotalBytes(content.getContentSendTotalBytes());
+            }
             if (content.getContentTvShow() != null) {
                 youboraOptions.setContentTvShow(content.getContentTvShow());
             }
             if (content.getContentType() != null) {
                 youboraOptions.setContentType(content.getContentType());
             }
+            if (content.getContentMetaData() != null) {
+                youboraOptions.setContentMetadata(getContentMetaDataBundle(content.getContentMetaData()));
+            }
+            if (content.getContentMetrics() != null) {
+                youboraOptions.setContentMetrics(getBundleFromMap(content.getContentMetrics()));
+            }
+            if (content.getContentEncoding() != null) {
+                if (content.getContentEncoding().getAudioCodec() != null) {
+                    youboraOptions.setContentEncodingAudioCodec(content.getContentEncoding().getAudioCodec());
+                }
+                if (content.getContentEncoding().getCodecProfile() != null) {
+                    youboraOptions.setContentEncodingCodecProfile(content.getContentEncoding().getCodecProfile());
+                }
+                if (content.getContentEncoding().getContainerFormat() != null) {
+                    youboraOptions.setContentEncodingContainerFormat(content.getContentEncoding().getContainerFormat());
+                }
+                if (content.getContentEncoding().getVideoCodec() != null) {
+                    youboraOptions.setContentEncodingVideoCodec(content.getContentEncoding().getVideoCodec());
+                }
+                if (content.getContentEncoding().getCodecSettings() != null) {
+                    youboraOptions.setContentEncodingCodecSettings(getBundleFromMap(content.getContentEncoding().getCodecSettings()));
+                }
+            } else {
+                if (content.getContentEncodingAudioCodec() != null) {
+                    youboraOptions.setContentEncodingAudioCodec(content.getContentEncodingAudioCodec());
+                }
+                if (content.getContentEncodingCodecProfile() != null) {
+                    youboraOptions.setContentEncodingCodecProfile(content.getContentEncodingCodecProfile());
+                }
+                if (content.getContentEncodingContainerFormat() != null) {
+                    youboraOptions.setContentEncodingContainerFormat(content.getContentEncodingContainerFormat());
+                }
+                if (content.getContentEncodingVideoCodec() != null) {
+                    youboraOptions.setContentEncodingVideoCodec(content.getContentEncodingVideoCodec());
+                }
+            }
+            if (content.getCustomDimensions() != null) {
+                populateContentCustomDimensions(youboraOptions, content.getCustomDimensions());
+            }
+        }
+
+        // Backward compatibility if app passes the custom dimension on top level instead of content
+        if ((content == null || content.getCustomDimensions() == null) &&  getContentCustomDimensions() != null) {
+            populateContentCustomDimensions(youboraOptions, getContentCustomDimensions());
         }
 
         setLegacyContentPropertiesBundle(youboraOptions);
 
-        youboraOptions.setContentMetadata(getContentMetaDataBundle());
-
-        //youboraOptions.setContentMetrics(getContentMetricsBundle());
-        //youboraOptions.setContentEncodingCodecSettings(getContentEncodingCodecSettingsBundle());
-
+        // Backward compatibility if app passes the metadata Properties on top level instead of content and Ads
+        if ((content == null || content.getContentMetaData() == null) && getProperties() != null) {
+            youboraOptions.setContentMetadata(getContentMetaDataBundle(getProperties()));
+        }
 
         if (network != null) {
             if (network.getNetworkConnectionType() != null) {
@@ -554,10 +869,12 @@ public class YouboraConfig {
             if (ads.getAdBreaksTime() != null) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
             }
-            youboraOptions.setAdCampaign(ads.getAdCampaign());
-            youboraOptions.setAdCreativeId(ads.getAdCreativeId());
-
-
+            if (ads.getAdCampaign() != null) {
+                youboraOptions.setAdCampaign(ads.getAdCampaign());
+            }
+            if (ads.getAdCreativeId() != null) {
+                youboraOptions.setAdCreativeId(ads.getAdCreativeId());
+            }
             if (ads.getAdExpectedBreaks() != null) {
                 youboraOptions.setAdExpectedBreaks(ads.getAdExpectedBreaks());
             }
@@ -567,11 +884,15 @@ public class YouboraConfig {
             if (ads.getAdGivenBreaks() != null) {
                 youboraOptions.setAdGivenBreaks(ads.getAdGivenBreaks());
             }
-
-            youboraOptions.setAdProvider(ads.getAdProvider());
-            youboraOptions.setAdResource(ads.getAdResource());
-            youboraOptions.setAdTitle(ads.getAdTitle());
-
+            if (ads.getAdProvider() != null) {
+                youboraOptions.setAdProvider(ads.getAdProvider());
+            }
+            if (ads.getAdResource() != null) {
+                youboraOptions.setAdResource(ads.getAdResource());
+            }
+            if (ads.getAdTitle() != null) {
+                youboraOptions.setAdTitle(ads.getAdTitle());
+            }
             if (ads.getAdCustomDimensions() != null) {
                 youboraOptions.setAdCustomDimension1(ads.getAdCustomDimensions().getAdCustomDimension1());
                 youboraOptions.setAdCustomDimension2(ads.getAdCustomDimensions().getAdCustomDimension2());
@@ -585,34 +906,50 @@ public class YouboraConfig {
                 youboraOptions.setAdCustomDimension10(ads.getAdCustomDimensions().getAdCustomDimension10());
             }
 
-            //UNSUPPORTED YET
-            //youboraOptions.setAdMetadata(getAdMetaDataBundle());
-            //youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle());
+            if (ads.getMetadata() != null) {
+                youboraOptions.setAdMetadata(getAdMetaDataBundle(ads.getMetadata()));
+            }
+            if (ads.getExpectedPattern() != null) {
+                youboraOptions.setAdExpectedPattern(getAdExpectedPatternBundle(ads.getExpectedPattern()));
+            }
+            if (ads.getBlockerDetected() != null) {
+                youboraOptions.setAdBlockerDetected(ads.getBlockerDetected());
+            }
+            if (ads.getAfterStop() != null) {
+                youboraOptions.setAdsAfterStop(ads.getAfterStop());
+            }
         }
 
-        if (contentCustomDimensions != null) {
-            youboraOptions.setContentCustomDimension1(contentCustomDimensions.getContentCustomDimension1());
-            youboraOptions.setContentCustomDimension2(contentCustomDimensions.getContentCustomDimension2());
-            youboraOptions.setContentCustomDimension3(contentCustomDimensions.getContentCustomDimension3());
-            youboraOptions.setContentCustomDimension4(contentCustomDimensions.getContentCustomDimension4());
-            youboraOptions.setContentCustomDimension5(contentCustomDimensions.getContentCustomDimension5());
-            youboraOptions.setContentCustomDimension6(contentCustomDimensions.getContentCustomDimension6());
-            youboraOptions.setContentCustomDimension7(contentCustomDimensions.getContentCustomDimension7());
-            youboraOptions.setContentCustomDimension8(contentCustomDimensions.getContentCustomDimension8());
-            youboraOptions.setContentCustomDimension9(contentCustomDimensions.getContentCustomDimension9());
-            youboraOptions.setContentCustomDimension10(contentCustomDimensions.getContentCustomDimension10());
-            youboraOptions.setContentCustomDimension11(contentCustomDimensions.getContentCustomDimension11());
-            youboraOptions.setContentCustomDimension12(contentCustomDimensions.getContentCustomDimension12());
-            youboraOptions.setContentCustomDimension13(contentCustomDimensions.getContentCustomDimension13());
-            youboraOptions.setContentCustomDimension14(contentCustomDimensions.getContentCustomDimension14());
-            youboraOptions.setContentCustomDimension15(contentCustomDimensions.getContentCustomDimension15());
-            youboraOptions.setContentCustomDimension16(contentCustomDimensions.getContentCustomDimension16());
-            youboraOptions.setContentCustomDimension17(contentCustomDimensions.getContentCustomDimension17());
-            youboraOptions.setContentCustomDimension18(contentCustomDimensions.getContentCustomDimension18());
-            youboraOptions.setContentCustomDimension19(contentCustomDimensions.getContentCustomDimension19());
-            youboraOptions.setContentCustomDimension20(contentCustomDimensions.getContentCustomDimension20());
+        if (session != null && session.getSessionMetrics() != null && !session.getSessionMetrics().isEmpty()) {
+            youboraOptions.setSessionMetrics(getBundleFromMap(session.getSessionMetrics()));
         }
+
         return youboraOptions;
+    }
+
+    private void populateContentCustomDimensions(Options youboraOptions, ContentCustomDimensions customDimensions) {
+        if (customDimensions != null) {
+            youboraOptions.setContentCustomDimension1(customDimensions.getContentCustomDimension1());
+            youboraOptions.setContentCustomDimension2(customDimensions.getContentCustomDimension2());
+            youboraOptions.setContentCustomDimension3(customDimensions.getContentCustomDimension3());
+            youboraOptions.setContentCustomDimension4(customDimensions.getContentCustomDimension4());
+            youboraOptions.setContentCustomDimension5(customDimensions.getContentCustomDimension5());
+            youboraOptions.setContentCustomDimension6(customDimensions.getContentCustomDimension6());
+            youboraOptions.setContentCustomDimension7(customDimensions.getContentCustomDimension7());
+            youboraOptions.setContentCustomDimension8(customDimensions.getContentCustomDimension8());
+            youboraOptions.setContentCustomDimension9(customDimensions.getContentCustomDimension9());
+            youboraOptions.setContentCustomDimension10(customDimensions.getContentCustomDimension10());
+            youboraOptions.setContentCustomDimension11(customDimensions.getContentCustomDimension11());
+            youboraOptions.setContentCustomDimension12(customDimensions.getContentCustomDimension12());
+            youboraOptions.setContentCustomDimension13(customDimensions.getContentCustomDimension13());
+            youboraOptions.setContentCustomDimension14(customDimensions.getContentCustomDimension14());
+            youboraOptions.setContentCustomDimension15(customDimensions.getContentCustomDimension15());
+            youboraOptions.setContentCustomDimension16(customDimensions.getContentCustomDimension16());
+            youboraOptions.setContentCustomDimension17(customDimensions.getContentCustomDimension17());
+            youboraOptions.setContentCustomDimension18(customDimensions.getContentCustomDimension18());
+            youboraOptions.setContentCustomDimension19(customDimensions.getContentCustomDimension19());
+            youboraOptions.setContentCustomDimension20(customDimensions.getContentCustomDimension20());
+        }
     }
 
     private void setLegacyContentPropertiesBundle(Options youboraOptions) {
@@ -697,17 +1034,36 @@ public class YouboraConfig {
     }
 
     /**
+     * Returns a bundle from a HashMap
+     * @param map incoming HashMap
+     * @return Bundle
+     */
+    @NonNull
+    private Bundle getBundleFromMap(HashMap<String, String> map) {
+        Bundle bundle = new Bundle();
+        if (map == null || map.isEmpty()) {
+            return bundle;
+        }
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
+
+        return bundle;
+    }
+
+    /**
      * Containing mixed extra information about the content like: director,
      * parental rating, device info or the audio channels.
      * @return bundle having properties
      */
-    private Bundle getContentMetaDataBundle() {
-        Properties prop = getProperties();
+    @NonNull
+    private Bundle getContentMetaDataBundle(Properties prop) {
+        Bundle propertiesBundle = new Bundle();
         if (prop == null) {
-            return new Bundle();
+            return propertiesBundle;
         }
 
-        Bundle propertiesBundle = new Bundle();
         if (prop.getDirector() != null) {
             propertiesBundle.putString("director", prop.getDirector());
         }
@@ -739,81 +1095,106 @@ public class YouboraConfig {
         return propertiesBundle;
     }
 
-    private Bundle getContentMetricsBundle() {
-        return new Bundle();
+    /**
+     * Containing mixed extra information about the Ads like: director,
+     * parental rating, device info or the audio channels.
+     * @return bundle having properties
+     */
+    @NonNull
+    private Bundle getAdMetaDataBundle(Properties prop) {
+        Bundle propertiesBundle = new Bundle();
+        if (prop == null) {
+            return propertiesBundle;
+        }
+
+        if (prop.getDirector() != null) {
+            propertiesBundle.putString("director", prop.getDirector());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("parental", prop.getParental());
+        }
+        if (prop.getParental() != null) {
+            propertiesBundle.putString("audioType", prop.getAudioType());
+        }
+        if (prop.getAudioChannels() != null) {
+            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
+        }
+        if (prop.getDevice() != null) {
+            propertiesBundle.putString("device", prop.getDevice());
+        }
+        if (prop.getRating() != null) {
+            propertiesBundle.putString("rating", prop.getRating());
+        }
+        if (prop.getYear() != null) {
+            propertiesBundle.putString("year", prop.getYear());
+        }
+        if (prop.getCast() != null) {
+            propertiesBundle.putString("cast", prop.getCast());
+        }
+        if (prop.getOwner() != null) {
+            propertiesBundle.putString("owner", prop.getOwner());
+        }
+
+        return propertiesBundle;
     }
 
-    private Bundle getContentEncodingCodecSettingsBundle() {
-        return new Bundle();
-    }
+    /**
+     * Set to positive integer array indicating how many ads will be shown for each break,
+     * value expected by the customer (the number of ads requested to the server for each break).
+     *
+     * @return Bundle of expected Ad pattern
+     */
+    @NonNull
+    private Bundle getAdExpectedPatternBundle(AdExpectedPattern adExpectedPattern) {
+        Bundle expectedPatternBundle = new Bundle();
+        if (adExpectedPattern == null) {
+            return expectedPatternBundle;
+        }
+        if (adExpectedPattern.getPre() != null) {
+            expectedPatternBundle.putIntegerArrayList("pre", adExpectedPattern.getPre());
+        }
+        if (adExpectedPattern.getMid() != null) {
+            expectedPatternBundle.putIntegerArrayList("mid", adExpectedPattern.getMid());
+        }
+        if (adExpectedPattern.getPost() != null) {
+            expectedPatternBundle.putIntegerArrayList("post", adExpectedPattern.getPost());
+        }
 
-    private Bundle getAdMetaDataBundle() {
-        return new Bundle();
-//        AdProperties prop = getAdProperties();
-//        if (prop == null) {
-//            return new Bundle();
-//        }
-//
-//        Bundle propertiesBundle = new Bundle();
-//        if (prop.getDirector() != null) {
-//            propertiesBundle.putString("director", prop.getDirector());
-//        }
-//        if (prop.getParental() != null) {
-//            propertiesBundle.putString("parental", prop.getParental());
-//        }
-//        if (prop.getParental() != null) {
-//            propertiesBundle.putString("audioType", prop.getAudioType());
-//        }
-//        if (prop.getAudioChannels() != null) {
-//            propertiesBundle.putString("audioChannels", prop.getAudioChannels());
-//        }
-//        if (prop.getDevice() != null) {
-//            propertiesBundle.putString("device", prop.getDevice());
-//        }
-//        if (prop.getRating() != null) {
-//            propertiesBundle.putString("rating", prop.getRating());
-//        }
-//        if (prop.getYear() != null) {
-//            propertiesBundle.putString("year", prop.getYear());
-//        }
-//        if (prop.getCast() != null) {
-//            propertiesBundle.putString("cast", prop.getCast());
-//        }
-//        if (prop.getOwner() != null) {
-//            propertiesBundle.putString("owner", prop.getOwner());
-//        }
-//
-//
-//        return propertiesBundle;
+        return expectedPatternBundle;
     }
-
-    private Bundle getAdExpectedPatternBundle() {
-        return new Bundle();
-    }
-
 
     public JsonObject toJson() {
 
         Map<String, JsonPrimitive> rootLevelParams = new HashMap<>();
         rootLevelParams.put("accountCode", new JsonPrimitive(getAccountCode() != null ? getAccountCode() : ""));
+        rootLevelParams.put("host", (getHost() != null) ? new JsonPrimitive(getHost()) : null);
+        rootLevelParams.put("authToken", (getAuthToken() != null) ? new JsonPrimitive(getAuthToken()) : null);
+        rootLevelParams.put("authType", (getAuthType() != null) ? new JsonPrimitive(getAuthType()) : null);
         rootLevelParams.put("username", (getUsername() != null) ? new JsonPrimitive(getUsername()) : null);
+        rootLevelParams.put("houseHoldId", (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null);
+
         rootLevelParams.put("userEmail", (getUserEmail() != null) ? new JsonPrimitive(getUserEmail()) : null);
         rootLevelParams.put("userAnonymousId", (getUserAnonymousId() != null) ? new JsonPrimitive(getUserAnonymousId()) : null);
         rootLevelParams.put("userType", (getUserType() != null) ? new JsonPrimitive(getUserType()) : null);
+        rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
+        rootLevelParams.put("userPrivacyProtocol", (getUserPrivacyProtocol() != null) ? new JsonPrimitive(getUserPrivacyProtocol()) : null);
+
         rootLevelParams.put("appName", (getAppName() != null) ? new JsonPrimitive(getAppName()) : null);
         rootLevelParams.put("appReleaseVersion", (getAppReleaseVersion() != null) ? new JsonPrimitive(getAppReleaseVersion()) : null);
-        rootLevelParams.put("houseHoldId", (getHouseHoldId() != null) ? new JsonPrimitive(getHouseHoldId()) : null);
+
         rootLevelParams.put("urlToParse", (getUrlToParse() != null) ? new JsonPrimitive(getUrlToParse()) : null);
         rootLevelParams.put("linkedViewId", (getLinkedViewId() != null) ? new JsonPrimitive(getLinkedViewId()) : null);
-
-        rootLevelParams.put("isUserObfuscateIp", new JsonPrimitive(getUserObfuscateIp()));
         rootLevelParams.put("httpSecure", new JsonPrimitive(getHttpSecure()));
         rootLevelParams.put("isAutoStart", new JsonPrimitive(getIsAutoStart()));
         rootLevelParams.put("isAutoDetectBackground", new JsonPrimitive(getIsAutoDetectBackground()));
         rootLevelParams.put("isEnabled", new JsonPrimitive(getIsEnabled()));
         rootLevelParams.put("isForceInit", new JsonPrimitive(getIsForceInit()));
         rootLevelParams.put("isOffline", new JsonPrimitive(getIsOffline()));
+        rootLevelParams.put("waitForMetadata", new JsonPrimitive(isWaitForMetadata()));
 
+        JsonObject user = YouboraConfigJsonBuilder.getUserJsonObject(getUser());
+        JsonArray pendingMetadata = YouboraConfigJsonBuilder.getPendingMetaDataJsonObject(getPendingMetadata());
+        JsonObject sessionMetrics = YouboraConfigJsonBuilder.getSessionMetricsJsonObject(getSession() != null ? getSession().getSessionMetrics() : null);
         JsonObject app = YouboraConfigJsonBuilder.getAppJsonObject(getApp());
         JsonObject parse = YouboraConfigJsonBuilder.getParseJsonObject(getParse());
         JsonObject device = YouboraConfigJsonBuilder.getDeviceJsonObject(getDevice());
@@ -822,8 +1203,11 @@ public class YouboraConfig {
         JsonObject errors = YouboraConfigJsonBuilder.getErrorsJsonObject(getErrors());
         JsonObject adsEntry = YouboraConfigJsonBuilder.getAdsJsonObject(getAds());
         JsonObject properties = YouboraConfigJsonBuilder.getPropertiesJsonObject(getProperties());
-        JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContnentCustomDimentionsJsonObject(getContentCustomDimensions());
+        JsonObject contentCustomDimensions = YouboraConfigJsonBuilder.getContentCustomDimensionsJsonObject(getContentCustomDimensions());
         return YouboraConfigJsonBuilder.getYouboraConfigJsonObject(rootLevelParams,
+                user,
+                pendingMetadata,
+                sessionMetrics,
                 app,
                 parse,
                 device,
@@ -834,7 +1218,7 @@ public class YouboraConfig {
                 properties,
                 contentCustomDimensions);
     }
-    
+
     public void merge(YouboraConfig youboraConfigUiConf) {
         if (youboraConfigUiConf == null) {
             return;
@@ -842,6 +1226,15 @@ public class YouboraConfig {
 
         if (TextUtils.isEmpty(accountCode)) {
             accountCode = youboraConfigUiConf.getAccountCode();
+        }
+        if (TextUtils.isEmpty(host)) {
+            host = youboraConfigUiConf.getHost();
+        }
+        if (TextUtils.isEmpty(authToken)) {
+            authToken = youboraConfigUiConf.getAuthToken();
+        }
+        if (TextUtils.isEmpty(authType)) {
+            authType = youboraConfigUiConf.getAuthType();
         }
         if (TextUtils.isEmpty(username)) {
             username =  youboraConfigUiConf.getUsername();
@@ -858,126 +1251,151 @@ public class YouboraConfig {
 
         if (content != null) {
             if (youboraConfigUiConf.getContent() != null) {
+
                 if (content.getContentBitrate() == null) {
                     content.setContentBitrate(youboraConfigUiConf.getContent().getContentBitrate());
                 }
-                if (content.getContentCdn() == null) {
+                if (TextUtils.isEmpty(content.getContentCdn())) {
                     content.setContentCdn(youboraConfigUiConf.getContent().getContentCdn());
                 }
-                if (content.getContentCdnNode() == null) {
+                if (TextUtils.isEmpty(content.getContentCdnNode())) {
                     content.setContentCdnNode(youboraConfigUiConf.getContent().getContentCdnNode());
                 }
-                if (content.getContentCdnType() == null) {
+                if (TextUtils.isEmpty(content.getContentCdnType())) {
                     content.setContentCdnType(youboraConfigUiConf.getContent().getContentCdnType());
                 }
-                if (content.getContentChannel() == null) {
+                if (TextUtils.isEmpty(content.getContentChannel())) {
                     content.setContentChannel(youboraConfigUiConf.getContent().getContentChannel());
                 }
-                if (content.getContentContractedResolution() == null) {
+                if (TextUtils.isEmpty(content.getContentContractedResolution())) {
                     content.setContentContractedResolution(youboraConfigUiConf.getContent().getContentContractedResolution());
                 }
-                if (content.getContentCost() == null) {
+                if (TextUtils.isEmpty(content.getContentCost())) {
                     content.setContentCost(youboraConfigUiConf.getContent().getContentCost());
                 }
-                if (content.getContentDrm() == null) {
+                if (TextUtils.isEmpty(content.getContentDrm())) {
                     content.setContentDrm(youboraConfigUiConf.getContent().getContentDrm());
                 }
                 if (content.getContentDuration() == null) {
                     content.setContentDuration(youboraConfigUiConf.getContent().getContentDuration());
                 }
-                if (content.getContentEncodingAudioCodec() == null) {
-                    content.setContentEncodingAudioCodec(youboraConfigUiConf.getContent().getContentEncodingAudioCodec());
-                }
-                if (content.getContentEncodingCodecProfile() == null) {
-                    content.setContentEncodingCodecProfile(youboraConfigUiConf.getContent().getContentEncodingCodecProfile());
-                }
-                if (content.getContentEncodingContainerFormat() == null) {
-                    content.setContentEncodingContainerFormat(youboraConfigUiConf.getContent().getContentEncodingContainerFormat());
-                }
-                if (content.getContentEncodingVideoCodec() == null) {
-                    content.setContentEncodingVideoCodec(youboraConfigUiConf.getContent().getContentEncodingVideoCodec());
-                }
-                if (content.getContentEpisodeTitle() == null) {
+                if (TextUtils.isEmpty(content.getContentEpisodeTitle())) {
                     content.setContentEpisodeTitle(youboraConfigUiConf.getContent().getContentEpisodeTitle());
                 }
                 if (content.getContentFps() == null) {
                     content.setContentFps(youboraConfigUiConf.getContent().getContentFps());
                 }
-                if (content.getContentGenre() == null) {
+                if (TextUtils.isEmpty(content.getContentGenre())) {
                     content.setContentGenre(youboraConfigUiConf.getContent().getContentGenre());
                 }
-                if (content.getContentGracenoteId() == null) {
+                if (TextUtils.isEmpty(content.getContentGracenoteId())) {
                     content.setContentGracenoteId(youboraConfigUiConf.getContent().getContentGracenoteId());
                 }
-                if (content.getContentId() == null) {
+                if (TextUtils.isEmpty(content.getContentId())) {
                     content.setContentId(youboraConfigUiConf.getContent().getContentId());
                 }
-                if (content.getContentImdbId() == null) {
+                if (TextUtils.isEmpty(content.getContentImdbId())) {
                     content.setContentImdbId(youboraConfigUiConf.getContent().getContentImdbId());
                 }
-                if (content.getContentIsLive() == null) {
-                    content.setContentIsLive(youboraConfigUiConf.getContent().getContentIsLive());
+                if (content.isLive() == null) {
+                    if (content.isLive().isLiveContent() == null) {
+                        content.isLive().setLiveContent(youboraConfigUiConf.getContent().isLive().isLiveContent());
+                    }
+                    if (content.isLive().getNoSeek() == null) {
+                        content.isLive().setNoSeek(youboraConfigUiConf.getContent().isLive().getNoSeek());
+                    }
+                    if (content.isLive().getNoMonitor() == null) {
+                        content.isLive().setNoMonitor(youboraConfigUiConf.getContent().isLive().getNoMonitor());
+                    }
                 }
-                if (content.getContentIsLiveNoSeek() == null && youboraConfigUiConf.getContent().getContentIsLiveNoSeek() != null) {
-                        content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+
+                if (content.getContentIsLiveNoSeek() == null) {
+                    content.setContentIsLiveNoSeek(youboraConfigUiConf.getContent().getContentIsLiveNoSeek());
+                } else if (content.isDVR() == null && youboraConfigUiConf.getContent().isDVR() != null) {
+                    content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().isDVR());
                 }
-                if (content.getIsDVR() == null && youboraConfigUiConf.getContent().getIsDVR() != null) {
-                        content.setContentIsLiveNoSeek(!youboraConfigUiConf.getContent().getIsDVR());
-                }
-                if (content.getContentLanguage() == null) {
+
+                if (TextUtils.isEmpty(content.getContentLanguage())) {
                     content.setContentLanguage(youboraConfigUiConf.getContent().getContentLanguage());
                 }
-                if (content.getContentPackage() == null) {
+                if (TextUtils.isEmpty(content.getContentPackage())) {
                     content.setContentPackage(youboraConfigUiConf.getContent().getContentPackage());
                 }
-                if (content.getContentPlaybackType() == null) {
+                if (TextUtils.isEmpty(content.getContentPlaybackType())) {
                     content.setContentPlaybackType(youboraConfigUiConf.getContent().getContentPlaybackType());
                 }
-                if (content.getContentPrice() == null) {
+                if (TextUtils.isEmpty(content.getContentPrice())) {
                     content.setContentPrice(youboraConfigUiConf.getContent().getContentPrice());
                 }
-                if (content.getContentProgram() == null) {
+                if (TextUtils.isEmpty(content.getContentProgram())) {
                     content.setContentProgram(youboraConfigUiConf.getContent().getContentProgram());
                 }
-                if (content.getContentRendition() == null) {
+                if (TextUtils.isEmpty(content.getContentRendition())) {
                     content.setContentRendition(youboraConfigUiConf.getContent().getContentRendition());
                 }
-                if (content.getContentResource() == null) {
+                if (TextUtils.isEmpty(content.getContentResource())) {
                     content.setContentResource(youboraConfigUiConf.getContent().getContentResource());
                 }
-                if (content.getContentSaga() == null) {
+                if (TextUtils.isEmpty(content.getContentSaga())) {
                     content.setContentSaga(youboraConfigUiConf.getContent().getContentSaga());
                 }
-                if (content.getContentSeason() == null) {
+                if (TextUtils.isEmpty(content.getContentSeason())) {
                     content.setContentSeason(youboraConfigUiConf.getContent().getContentSeason());
                 }
-                if (content.getContentStreamingProtocol() == null) {
+                if (TextUtils.isEmpty(content.getContentStreamingProtocol())) {
                     content.setContentStreamingProtocol(youboraConfigUiConf.getContent().getContentStreamingProtocol());
                 }
-                if (content.getContentSubtitles() == null) {
+                if (TextUtils.isEmpty(content.getContentSubtitles())) {
                     content.setContentSubtitles(youboraConfigUiConf.getContent().getContentSubtitles());
                 }
                 if (content.getContentThroughput() == null) {
                     content.setContentThroughput(youboraConfigUiConf.getContent().getContentThroughput());
                 }
-                if (content.getContentTitle() == null) {
+                if (TextUtils.isEmpty(content.getContentTitle())) {
                     content.setContentTitle(youboraConfigUiConf.getContent().getContentTitle());
                 }
-                if (content.getContentTransactionCode() == null) {
+                if (TextUtils.isEmpty(content.getContentTransactionCode())) {
                     content.setContentTransactionCode(youboraConfigUiConf.getContent().getContentTransactionCode());
+                }
+                if (TextUtils.isEmpty(content.getContentTransportFormat())) {
+                    content.setContentTransportFormat(youboraConfigUiConf.getContent().getContentTransportFormat());
                 }
                 if (content.getContentTotalBytes() == null) {
                     content.setContentTotalBytes(youboraConfigUiConf.getContent().getContentTotalBytes());
                 }
-                if (content.getContentTransportFormat() == null) {
-                    content.setContentTransportFormat(youboraConfigUiConf.getContent().getContentTransportFormat());
+                if (content.getContentSendTotalBytes() == null) {
+                    content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
                 }
-                content.setContentSendTotalBytes(youboraConfigUiConf.getContent().getContentSendTotalBytes());
-                if (content.getContentTvShow() == null) {
+                if (TextUtils.isEmpty(content.getContentTvShow())) {
                     content.setContentTvShow(youboraConfigUiConf.getContent().getContentTvShow());
                 }
-                if (content.getContentType() == null) {
+                if (TextUtils.isEmpty(content.getContentType())) {
                     content.setContentType(youboraConfigUiConf.getContent().getContentType());
+                }
+                if (content.getContentMetaData() == null) {
+                    content.setContentMetaData(youboraConfigUiConf.getContent().getContentMetaData());
+                }
+                if (content.getContentMetrics() == null) {
+                    content.setContentMetrics(youboraConfigUiConf.getContent().getContentMetrics());
+                }
+                if (content.getContentEncoding() == null) {
+                    content.setContentEncoding(youboraConfigUiConf.getContent().getContentEncoding());
+                } else {
+                    if (TextUtils.isEmpty(content.getContentEncodingAudioCodec())) {
+                        content.setContentEncodingAudioCodec(youboraConfigUiConf.getContent().getContentEncodingAudioCodec());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingCodecProfile())) {
+                        content.setContentEncodingCodecProfile(youboraConfigUiConf.getContent().getContentEncodingCodecProfile());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingContainerFormat())) {
+                        content.setContentEncodingContainerFormat(youboraConfigUiConf.getContent().getContentEncodingContainerFormat());
+                    }
+                    if (TextUtils.isEmpty(content.getContentEncodingVideoCodec())) {
+                        content.setContentEncodingVideoCodec(youboraConfigUiConf.getContent().getContentEncodingVideoCodec());
+                    }
+                }
+                if (content.getCustomDimensions() == null) {
+                    content.setCustomDimensions(youboraConfigUiConf.getContent().getCustomDimensions());
                 }
             }
         } else {
@@ -986,21 +1404,27 @@ public class YouboraConfig {
 
         if (app != null) {
             if (youboraConfigUiConf.getApp() != null) {
-                if (app.getAppName() == null) {
+                if (TextUtils.isEmpty(app.getAppName())) {
                     app.setAppName(youboraConfigUiConf.getApp().getAppName());
                 }
-                if (app.getAppReleaseVersion() == null) {
-                    app.setAppReleaseVersion(youboraConfigUiConf.getAppReleaseVersion());
+                if (TextUtils.isEmpty(app.getAppReleaseVersion())) {
+                    app.setAppReleaseVersion(youboraConfigUiConf.getApp().getAppReleaseVersion());
                 }
-            }  else {
-                app = youboraConfigUiConf.getApp();
             }
+        } else {
+            app = youboraConfigUiConf.getApp();
         }
 
         if (parse != null) {
             if (youboraConfigUiConf.getParse() != null) {
                 if (parse.getParseManifest() == null) {
                     parse.setParseManifest(youboraConfigUiConf.getParse().getParseManifest());
+                }
+                if (parse.getParseCdnNodeList() == null) {
+                    parse.setParseCdnNodeList(youboraConfigUiConf.getParse().getParseCdnNodeList());
+                }
+                if (parse.getParseCdnNode() == null) {
+                    parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
                 }
                 if (parse.getParseCdnNode() == null) {
                     parse.setParseCdnNode(youboraConfigUiConf.getParse().getParseCdnNode());
@@ -1011,8 +1435,11 @@ public class YouboraConfig {
                 if (parse.getParseCdnTTL() == null) {
                     parse.setParseCdnTTL(youboraConfigUiConf.getParse().getParseCdnTTL());
                 }
-                if (parse.getParseCdnNameHeader() == null) {
+                if (TextUtils.isEmpty(parse.getParseCdnNameHeader())) {
                     parse.setParseCdnNameHeader(youboraConfigUiConf.getParse().getParseCdnNameHeader());
+                }
+                if (TextUtils.isEmpty(parse.getParseNodeHeader())) {
+                    parse.setParseNodeHeader(youboraConfigUiConf.getParse().getParseNodeHeader());
                 }
                 if (parse.getParseCdnSwitchHeader() == null) {
                     parse.setParseCdnSwitchHeader(youboraConfigUiConf.getParse().getParseCdnSwitchHeader());
@@ -1027,10 +1454,10 @@ public class YouboraConfig {
                 if (network.getNetworkConnectionType() == null) {
                     network.setNetworkConnectionType(youboraConfigUiConf.getNetwork().getNetworkConnectionType());
                 }
-                if (network.getNetworkIP() == null) {
+                if (TextUtils.isEmpty(network.getNetworkIP())) {
                     network.setNetworkIP(youboraConfigUiConf.getNetwork().getNetworkIP());
                 }
-                if (network.getNetworkIsp() == null) {
+                if (TextUtils.isEmpty(network.getNetworkIsp())) {
                     network.setNetworkIsp(youboraConfigUiConf.getNetwork().getNetworkIsp());
                 }
             }
@@ -1059,10 +1486,10 @@ public class YouboraConfig {
                 if (ads.getAdBreaksTime() == null) {
                     ads.setAdBreaksTime(youboraConfigUiConf.getAds().getAdBreaksTime());
                 }
-                if (ads.getAdCampaign() == null) {
+                if (TextUtils.isEmpty(ads.getAdCampaign())) {
                     ads.setAdCampaign(youboraConfigUiConf.getAds().getAdCampaign());
                 }
-                if (ads.getAdCreativeId() == null) {
+                if (TextUtils.isEmpty(ads.getAdCreativeId())) {
                     ads.setAdCreativeId(youboraConfigUiConf.getAds().getAdCreativeId());
                 }
                 if (ads.getAdExpectedBreaks() == null) {
@@ -1074,14 +1501,26 @@ public class YouboraConfig {
                 if (ads.getAdGivenBreaks() == null) {
                     ads.setAdGivenBreaks(youboraConfigUiConf.getAds().getAdGivenBreaks());
                 }
-                if (ads.getAdProvider() == null) {
+                if (TextUtils.isEmpty(ads.getAdProvider())) {
                     ads.setAdProvider(youboraConfigUiConf.getAds().getAdProvider());
                 }
-                if (ads.getAdResource() == null) {
+                if (TextUtils.isEmpty(ads.getAdResource())) {
                     ads.setAdResource(youboraConfigUiConf.getAds().getAdResource());
                 }
-                if (ads.getAdTitle() == null) {
+                if (TextUtils.isEmpty(ads.getAdTitle())) {
                     ads.setAdTitle(youboraConfigUiConf.getAds().getAdTitle());
+                }
+                if (ads.getBlockerDetected() == null) {
+                    ads.setBlockerDetected(youboraConfigUiConf.getAds().getBlockerDetected());
+                }
+                if (ads.getMetadata() == null) {
+                    ads.setMetadata(youboraConfigUiConf.getAds().getMetadata());
+                }
+                if (ads.getExpectedPattern() == null) {
+                    ads.setExpectedPattern(youboraConfigUiConf.getAds().getExpectedPattern());
+                }
+                if (ads.getAfterStop() == null) {
+                    ads.setAfterStop(youboraConfigUiConf.getAds().getAfterStop());
                 }
             }
         } else {
@@ -1187,6 +1626,14 @@ public class YouboraConfig {
             }
         } else {
             contentCustomDimensions = youboraConfigUiConf.getContentCustomDimensions();
+        }
+
+        if (session != null) {
+            if (youboraConfigUiConf.getSession() != null) {
+                if (session.getSessionMetrics() == null) {
+                    session.setSessionMetrics(youboraConfigUiConf.getSession().getSessionMetrics());
+                }
+            }
         }
     }
 }
