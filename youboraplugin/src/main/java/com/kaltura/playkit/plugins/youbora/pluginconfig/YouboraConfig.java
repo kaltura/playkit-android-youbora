@@ -725,7 +725,7 @@ public class YouboraConfig {
                 }
             }
 
-            if (content.isLive() == null && content.isLive().getNoSeek() == null && content.getContentIsLiveNoSeek() != null) {
+            if ((content.isLive() == null || content.isLive().getNoSeek() == null) && content.getContentIsLiveNoSeek() != null) {
                 youboraOptions.setContentIsLiveNoSeek(content.getContentIsLiveNoSeek());
             } else if (content.isDVR() != null) {
                 youboraOptions.setContentIsLiveNoSeek(!content.isDVR());
@@ -1297,7 +1297,7 @@ public class YouboraConfig {
                 if (TextUtils.isEmpty(content.getContentImdbId())) {
                     content.setContentImdbId(youboraConfigUiConf.getContent().getContentImdbId());
                 }
-                if (content.isLive() == null) {
+                if (content.isLive() != null && youboraConfigUiConf.getContent().isLive() != null) {
                     if (content.isLive().isLiveContent() == null) {
                         content.isLive().setLiveContent(youboraConfigUiConf.getContent().isLive().isLiveContent());
                     }
