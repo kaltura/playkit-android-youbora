@@ -124,7 +124,7 @@ public class YouboraConfigJsonBuilder {
             parseJsonObject.add("parseCdnNode", getParseCdnNodeObject(parse.getParseCdnNode()));
         }
 
-        if (parse.getParseCdnNodeList() != null) {
+        if (parse.getParseCdnNodeList() != null && !parse.getParseCdnNodeList().isEmpty()) {
             JsonArray parseCdnNodeListJsonArray = new JsonArray();
             for(String cdn : parse.getParseCdnNodeList()) {
                 parseCdnNodeListJsonArray.add(cdn);
@@ -161,7 +161,7 @@ public class YouboraConfigJsonBuilder {
             manifestJsonObject.addProperty("parseManifest", manifest.getParseManifest());
         }
 
-        if (manifest.getParseManifestAuth() != null) {
+        if (manifest.getParseManifestAuth() != null && !manifest.getParseManifestAuth().isEmpty()) {
             manifestJsonObject.add("parseManifestAuth", addHashMapValuesToJsonObject(manifest.getParseManifestAuth()));
         }
 
@@ -179,7 +179,7 @@ public class YouboraConfigJsonBuilder {
             cdnNodeJsonObject.addProperty("parseCdnNode", cdnNode.getParseCdnNode());
         }
 
-        if (cdnNode.getParseCdnNodeList() != null) {
+        if (cdnNode.getParseCdnNodeList() != null && !cdnNode.getParseCdnNodeList().isEmpty()) {
             JsonArray parseCdnNodeListJsonArray = new JsonArray();
             for(String cdn : cdnNode.getParseCdnNodeList()) {
                 parseCdnNodeListJsonArray.add(cdn);
@@ -374,7 +374,6 @@ public class YouboraConfigJsonBuilder {
             contentEntry.add("contentMetaData", getPropertiesJsonObject(content.getContentMetaData()));
         }
         if (content.getContentMetrics() != null && !content.getContentMetrics().isEmpty()) {
-            JsonObject metricsJson = new JsonObject();
             contentEntry.add("contentMetrics", addHashMapValuesToJsonObject(content.getContentMetrics()));
         }
         if (content.getCustomDimensions() != null) {
@@ -682,7 +681,7 @@ public class YouboraConfigJsonBuilder {
         if (encoding.getCodecProfile() != null) {
             encodingJsonObject.addProperty("codecProfile", encoding.getCodecProfile());
         }
-        if (encoding.getCodecSettings() != null) {
+        if (encoding.getCodecSettings() != null && !encoding.getCodecSettings().isEmpty()) {
             encodingJsonObject.add("codecSettings", addHashMapValuesToJsonObject(encoding.getCodecSettings()));
         }
         if (encoding.getContainerFormat() != null) {
