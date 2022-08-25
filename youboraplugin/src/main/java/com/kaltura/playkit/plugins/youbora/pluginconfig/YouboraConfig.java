@@ -529,11 +529,11 @@ public class YouboraConfig {
                 youboraOptions.setUserAnonymousId(user.getAnonymousId());
             }
             if (!TextUtils.isEmpty(user.getType())) {
-                youboraOptions.setUserEmail(user.getType());
+                youboraOptions.setUserType(user.getType());
             }
-
-            youboraOptions.setUserObfuscateIp(user.getObfuscateIp());
-
+            if (user.getObfuscateIp() != null) {
+                youboraOptions.setUserObfuscateIp(user.getObfuscateIp());
+            }
             if (!TextUtils.isEmpty(user.getPrivacyProtocol())) {
                 youboraOptions.setUserPrivacyProtocol(user.getPrivacyProtocol());
             }
@@ -545,7 +545,7 @@ public class YouboraConfig {
                 youboraOptions.setUserAnonymousId(getUserAnonymousId());
             }
             if (!TextUtils.isEmpty(getUserType())) {
-                youboraOptions.setUserEmail(getUserType());
+                youboraOptions.setUserType(getUserType());
             }
 
             youboraOptions.setUserObfuscateIp(getUserObfuscateIp());
@@ -605,7 +605,7 @@ public class YouboraConfig {
                 if (parse.getParseCdnNode().getParseCdnNode() != null) {
                     youboraOptions.setParseCdnNode(parse.getParseCdnNode().getParseCdnNode());
                 }
-                if (parse.getParseCdnNode().getParseCdnNodeList() != null) {
+                if (parse.getParseCdnNode().getParseCdnNodeList() != null && !parse.getParseCdnNode().getParseCdnNodeList().isEmpty()) {
                     youboraOptions.setParseCdnNodeList(parse.getParseCdnNode().getParseCdnNodeList());
                 }
             }
@@ -791,7 +791,7 @@ public class YouboraConfig {
             if (content.getContentMetaData() != null) {
                 youboraOptions.setContentMetadata(getContentMetaDataBundle(content.getContentMetaData()));
             }
-            if (content.getContentMetrics() != null) {
+            if (content.getContentMetrics() != null && !content.getContentMetrics().isEmpty()) {
                 youboraOptions.setContentMetrics(getBundleFromMap(content.getContentMetrics()));
             }
             if (content.getContentEncoding() != null) {
@@ -854,19 +854,19 @@ public class YouboraConfig {
         }
 
         if (errors != null) {
-            if (errors.getErrorsIgnore() != null) {
+            if (errors.getErrorsIgnore() != null && errors.getErrorsIgnore().length > 0) {
                 youboraOptions.setErrorsToIgnore(errors.getErrorsIgnore());
             }
-            if (errors.getErrorsFatal() != null) {
+            if (errors.getErrorsFatal() != null && errors.getErrorsFatal().length > 0) {
                 youboraOptions.setFatalErrors(errors.getErrorsFatal());
             }
-            if (errors.getErrorsNonFatal() != null) {
+            if (errors.getErrorsNonFatal() != null && errors.getErrorsNonFatal().length > 0) {
                 youboraOptions.setNonFatalErrors(errors.getErrorsNonFatal());
             }
         }
 
         if (ads != null) {
-            if (ads.getAdBreaksTime() != null) {
+            if (ads.getAdBreaksTime() != null && !ads.getAdBreaksTime().isEmpty()) {
                 youboraOptions.setAdBreaksTime(ads.getAdBreaksTime());
             }
             if (ads.getAdCampaign() != null) {
@@ -1150,13 +1150,13 @@ public class YouboraConfig {
         if (adExpectedPattern == null) {
             return expectedPatternBundle;
         }
-        if (adExpectedPattern.getPre() != null) {
+        if (adExpectedPattern.getPre() != null && !adExpectedPattern.getPre().isEmpty()) {
             expectedPatternBundle.putIntegerArrayList("pre", adExpectedPattern.getPre());
         }
-        if (adExpectedPattern.getMid() != null) {
+        if (adExpectedPattern.getMid() != null && !adExpectedPattern.getMid().isEmpty()) {
             expectedPatternBundle.putIntegerArrayList("mid", adExpectedPattern.getMid());
         }
-        if (adExpectedPattern.getPost() != null) {
+        if (adExpectedPattern.getPost() != null && !adExpectedPattern.getPost().isEmpty()) {
             expectedPatternBundle.putIntegerArrayList("post", adExpectedPattern.getPost());
         }
 
