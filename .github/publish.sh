@@ -75,7 +75,7 @@ EOF
                       JSON_BODY="$JSON_BODY$NEW_TAG\n\n"
           JSON_BODY="$JSON_BODY * upgrade to $NEW_TAG\n\n"
           JSON_BODY="$JSON_BODY #### Gradle\n\n"
-                      JSON_BODY="$JSON_BODY * implementation 'com.kaltura.playkit:youbora"
+                      JSON_BODY="$JSON_BODY * implementation 'com.kaltura.playkit:youboraplugin"
           JSON_BODY="$NEW_VERSION"
           JSON_BODY="$JSON_BODY'"
 
@@ -134,7 +134,7 @@ color=0072C6
                   },
                   {
                       "name": "Gradle line",
-                      "value": "implementation 'com.kaltura.playkit:youbora:$COMMIT_SHA'"
+                      "value": "implementation 'com.kaltura.playkit:youboraplugin:$COMMIT_SHA'"
                   }
               ]
           }

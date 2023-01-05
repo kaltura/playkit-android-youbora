@@ -51,4 +51,4 @@ sed -i '/'"$newFeatures"'/a\
 fi
 
 echo "### Gradle" >> $RELEASE_NOTES
-echo "$nl* \`implementation 'com.kaltura.playkit:youbora:$NEW_VERSION"\'\` >> $RELEASE_NOTES
+echo "$nl* \`implementation 'com.kaltura.playkit:youboraplugin:$NEW_VERSION"\'\` >> $RELEASE_NOTES
