@@ -34,6 +34,16 @@ set_version() {
 
     # Changing the version in version.gradle file
     perl -pi -e "s/^ext.libVersion.*$/ext.libVersion = '$NEW_VERSION'/" $VERSION_FILE
+
+    # Changing the version in build.gradle file
+    if [[ "$RELEASE_TYPE" == "Patch" || "$RELEASE_TYPE" == "Update" ]]; then
+       echo "RELEASE_TYPE = '$RELEASE_TYPE'"
+       perl -pi -e "s/playkit:playkit:$PLAYKIT_PREV_VERSION/playkit:playkit:$NEW_VERSION/" $BUILD_GRADLE
+    fi
+    if [ "$RELEASE_TYPE" == "Full" ]; then
+       echo "RELEASE_TYPE = '$RELEASE_TYPE'"
+       perl -pi -e "s/:playkit-android:dev-SNAPSHOT/.playkit:playkit:$NEW_VERSION/" $BUILD_GRADLE
+    fi
 }
 
 build() {
@@ -48,6 +58,7 @@ release_and_tag() {
     echo Releasing version $NEW_VERSION of $REPO_NAME to GitHub
     set +e
     git add $VERSION_FILE
+    git add $BUILD_GRADLE
     git commit -m "Update version to $NEW_TAG"
     set -e
     git push origin HEAD:$BRANCH_NAME
@@ -75,7 +86,7 @@ EOF
                       JSON_BODY="$JSON_BODY$NEW_TAG\n\n"
           JSON_BODY="$JSON_BODY * upgrade to $NEW_TAG\n\n"
           JSON_BODY="$JSON_BODY #### Gradle\n\n"
-                      JSON_BODY="$JSON_BODY * implementation 'com.kaltura.playkit:youbora"
+                      JSON_BODY="$JSON_BODY * implementation 'com.kaltura.playkit:youboraplugin"
           JSON_BODY="$NEW_VERSION"
           JSON_BODY="$JSON_BODY'"
 
@@ -134,7 +145,7 @@ color=0072C6
                   },
                   {
                       "name": "Gradle line",
-                      "value": "implementation 'com.kaltura.playkit:youbora:$COMMIT_SHA'"
+                      "value": "implementation 'com.kaltura.playkit:youboraplugin:$COMMIT_SHA'"
                   }
               ]
           }
@@ -161,6 +172,7 @@ EOF
   export REPO_NAME=$REPO_NAME
   MODULE_NAME=$MODULE_NAME
   VERSION_FILE=$MODULE_NAME/version.gradle
+  BUILD_GRADLE=$MODULE_NAME/build.gradle
 
   REPO_URL=https://github.com/kaltura/$REPO_NAME
   export NEW_VERSION=$NEW_VERSION
