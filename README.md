@@ -54,7 +54,16 @@ player = KalturaOttPlayer.create(this@MainActivity, playerInitOptions)
 
 ```
 
+### Example:
+
+[Youbora plugin sample](https://github.com/kaltura/playkit-android-samples/blob/c28187bed44d20efe399cae82a48d69e193883ac/Youbora/app/src/main/java/com/kaltura/playkit/samples/youbora/MainActivity.java#L116)
+* Inorder to run the sample:
+
+download [Samples Repo](https://github.com/kaltura/kaltura-player-android-samples/tree/master)
+in Android Studio open the Advanced Samples folder and run the youbora sample
+
 #### Build your Youbora config using Bundle 
+
 ##### Example for some of the properties the App can send to Youbora plugin. The only must property to send is _your account code_. 
 In case if properties are not sent and if plugin have it internally plugin will set it automatically i.e media title, media resource and more.
 
