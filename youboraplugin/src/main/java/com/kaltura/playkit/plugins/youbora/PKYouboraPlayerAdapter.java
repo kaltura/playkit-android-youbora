@@ -217,26 +217,12 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             onStateChangedEvent(event);
         });
 
+        messageBus.addListener(this, PlayerEvent.stopped, event -> {
+            handlePlaybackTeardown(event);
+        });
+
         messageBus.addListener(this, PlayerEvent.ended, event -> {
-            printReceivedPlayerEvent(event);
-            if (isNullAdapter()) {
-                return;
-            }
-
-            if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
-                getPlugin().getAdapter().fireStop();
-                fireStop();
-                isFirstPlay = true;
-                adCuePoints = null;
-            } else {
-                if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
-                    fireStop();
-                    isFirstPlay = true;
-                    adCuePoints = null;
-                }
-            }
-
-            sendReportEvent(event);
+            handlePlaybackTeardown(event);
         });
 
         messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
@@ -356,6 +342,28 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
                 adCuePoints = null;
             }
         });
+    }
+
+    private void handlePlaybackTeardown(PKEvent event) {
+        printReceivedPlayerEvent(event);
+        if (isNullAdapter()) {
+            return;
+        }
+
+        if (PKAdPluginType.server.equals(getLastReportedAdPluginType())) {
+            getPlugin().getAdapter().fireStop();
+            fireStop();
+            isFirstPlay = true;
+            adCuePoints = null;
+        } else {
+            if (!isFirstPlay && ((adCuePoints == null) || !adCuePoints.hasPostRoll())) {
+                fireStop();
+                isFirstPlay = true;
+                adCuePoints = null;
+            }
+        }
+
+        sendReportEvent(event);
     }
 
     private String getVideoCodecs(List<VideoTrack> tracks) {
