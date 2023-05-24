@@ -125,6 +125,7 @@ public class YouboraPlugin extends PKPlugin {
 
         messageBus.addListener(this, PlayerEvent.stopped, event -> {
             log.d("YouboraPlugin STOPPED");
+            stopMonitoring();
         });
 
         messageBus.addListener(this, InterceptorEvent.cdnSwitched, event -> {
