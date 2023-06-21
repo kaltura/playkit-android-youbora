@@ -14,6 +14,7 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.text.TextUtils;
 
+import com.kaltura.android.exoplayer2.upstream.HttpDataSource;
 import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKAudioCodec;
@@ -136,9 +137,11 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         if (playerErrorException != null && playerErrorException.getCause() != null && playerErrorException.getCause().getClass() != null) {
             exceptionClass = playerErrorException.getCause().getClass().getName();
             errorMetadata = (playerErrorException.getCause().toString() != null) ? playerErrorException.getCause().toString() : errorMetadata;
+            errorMetadata = appendDataSpec(errorMetadata, error);
         } else {
             if (error.exception.getClass() != null) {
                 exceptionClass = error.exception.getClass().getName();
+                errorMetadata = appendDataSpec(errorMetadata, error);
             }
         }
 
@@ -159,6 +162,15 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         } else {
             fireFatalError(event.eventType().name(), exceptionCauseBuilder.toString() + " - " + exceptionClass , errorMetadata, playerErrorException);
         }
+    }
+
+    private static String appendDataSpec(String errorMetadata, PKError error) {
+        if (error.exception instanceof HttpDataSource.HttpDataSourceException) {
+            errorMetadata += ", " + ((HttpDataSource.HttpDataSourceException) error.exception).dataSpec;
+        } else if (error.exception instanceof HttpDataSource.InvalidResponseCodeException) {
+            errorMetadata += ", " + ((HttpDataSource.InvalidResponseCodeException) error.exception).dataSpec;
+        }
+        return errorMetadata;
     }
 
     public static LinkedHashSet<String> getExceptionMessageChain(Throwable throwable) {
