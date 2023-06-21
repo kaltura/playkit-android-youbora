@@ -169,6 +169,10 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
             errorMetadata += ", " + ((HttpDataSource.HttpDataSourceException) error.exception).dataSpec;
         } else if (error.exception instanceof HttpDataSource.InvalidResponseCodeException) {
             errorMetadata += ", " + ((HttpDataSource.InvalidResponseCodeException) error.exception).dataSpec;
+        } else if (error.exception.getCause() instanceof HttpDataSource.HttpDataSourceException) {
+            errorMetadata += ", " + ((HttpDataSource.HttpDataSourceException) error.exception.getCause()).dataSpec;
+        } else if (error.exception.getCause() instanceof HttpDataSource.InvalidResponseCodeException) {
+            errorMetadata += ", " + ((HttpDataSource.InvalidResponseCodeException) error.exception.getCause()).dataSpec;
         }
         return errorMetadata;
     }
