@@ -14,7 +14,7 @@ package com.kaltura.playkit.plugins.youbora;
 
 import android.text.TextUtils;
 
-import com.kaltura.android.exoplayer2.upstream.HttpDataSource;
+import com.kaltura.androidx.media3.datasource.HttpDataSource;
 import com.kaltura.playkit.BuildConfig;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKAudioCodec;
