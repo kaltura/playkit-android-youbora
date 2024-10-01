@@ -3,14 +3,15 @@ apply plugin: 'kotlin-android'
 apply from: 'version.gradle'
 
 android {
-    compileSdkVersion 33
+    namespace 'com.kaltura.playkit.plugin.youbora'
+    compileSdk 34
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 33
+        minSdkVersion 21
+        targetSdkVersion 34
         versionName libVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String","VERSION_NAME","\"${libVersion}\"")
@@ -27,12 +28,22 @@ android {
         jvmTarget = '1.8'
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    publishing {
+        publishing {
+            singleVariant('release') {
+            }
+        }
+    }
 }
 
 dependencies {
 
     //TODO change to latest playkit version after tagging.
-    implementation 'com.kaltura:playkit-android:dev-SNAPSHOT'
+    implementation 'com.kaltura:playkit-android:KUX-1761-SNAPSHOT'
     //implementation project(":playkit")
 
     api 'com.nicepeopleatwork:youboralib:6.8.4'
