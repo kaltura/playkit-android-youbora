@@ -5,7 +5,7 @@
 # BINTRAY_USER, BINTRAY_KEY
 
 # Run locally:
-# TRAVIS_TAG=v0.1.2 BINTRAY_USER=username BINTRAY_KEY=fjkhsdfka3289r82rkfe ./travis-push-to-bintray.sh
+# TRAVIS_TAG=v0.1.2 BINTRAY_USER=username BINTRAY_KEY=some_key ./travis-push-to-bintray.sh
 
 
 LIB=youboraplugin
