@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kaltura.androidx.media3.common.util.UnstableApi;
 import com.kaltura.playkit.InterceptorEvent;
 import com.kaltura.playkit.MessageBus;
 import com.kaltura.playkit.PKDrmParams;
@@ -33,7 +34,7 @@ import static com.kaltura.playkit.plugins.youbora.pluginconfig.YouboraConfig.KEY
 /**
  * Created by zivilan on 02/11/2016.
  */
-
+@UnstableApi
 public class YouboraPlugin extends PKPlugin {
     private static final PKLog log = PKLog.get("YouboraPlugin");
 
