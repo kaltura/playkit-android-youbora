@@ -43,7 +43,7 @@ android {
 dependencies {
 
     //TODO change to latest playkit version after tagging.
-    implementation 'com.kaltura:playkit-android:KUX-1761-SNAPSHOT'
+    implementation 'com.kaltura.playkit:playkit:5.0.0'
     //implementation project(":playkit")
 
     api 'com.nicepeopleatwork:youboralib:6.8.4'
