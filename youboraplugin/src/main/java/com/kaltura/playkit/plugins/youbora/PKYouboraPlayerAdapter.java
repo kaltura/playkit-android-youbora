@@ -243,8 +243,13 @@ class PKYouboraPlayerAdapter extends PlayerAdapter<Player> {
         });
 
         messageBus.addListener(this, PlayerEvent.tracksAvailable, event -> {
-            lastReportedVideoCodecs = getVideoCodecs(event.tracksInfo.getVideoTracks());
-            lastReportedAudioCodecs = getAudioCodecs(event.tracksInfo.getAudioTracks());
+            if (event.tracksInfo != null) {
+                lastReportedVideoCodecs = getVideoCodecs(event.tracksInfo.getVideoTracks());
+                lastReportedAudioCodecs = getAudioCodecs(event.tracksInfo.getAudioTracks());
+            } else {
+                lastReportedVideoCodecs = null;
+                lastReportedAudioCodecs = null;
+            }
         });
 
         messageBus.addListener(this, PlayerEvent.audioTrackChanged, event -> {
