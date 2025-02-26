@@ -1,5 +1,6 @@
 package com.kaltura.playkit.plugins.youbora;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -77,7 +78,7 @@ public class YouboraPlugin extends PKPlugin {
     };
 
     @Override
-    protected void onLoad(final Player player, Object config, final MessageBus messageBus, Context context) {
+    protected void onLoad(final Player player, Object config, final MessageBus messageBus, Context context, Activity playerActivity) {
         log.d("onLoad");
         this.player = player;
         this.messageBus = messageBus;
@@ -85,6 +86,9 @@ public class YouboraPlugin extends PKPlugin {
         this.pluginConfig = parseConfig(config);
         //YouboraLog.setDebugLevel(YouboraLog.Level.VERBOSE);
         npawPlugin = new NPAWPlugin(pluginConfig, context, fastDataConfig);
+        if (playerActivity != null) {
+            npawPlugin.setActivity(playerActivity);
+        }
         loadPlugin();
     }
 
